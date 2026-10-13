@@ -1,0 +1,267 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>settingsDialog</class>
+ <widget class="QDialog" name="settingsDialog">
+  <property name="windowTitle">
+   <string>Settings | Static &amp; Dynamic Radial O-Ring Calculator</string>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>510</width>
+    <height>360</height>
+   </size>
+  </property>
+  <layout class="QVBoxLayout" name="settingsLayout">
+   <item>
+    <widget class="QLabel" name="heading">
+     <property name="text">
+      <string>Settings</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-size: 17px; font-weight: 700; color: #164f8a;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="settings_heading_rule">
+     <property name="frameShape">
+      <enum>QFrame::Shape::HLine</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Plain</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="settings_app_name">
+     <property name="text">
+      <string>Static &amp; Dynamic Radial O-Ring Calculator</string>
+     </property>
+     <property name="styleSheet">
+      <string>color:#71849a; font-size:11px;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="settings_tabs">
+     <widget class="QWidget" name="assumptions_tab">
+      <attribute name="title">
+       <string>Assumptions</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="assumptionsLayout">
+       <item>
+        <widget class="QScrollArea" name="assumptions_scroll">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::Shape::NoFrame</enum>
+         </property>
+         <widget class="QWidget" name="assumptions_content">
+          <layout class="QVBoxLayout" name="assumptionsContentLayout">
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="assumptions_text">
+             <property name="textFormat"><enum>Qt::TextFormat::RichText</enum></property><property name="text">
+              <string>&lt;html&gt;&lt;body&gt;
+&lt;p style="margin:0 0 7px 0; color:#164f8a; font-weight:600;"&gt;Scope and tolerance evaluation&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• The calculator is intended for static and dynamic (reciprocating) radial O-ring seals. Rotary seals and axial face seals are not covered.&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• Minimum and maximum results are generally determined by evaluating combinations of the permitted dimensional tolerance limits. Piston squeeze additionally checks both sides of the 3% ID-stretch transition where the tolerance range crosses it. Other intermediate combinations are not searched, so more extreme results between those limits cannot be ruled out.&lt;/p&gt;
+&lt;p style="margin:28px 0 7px 0; color:#164f8a; font-weight:600;"&gt;Groove geometry and O-ring behaviour&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• Gland fill is calculated from the O-ring material cross-sectional area and the available gland area in a two-dimensional (2D) representation. The available gland area includes the machined groove cross-section with its wall angles, base radii and opening radii, plus a rectangular clearance area. The clearance area uses the actual groove opening width after the opening radii and extends perpendicularly from the grooved component surface to the opposing piston or cylinder surface. The full three-dimensional annular seal volume is not calculated.&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• For piston grooves, the installed O-ring cross-section used for squeeze accounts for ID stretch using a published empirical relationship. The O-ring material area used for gland fill is calculated separately using a constant-volume model. For cylinder grooves, no equivalent cross-section correction is applied for OD interference.&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• Parker's published empirical relationships for piston O-ring cross-section reduction use one equation for 0–3% ID stretch and another for stretch above 3%. The equations do not meet exactly at 3%, so calculated squeeze can change abruptly as stretch crosses the transition. This can result in unequal gaps between minimum, nominal and maximum squeeze, including cases where minimum and nominal are identical despite dimensional tolerances. When the permitted stretch range crosses 3%, the calculator evaluates both sides of the transition when determining squeeze extremes.&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• Groove geometry is based on symmetrical profiles with straight sidewalls and tangent corner radii. Groove width is measured between theoretical sharp intersections before accounting for opening radii.&lt;/p&gt;
+&lt;p style="margin:28px 0 7px 0; color:#164f8a; font-weight:600;"&gt;Screening interpretation and design responsibility&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• PASS indicates that the individual dimensional screening criterion is satisfied for the evaluated tolerance combinations. REVIEW indicates that one or more evaluated values fall outside the selected screening criterion and require engineering evaluation; it does not automatically mean the seal design is unsuitable. INVALID indicates inputs or geometry that cannot be evaluated. The screening limits are general engineering criteria and may not be suitable for every O-ring material or application.&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• Dimensional screening results do not constitute complete seal design approval. Operating pressure, temperature, material compatibility, extrusion resistance, component clearance, manufacturing conditions and service requirements must be assessed separately.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="assumptions_inner_spacer">
+             <property name="orientation">
+              <enum>Qt::Orientation::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>0</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+          <property name="styleSheet">
+           <string>QWidget#assumptions_content { background: white; }</string>
+          </property>
+         </widget>
+         <property name="styleSheet">
+          <string>QScrollArea#assumptions_scroll { background: white; border: none; } QScrollArea#assumptions_scroll &gt; QWidget &gt; QWidget { background: white; }</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="references_tab">
+      <attribute name="title">
+       <string>References</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="referencesLayout">
+       <item>
+        <widget class="QScrollArea" name="references_scroll">
+         <property name="widgetResizable"><bool>true</bool></property>
+         <property name="frameShape"><enum>QFrame::Shape::NoFrame</enum></property>
+         <widget class="QWidget" name="references_content">
+          <layout class="QVBoxLayout" name="referencesContentLayout">
+           <property name="leftMargin"><number>3</number></property>
+           <property name="rightMargin"><number>3</number></property>
+           <property name="topMargin"><number>3</number></property>
+           <property name="bottomMargin"><number>3</number></property>
+           <item>
+            <widget class="QLabel" name="references_heading">
+             <property name="text"><string>Reference publications</string></property>
+             <property name="styleSheet"><string>font-weight:600; color:#164f8a;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="references_text">
+             <property name="textFormat"><enum>Qt::TextFormat::RichText</enum></property>
+             <property name="text"><string>&lt;html&gt;&lt;body&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;The following publications were used to develop and verify the calculator's dimensional screening methods:&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• Parker Hannifin: Parker O-Ring Handbook, Catalog ORD 5700A/US (2001), Sections 3.5–3.7 and Figure 3-3. Guidance on O-ring stretch, squeeze, gland fill and installed cross-section reduction.&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• Freudenberg Sealing Technologies: O-Ring Reference AS568 Sizes, pages 2–4. O-ring dimensions, tolerances and radial groove design guidance.&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• James Walker: 'O' Ring Guide, Issue 7, pages 27–31. Supplementary O-ring housing and design guidance.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</string></property>
+             <property name="wordWrap"><bool>true</bool></property>
+            </widget>
+           </item>
+           <item><spacer name="referencesSectionGap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item><item>
+            <widget class="QLabel" name="criteria_heading">
+             <property name="text"><string>Adopted dimensional screening criteria</string></property>
+             <property name="styleSheet"><string>font-weight:600; color:#164f8a;</string></property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="criteria_text">
+             <property name="textFormat"><enum>Qt::TextFormat::RichText</enum></property>
+             <property name="text"><string>&lt;html&gt;&lt;body&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;The following limits are applied by the calculator:&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• O-ring squeeze: Minimum ≥ 0.007″; maximum ≤ 30% for static applications or ≤ 16% for dynamic (reciprocating) applications. Based on Parker, Section 3.6.&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• O-ring fit: Installed ID stretch of 0–5% for piston grooves, or OD interference of 0–2% for cylinder grooves. Based on Parker, Section 3.5, and Freudenberg, page 2.&lt;/p&gt;
+&lt;p style="margin:0 0 10px 0;"&gt;• Gland fill: 60–85%, with approximately 75% as the preferred target. Based on Parker, Section 3.7.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</string></property>
+             <property name="wordWrap"><bool>true</bool></property>
+            </widget>
+           </item>
+           <item><spacer name="referencesClosingNoteGap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+           <item>
+            <widget class="QLabel" name="references_note">
+             <property name="text"><string>These are selected general dimensional screening criteria, not universal acceptance limits for all materials and operating conditions. Manufacturer recommendations may differ for specific applications.
+
+The reference publications are not distributed with the application.</string></property>
+             <property name="wordWrap"><bool>true</bool></property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="referencesSpacer">
+             <property name="orientation"><enum>Qt::Orientation::Vertical</enum></property>
+             <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
+             <property name="sizeHint" stdset="0"><size><width>20</width><height>0</height></size></property>
+            </spacer>
+           </item>
+          </layout>
+          <property name="styleSheet"><string>QWidget#references_content { background: white; }</string></property>
+         </widget>
+         <property name="styleSheet"><string>QScrollArea#references_scroll { background: white; border: none; } QScrollArea#references_scroll &gt; QWidget &gt; QWidget { background: white; }</string></property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="updates_tab">
+      <attribute name="title"><string>Updates</string></attribute>
+      <layout class="QVBoxLayout" name="updatesLayout">
+       <item><widget class="QLabel" name="current_version"><property name="text"><string>Current version:</string></property></widget></item>
+       <item><spacer name="updates_version_to_checkbox_gap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>12</height></size></property></spacer></item><item><widget class="QCheckBox" name="check_on_launch"><property name="text"><string>Automatically check for updates on launch</string></property></widget></item>
+       <item><spacer name="updates_checkbox_to_information_gap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>12</height></size></property></spacer></item><item><widget class="QLabel" name="update_information"><property name="text"><string>Checks stable GitHub Releases in the background. Updates are not downloaded or installed automatically; the application remains portable.</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+       <item><spacer name="updates_information_to_status_gap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>8</height></size></property></spacer></item><item><widget class="QLabel" name="update_status"><property name="text"><string>Not checked yet</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+       <item><spacer name="updates_status_to_buttons_gap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>14</height></size></property></spacer></item><item><layout class="QHBoxLayout" name="updateButtonLayout">
+        <item><widget class="QPushButton" name="check_now_button"><property name="text"><string>Check for updates</string></property></widget></item>
+        <item><widget class="QPushButton" name="open_release_button"><property name="text"><string>Download update</string></property><property name="enabled"><bool>false</bool></property></widget></item>
+        <item><spacer name="updateButtonSpacer"><property name="orientation"><enum>Qt::Orientation::Horizontal</enum></property></spacer></item>
+       </layout></item>
+       <item><spacer name="updatesSpacer"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>40</height></size></property></spacer></item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="about_tab">
+      <attribute name="title">
+       <string>About</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="aboutLayout">
+       <item>
+        <widget class="QLabel" name="about_text">
+         <property name="text">
+          <string>ZeroFlagLabs Static &amp; Dynamic Radial O-Ring Calculator  ·  v1.0.0
+
+Dimensional screening for static and dynamic (reciprocating) radial O-ring seals.
+
+Licence: MIT (for the original application source code).
+Free and open source: use, modify and redistribute under the MIT Licence.
+
+Third-party components, including PySide6/Qt, retain their respective licences. See the repository LICENSE and third-party notices when published.
+
+</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item><spacer name="about_github_section_gap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>16</height></size></property></spacer></item><item><widget class="QLabel" name="github_link"><property name="text"><string>Project on GitHub</string></property></widget></item>
+       <item>
+        <spacer name="aboutSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttons">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::StandardButton::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

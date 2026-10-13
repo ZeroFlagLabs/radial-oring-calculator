@@ -1,0 +1,3 @@
+# Core runtime dependencies. The app uses PySide6, NOT PyQt6.
+# Runtime uses Qt for Python (PySide6); install with pip in a virtual environment.
+PySide6>=6.7,<7

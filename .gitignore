@@ -1,0 +1,49 @@
+# Confidential engineering reference drawings: NEVER commit or publish.
+/references/
+/references*/
+/design-assets/
+
+# Development environments
+/.venv/
+/venv/
+
+# Python and tooling
+**/__pycache__/
+*.py[cod]
+/.pytest_cache/
+/.mypy_cache/
+/.idea/
+/.vscode/
+/build/
+/dist/
+/releases/
+*.spec
+*.log
+
+# Local helper output and backup artefacts
+ORing_Project_Structure.txt
+*.lnk
+
+# Machine-local configuration and secrets (never publish)
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+*.p12
+*.key
+*.keystore
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Local audit/release staging or machine configuration
+/_audit/
+/audit/
+/*.zip
+/*.ps1
+
+# Non-public audit contents
+/_review/
+/_publication_staging/

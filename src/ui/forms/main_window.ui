@@ -1,0 +1,3357 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ui version="4.0">
+ <class>appSurface</class>
+ <widget class="QWidget" name="appSurface">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>989</width>
+    <height>1356</height>
+   </rect>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+            QWidget#appSurface { background: #f3f7fb; color: #1b3452; }
+            QGroupBox { background: #ffffff; border: 1px solid #d8e4f0;
+                        border-radius: 6px; margin-top: 13px; padding: 5px 7px 5px;
+                        font-weight: 600; color: #174675; }
+            QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left;
+                               left: 10px; top: 2px; padding: 0 4px; color: #164f8a; }
+            QLineEdit, QDoubleSpinBox, QComboBox { background: white; border: 1px solid #b9cce1;
+                       border-radius: 4px; min-height: 22px; padding: 1px 4px; color: #243d58; }
+            QDoubleSpinBox:disabled { background: #e3e8ee; border-color: #c4cdd8; color: #8190a1; }
+            QDoubleSpinBox::up-button:disabled, QDoubleSpinBox::down-button:disabled {
+                       background: #dce2e9; }
+            QDoubleSpinBox:focus, QComboBox:focus { border: 2px solid #258aca; }
+            QPushButton { background: #eaf3fc; color: #144b83; border: 1px solid #9ebfe2;
+                          border-radius: 5px; min-height: 24px; padding: 2px 8px; font-weight: 600; }
+            QPushButton:hover { background: #d9ecff; }
+            QPushButton:disabled { color: #8795a5; background: #eff2f5; }
+            QPlainTextEdit { background: white; color: #243d58; }
+
+            /* Small, borderless steppers matching the outlined dropdown chevron. */
+            QDoubleSpinBox { padding-right: 18px; }
+            QDoubleSpinBox::up-button, QDoubleSpinBox::down-button {
+                subcontrol-origin: border;
+                width: 16px;
+                background: transparent;
+                border: none;
+            }
+            QDoubleSpinBox::up-button { subcontrol-position: top right; }
+            QDoubleSpinBox::down-button { subcontrol-position: bottom right; }
+            QDoubleSpinBox::up-arrow {
+                image: url(src/resources/icons/spin-chevron-up.png);
+                width: 12px; height: 8px;
+            }
+            QDoubleSpinBox::down-arrow {
+                image: url(src/resources/icons/spin-chevron-down.png);
+                width: 12px; height: 8px;
+            }
+            QDoubleSpinBox::up-arrow:disabled {
+                image: url(src/resources/icons/spin-chevron-up-disabled.png);
+            }
+            QDoubleSpinBox::down-arrow:disabled {
+                image: url(src/resources/icons/spin-chevron-down-disabled.png);
+            }
+            QPushButton#guide_button {
+                background: #f7fafc;
+                border: 1px solid #c1d4e8;
+                border-radius: 5px;
+                min-height: 0px;
+                padding: 0px;
+            }
+            QPushButton#guide_button:hover {
+                background: #e5f1fc;
+                border-color: #80b0dd;
+            }
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing">
+    <number>4</number>
+   </property>
+   <property name="leftMargin">
+    <number>10</number>
+   </property>
+   <property name="topMargin">
+    <number>10</number>
+   </property>
+   <property name="rightMargin">
+    <number>10</number>
+   </property>
+   <property name="bottomMargin">
+    <number>4</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="titleLayout">
+     <property name="spacing">
+      <number>10</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="window_title">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Static &amp; Dynamic Radial O-Ring Calculator</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="headerSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>10</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="version_label">
+       <property name="text">
+        <string>v1.0.0</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="settings_button">
+       <property name="minimumSize">
+        <size>
+         <width>27</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>27</width>
+         <height>27</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Settings, engineering references and application information</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="setup_group">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Application setup</string>
+     </property>
+     <layout class="QGridLayout" name="setupLayout">
+      <property name="leftMargin">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>7</number>
+      </property>
+      <property name="rightMargin">
+       <number>7</number>
+      </property>
+      <property name="bottomMargin">
+       <number>7</number>
+      </property>
+      <property name="spacing">
+       <number>3</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="selector_application_label">
+        <property name="text">
+         <string>Application</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QComboBox" name="application">
+        <property name="minimumSize">
+         <size>
+          <width>184</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>184</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="selector_configuration_label">
+        <property name="text">
+         <string>Gland type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="configuration">
+        <property name="minimumSize">
+         <size>
+          <width>184</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>184</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="selector_groove_type_label">
+        <property name="text">
+         <string>Groove profile</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QComboBox" name="groove_type">
+        <property name="minimumSize">
+         <size>
+          <width>184</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>184</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="selector_entry_mode_stack_label">
+        <property name="text">
+         <string>Groove dimension</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QStackedWidget" name="entry_mode_stack">
+        <property name="minimumSize">
+         <size>
+          <width>184</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>184</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="currentIndex">
+         <number>1</number>
+        </property>
+        <widget class="QComboBox" name="entry_mode"/>
+        <widget class="QComboBox" name="female_entry_mode"/>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <layout class="QHBoxLayout" name="oringHeaderLayout">
+        <property name="spacing">
+         <number>3</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="selector_ring_size_label">
+          <property name="text">
+           <string>O-ring selection</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="oringHeaderSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>4</width>
+            <height>12</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QFrame" name="match_slot">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Shape::NoFrame</enum>
+          </property>
+          <layout class="QVBoxLayout" name="matchLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="match_note">
+             <property name="toolTip">
+              <string>Manual dimensions match a standard AS568 size</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="4">
+       <layout class="QHBoxLayout" name="oringGuideLayout">
+        <property name="spacing">
+         <number>3</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QComboBox" name="ring_size">
+          <property name="minimumSize">
+           <size>
+            <width>184</width>
+            <height>26</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>26</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="oring_info_edge_spacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="guide_button">
+          <property name="minimumSize">
+           <size>
+            <width>27</width>
+            <height>2</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>27</width>
+            <height>27</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Open O-Ring Size Reference</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>src/resources/icons/info-guide.png</normaloff>src/resources/icons/info-guide.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>18</width>
+            <height>18</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="contentLayout">
+     <property name="spacing">
+      <number>9</number>
+     </property>
+     <item>
+      <widget class="QFrame" name="input_panel">
+       <property name="minimumSize">
+        <size>
+         <width>466</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>466</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::NoFrame</enum>
+       </property>
+       <layout class="QVBoxLayout" name="inputLayout">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="male_group">
+          <property name="minimumSize">
+           <size>
+            <width>456</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>456</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Component dimensions</string>
+          </property>
+          <layout class="QVBoxLayout" name="maleLayout">
+           <property name="spacing">
+            <number>3</number>
+           </property>
+           <property name="leftMargin">
+            <number>6</number>
+           </property>
+           <property name="topMargin">
+            <number>6</number>
+           </property>
+           <property name="rightMargin">
+            <number>6</number>
+           </property>
+           <property name="bottomMargin">
+            <number>6</number>
+           </property>
+           <item>
+            <layout class="QFormLayout" name="male_common_form">
+             <property name="horizontalSpacing">
+              <number>2</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>2</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item row="0" column="1">
+              <widget class="QFrame" name="dim_male_cylinder_id">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_male_cylinder_id">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_cylinder_id_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_male_cylinder_id">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_cylinder_id_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_male_cylinder_id">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Cylinder ID</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QStackedWidget" name="gland_entry">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <widget class="QWidget" name="male_direct_page">
+              <layout class="QFormLayout" name="male_direct_form">
+               <property name="horizontalSpacing">
+                <number>2</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>2</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_male_direct_rod_od">
+                 <property name="minimumSize">
+                  <size>
+                   <width>130</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>130</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Piston OD</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QFrame" name="dim_male_direct_rod_od">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::NoFrame</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="hbox_male_direct_rod_od">
+                  <property name="spacing">
+                   <number>4</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="AdaptiveSpinBox" name="spin_male_direct_rod_od_nom">
+                    <property name="minimumSize">
+                     <size>
+                      <width>130</width>
+                      <height>26</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="keyboardTracking">
+                     <bool>false</bool>
+                    </property>
+                    <property name="suffix">
+                     <string> in</string>
+                    </property>
+                    <property name="decimals">
+                     <number>6</number>
+                    </property>
+                    <property name="minimum">
+                     <double>0.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>10000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.001000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="plusminus_male_direct_rod_od">
+                    <property name="text">
+                     <string>±</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignmentFlag::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="AdaptiveSpinBox" name="spin_male_direct_rod_od_tol">
+                    <property name="minimumSize">
+                     <size>
+                      <width>130</width>
+                      <height>26</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="keyboardTracking">
+                     <bool>false</bool>
+                    </property>
+                    <property name="suffix">
+                     <string> in</string>
+                    </property>
+                    <property name="decimals">
+                     <number>6</number>
+                    </property>
+                    <property name="maximum">
+                     <double>10000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.001000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="male_depth_page">
+              <layout class="QFormLayout" name="male_depth_form">
+               <property name="horizontalSpacing">
+                <number>2</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>2</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_male_rod_od">
+                 <property name="minimumSize">
+                  <size>
+                   <width>130</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>130</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Piston OD</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QFrame" name="dim_male_rod_od">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::NoFrame</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="hbox_male_rod_od">
+                  <property name="spacing">
+                   <number>4</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="AdaptiveSpinBox" name="spin_male_rod_od_nom">
+                    <property name="minimumSize">
+                     <size>
+                      <width>130</width>
+                      <height>26</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="keyboardTracking">
+                     <bool>false</bool>
+                    </property>
+                    <property name="suffix">
+                     <string> in</string>
+                    </property>
+                    <property name="decimals">
+                     <number>6</number>
+                    </property>
+                    <property name="minimum">
+                     <double>0.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>10000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.001000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="plusminus_male_rod_od">
+                    <property name="text">
+                     <string>±</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignmentFlag::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="AdaptiveSpinBox" name="spin_male_rod_od_tol">
+                    <property name="minimumSize">
+                     <size>
+                      <width>130</width>
+                      <height>26</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="keyboardTracking">
+                     <bool>false</bool>
+                    </property>
+                    <property name="suffix">
+                     <string> in</string>
+                    </property>
+                    <property name="decimals">
+                     <number>6</number>
+                    </property>
+                    <property name="maximum">
+                     <double>10000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.001000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="female_group">
+          <property name="minimumSize">
+           <size>
+            <width>456</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>456</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Component dimensions</string>
+          </property>
+          <layout class="QVBoxLayout" name="femaleLayout">
+           <property name="spacing">
+            <number>3</number>
+           </property>
+           <property name="leftMargin">
+            <number>6</number>
+           </property>
+           <property name="topMargin">
+            <number>6</number>
+           </property>
+           <property name="rightMargin">
+            <number>6</number>
+           </property>
+           <property name="bottomMargin">
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QStackedWidget" name="female_gland_entry">
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <widget class="QWidget" name="female_direct_page">
+              <layout class="QFormLayout" name="female_direct_form">
+               <property name="horizontalSpacing">
+                <number>2</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>2</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_female_direct_cylinder_id">
+                 <property name="minimumSize">
+                  <size>
+                   <width>130</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>130</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Cylinder ID</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QFrame" name="dim_female_direct_cylinder_id">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::NoFrame</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="hbox_female_direct_cylinder_id">
+                  <property name="spacing">
+                   <number>4</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="AdaptiveSpinBox" name="spin_female_direct_cylinder_id_nom">
+                    <property name="minimumSize">
+                     <size>
+                      <width>130</width>
+                      <height>26</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="keyboardTracking">
+                     <bool>false</bool>
+                    </property>
+                    <property name="suffix">
+                     <string> in</string>
+                    </property>
+                    <property name="decimals">
+                     <number>6</number>
+                    </property>
+                    <property name="minimum">
+                     <double>0.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>10000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.001000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="plusminus_female_direct_cylinder_id">
+                    <property name="text">
+                     <string>±</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignmentFlag::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="AdaptiveSpinBox" name="spin_female_direct_cylinder_id_tol">
+                    <property name="minimumSize">
+                     <size>
+                      <width>130</width>
+                      <height>26</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="keyboardTracking">
+                     <bool>false</bool>
+                    </property>
+                    <property name="suffix">
+                     <string> in</string>
+                    </property>
+                    <property name="decimals">
+                     <number>6</number>
+                    </property>
+                    <property name="maximum">
+                     <double>10000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.001000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="female_depth_page">
+              <layout class="QFormLayout" name="female_depth_form">
+               <property name="horizontalSpacing">
+                <number>2</number>
+               </property>
+               <property name="verticalSpacing">
+                <number>2</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_female_cylinder_id">
+                 <property name="minimumSize">
+                  <size>
+                   <width>130</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>130</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Cylinder ID</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QFrame" name="dim_female_cylinder_id">
+                 <property name="frameShape">
+                  <enum>QFrame::Shape::NoFrame</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="hbox_female_cylinder_id">
+                  <property name="spacing">
+                   <number>4</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="AdaptiveSpinBox" name="spin_female_cylinder_id_nom">
+                    <property name="minimumSize">
+                     <size>
+                      <width>130</width>
+                      <height>26</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="keyboardTracking">
+                     <bool>false</bool>
+                    </property>
+                    <property name="suffix">
+                     <string> in</string>
+                    </property>
+                    <property name="decimals">
+                     <number>6</number>
+                    </property>
+                    <property name="minimum">
+                     <double>0.000000000000000</double>
+                    </property>
+                    <property name="maximum">
+                     <double>10000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.001000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="plusminus_female_cylinder_id">
+                    <property name="text">
+                     <string>±</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignmentFlag::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="AdaptiveSpinBox" name="spin_female_cylinder_id_tol">
+                    <property name="minimumSize">
+                     <size>
+                      <width>130</width>
+                      <height>26</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="keyboardTracking">
+                     <bool>false</bool>
+                    </property>
+                    <property name="suffix">
+                     <string> in</string>
+                    </property>
+                    <property name="decimals">
+                     <number>6</number>
+                    </property>
+                    <property name="maximum">
+                     <double>10000.000000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.001000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.000000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+           <item>
+            <layout class="QFormLayout" name="female_common_form">
+             <property name="horizontalSpacing">
+              <number>2</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>2</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_female_rod_od">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Piston OD</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QFrame" name="dim_female_rod_od">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_female_rod_od">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_female_rod_od_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_female_rod_od">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_female_rod_od_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="shared_group">
+          <property name="minimumSize">
+           <size>
+            <width>456</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>456</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Groove dimensions</string>
+          </property>
+          <layout class="QVBoxLayout" name="sharedLayout">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <property name="leftMargin">
+            <number>6</number>
+           </property>
+           <property name="topMargin">
+            <number>6</number>
+           </property>
+           <property name="rightMargin">
+            <number>6</number>
+           </property>
+           <property name="bottomMargin">
+            <number>6</number>
+           </property>
+           <item>
+            <layout class="QFormLayout" name="shared_form">
+             <property name="horizontalSpacing">
+              <number>2</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>2</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_shared_width">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Width</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QFrame" name="dim_shared_width">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_shared_width">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_width_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_shared_width">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_width_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_shared_radius">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Base radius</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QFrame" name="dim_shared_radius">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_shared_radius">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_radius_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_shared_radius">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_radius_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_shared_entrance_radius">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Opening radius</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QFrame" name="dim_shared_entrance_radius">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_shared_entrance_radius">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_entrance_radius_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_shared_entrance_radius">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_entrance_radius_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_shared_rect_angle">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Wall angle</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <widget class="QFrame" name="dim_shared_rect_angle">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_shared_rect_angle">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_rect_angle_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> deg</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>-74.998999999999995</double>
+                  </property>
+                  <property name="maximum">
+                   <double>74.998999999999995</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_shared_rect_angle">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_rect_angle_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> deg</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="label_shared_angle">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Dovetail angle</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
+              <widget class="QFrame" name="dim_shared_angle">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_shared_angle">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_angle_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> deg</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_shared_angle">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_shared_angle_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> deg</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_male_gland_od">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>OD</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QFrame" name="dim_male_gland_od">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_male_gland_od">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_gland_od_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_male_gland_od">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_gland_od_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_male_groove_depth">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Depth</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QFrame" name="dim_male_groove_depth">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_male_groove_depth">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_groove_depth_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_male_groove_depth">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_groove_depth_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_female_gland_id">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>ID</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QFrame" name="dim_female_gland_id">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_female_gland_id">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_female_gland_id_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_female_gland_id">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_female_gland_id_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_female_groove_depth">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Depth</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QFrame" name="dim_female_groove_depth">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_female_groove_depth">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_female_groove_depth_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_female_groove_depth">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_female_groove_depth_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="shared_note">
+             <property name="text">
+              <string>Width is measured between theoretical sharp intersections (opening radii excluded where present).</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="ring_group">
+          <property name="minimumSize">
+           <size>
+            <width>456</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>456</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>O-ring dimensions</string>
+          </property>
+          <layout class="QVBoxLayout" name="ringLayout">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <property name="leftMargin">
+            <number>6</number>
+           </property>
+           <property name="topMargin">
+            <number>6</number>
+           </property>
+           <property name="rightMargin">
+            <number>6</number>
+           </property>
+           <property name="bottomMargin">
+            <number>6</number>
+           </property>
+           <item>
+            <layout class="QFormLayout" name="ring_form">
+             <property name="horizontalSpacing">
+              <number>2</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>2</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_male_ring_id">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>ID</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QFrame" name="dim_male_ring_id">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_male_ring_id">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_ring_id_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_male_ring_id">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_ring_id_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_male_section">
+               <property name="minimumSize">
+                <size>
+                 <width>130</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Cross-section</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QFrame" name="dim_male_section">
+               <property name="frameShape">
+                <enum>QFrame::Shape::NoFrame</enum>
+               </property>
+               <layout class="QHBoxLayout" name="hbox_male_section">
+                <property name="spacing">
+                 <number>4</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_section_nom">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="minimum">
+                   <double>0.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="plusminus_male_section">
+                  <property name="text">
+                   <string>±</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignmentFlag::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="AdaptiveSpinBox" name="spin_male_section_tol">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>26</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="keyboardTracking">
+                   <bool>false</bool>
+                  </property>
+                  <property name="suffix">
+                   <string> in</string>
+                  </property>
+                  <property name="decimals">
+                   <number>6</number>
+                  </property>
+                  <property name="maximum">
+                   <double>10000.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="input_bottom_stretch">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="guide_panel">
+       <property name="frameShape">
+        <enum>QFrame::Shape::NoFrame</enum>
+       </property>
+       <layout class="QVBoxLayout" name="guidePanelLayout">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="drawing_group">
+          <property name="title">
+           <string>Dimension guide</string>
+          </property>
+          <layout class="QVBoxLayout" name="drawingLayout">
+           <property name="spacing">
+            <number>4</number>
+           </property>
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QFrame" name="guide_placeholder">
+             <property name="frameShape">
+              <enum>QFrame::Shape::StyledPanel</enum>
+             </property>
+             <layout class="QVBoxLayout" name="placeholderLayout">
+              <property name="spacing">
+               <number>5</number>
+              </property>
+              <property name="leftMargin">
+               <number>10</number>
+              </property>
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="placeholder_title">
+                <property name="text">
+                 <string>Dimension drawing to be refined</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="placeholder_note">
+                <property name="text">
+                 <string>Reserved for the male/female gland reference sketch.</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="overview_box">
+     <property name="title">
+      <string>Dimensional screening results</string>
+     </property>
+     <layout class="QVBoxLayout" name="overviewLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="leftMargin">
+       <number>8</number>
+      </property>
+      <property name="topMargin">
+       <number>8</number>
+      </property>
+      <property name="rightMargin">
+       <number>8</number>
+      </property>
+      <property name="bottomMargin">
+       <number>4</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="overview_table">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Shape::NoFrame</enum>
+        </property>
+        <layout class="QGridLayout" name="overview_grid">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>9</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <property name="spacing">
+          <number>4</number>
+         </property>
+         <item row="0" column="1">
+          <widget class="QLabel" name="overview_header_1">
+           <property name="text">
+            <string>Minimum</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="overview_header_2">
+           <property name="text">
+            <string>Nominal</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="overview_header_3">
+           <property name="text">
+            <string>Maximum</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5">
+          <widget class="QLabel" name="overview_header_4">
+           <property name="text">
+            <string>Status</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="overview_squeeze_name">
+           <property name="text">
+            <string>Squeeze</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="overview_squeeze_1">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="overview_squeeze_2">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLabel" name="overview_squeeze_3">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="5">
+          <widget class="QLabel" name="overview_squeeze_4">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="overview_fit_name">
+           <property name="text">
+            <string>Fit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="overview_fit_1">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="overview_fit_2">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="overview_fit_3">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="5">
+          <widget class="QLabel" name="overview_fit_4">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="overview_fill_name">
+           <property name="text">
+            <string>Gland fill</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="overview_fill_1">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLabel" name="overview_fill_2">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QLabel" name="overview_fill_3">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="5">
+          <widget class="QLabel" name="overview_fill_4">
+           <property name="text">
+            <string>—</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="overview_header_0">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="overview_note">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="actionLayout">
+     <property name="spacing">
+      <number>8</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="trace_button">
+       <property name="minimumSize"><size><width>152</width><height>0</height></size></property>
+       <property name="maximumSize"><size><width>152</width><height>16777215</height></size></property>
+       <property name="text">
+        <string>Inspect results</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="reset_button">
+       <property name="minimumSize"><size><width>152</width><height>0</height></size></property>
+       <property name="maximumSize"><size><width>152</width><height>16777215</height></size></property>
+       <property name="text"><string>Reset dimensions</string></property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="actionSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>30</width>
+         <height>10</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="snapshot_button">
+       <property name="minimumSize"><size><width>152</width><height>0</height></size></property>
+       <property name="maximumSize"><size><width>152</width><height>16777215</height></size></property>
+       <property name="text">
+        <string>Copy snapshot</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="save_snapshot_button">
+       <property name="minimumSize"><size><width>152</width><height>0</height></size></property>
+       <property name="maximumSize"><size><width>152</width><height>16777215</height></size></property>
+       <property name="text">
+        <string>Save PNG…</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AdaptiveSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>src.ui.main_window</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ui version="4.0">
+ <class>InspectResults</class>
+ <widget class="QDialog" name="InspectResults">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Inspect Results | Static &amp; Dynamic Radial O-Ring Calculator</string>
+  </property>
+  <layout class="QVBoxLayout" name="inspectionLayout">
+   <property name="spacing">
+    <number>8</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="inspect_heading">
+     <property name="text">
+      <string>Inspect Results</string>
+     </property>
+     <property name="styleSheet">
+      <string>font-size:17px; font-weight:700; color:#164f8a;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="inspect_heading_rule">
+     <property name="frameShape">
+      <enum>QFrame::Shape::HLine</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="inspect_app_name">
+     <property name="text">
+      <string>Static &amp; Dynamic Radial O-Ring Calculator</string>
+     </property>
+     <property name="styleSheet">
+      <string>color:#71849a; font-size:11px;</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="result_tabs">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tolerance_tab">
+      <attribute name="title">
+       <string>Tolerance cases</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="toleranceTabLayout">
+       <item>
+        <layout class="QHBoxLayout" name="traceSelectorsLayout">
+         <property name="spacing">
+          <number>14</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="trace_measure_column">
+           <property name="spacing">
+            <number>4</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="measure_label">
+             <property name="text">
+              <string>Result</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="trace_measure">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>140</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="trace_condition_column">
+           <property name="spacing">
+            <number>4</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="condition_label">
+             <property name="text">
+              <string>Condition</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="trace_condition">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>140</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="trace_precision_column">
+           <property name="spacing">
+            <number>4</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="precision_label">
+             <property name="text">
+              <string>Precision</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="trace_precision">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>140</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTextBrowser" name="trace_text">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="trace_disclaimer">
+         <property name="text">
+          <string />
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="geometry_tab">
+      <attribute name="title">
+       <string>Calculated geometry</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="geometryTabLayout">
+       <item>
+        <widget class="QLabel" name="geometry_help">
+         <property name="text">
+          <string>Derived groove dimensions and areas (minimum / nominal / maximum). Values are calculated from the entered geometry, not repeated inputs. Display precision follows Tolerance cases.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="geometry_table">
+         <property name="columnCount">
+          <number>4</number>
+         </property>
+         <property name="rowCount">
+          <number>0</number>
+         </property>
+         <column>
+          <property name="text">
+           <string>Measurement</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Minimum</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Nominal</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Maximum</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="geometry_note">
+         <property name="text">
+          <string />
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+         <property name="visible">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="inspectionButtons">
+     <item>
+      <spacer name="inspectionSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>10</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="close_inspection">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources />
+ <connections />
+</ui>

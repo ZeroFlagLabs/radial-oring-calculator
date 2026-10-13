@@ -6,26 +6,26 @@ The **Static & Dynamic Radial O-Ring Calculator** provides dimensional screening
 
 For supported piston (male) and cylinder (female) configurations, it evaluates **minimum, nominal and maximum** radial squeeze, installed fit (piston ID stretch or cylinder OD interference), and gland fill. The **Inspect Results** window shows equations, substitutions and supporting explanations.
 
-**PASS** means the evaluated dimensions meet the selected screening criteria. **REVIEW** means engineering evaluation is required; it does not automatically mean the seal will not function. **INVALID** means the inputs or geometry could not be evaluated.
+**PASS** means the evaluated dimensions meet the selected screening criteria. **REVIEW** requires engineering evaluation; it does not automatically mean the seal cannot function. **INVALID** means the inputs or geometry could not be evaluated.
 
 ## Two-dimensional gland geometry
 
-Available gland area is a **two-dimensional (2D) representation** of the machined groove cross-section, accounting for relevant wall angles, base radii and opening radii, plus the rectangular radial-clearance area extending from the actual groove opening to the opposing component surface. It is not a calculation of complete three-dimensional annular seal volume.
+Available gland area is a **two-dimensional (2D) representation** of the machined groove cross-section, accounting for relevant wall angles, base radii and opening radii, plus the rectangular radial-clearance area extending from the actual groove opening to the opposing component surface. It is not the full three-dimensional annular seal volume.
 
-The calculator applies the documented O-ring installation models and tolerance evaluations. In piston squeeze calculations, the manufacturer's published empirical section-reduction equations have a transition at **3% ID stretch**; the calculator considers both sides of that transition when the stretch interval crosses it. See **Settings → Assumptions**, **Settings → References**, and **Inspect Results** for the method and relevant references.
+For piston squeeze, the manufacturer's published section-reduction equations transition at **3% ID stretch**. The calculator evaluates both sides where the permitted stretch range crosses that transition. See **Settings → Assumptions**, **Settings → References** and **Inspect Results** for the documented method.
 
 ## Outside the dimensional screening
 
-Users must independently assess, as relevant, pressure rating, extrusion clearance, backup rings, elastomer materials, temperature, thermal expansion, compatibility with fluids and gases, lubrication, friction, dynamic duty and speed, surface finish, hardness, pressure cycling, rapid gas decompression, installation damage and groove manufacture.
+Evaluate independently as applicable: pressure and extrusion clearance, backup rings, elastomer materials and compatibility, temperature and thermal expansion, surface finish and hardness, lubrication and friction, dynamic duty/speed, pressure cycling, rapid gas decompression, installation damage and manufacturing constraints.
 
-Dimension Guides explain the dimensional datums; they are **not to scale**.
+The eight Dimension Guides identify relevant datums; **they are not to scale**.
 
-## Validation and release status
+## Validation evidence and limitations
 
-The pre-release evaluation included six comparisons with historical Mathcad examples, three independent SolidWorks 2D double-dovetail area checks, and regression checks for the 3% piston-stretch transition. Differences in methodology, particularly piston installed-section calculations and female-groove fit, are explained in the application. Those comparisons support the evaluated cases, not every conceivable seal configuration.
+Pre-release evaluation included comparisons against **six historic Mathcad examples**, **three independent SolidWorks 2D double-dovetail area checks**, and the **3% stretch transition** regression cases. Differences in methodology, notably installed-section handling and female-groove interference, are explained within the application. The evaluated examples do not prove every possible seal configuration.
 
-Before the public v1.0.0 release, the final Windows GUI regression suite, packaged executable, embedded assets, links, notices and distribution rights must be checked. Until a GitHub Release appears, no downloadable production executable is claimed.
+Before publishing v1.0.0, complete the Windows GUI regression suite, portable EXE and embedded-resource smoke tests, links and updater checks, and third-party source/data redistribution review.
 
 ## References and licensing
 
-The in-app References tab identifies the Parker, Freudenberg and James Walker publications used when developing the methods. These publications are not provided for download from this repository. Third-party libraries and reference data retain their own terms and rights. The application source is licensed under MIT; see [LICENSE](../LICENSE).
+The in-app References tab cites Parker, Freudenberg and James Walker engineering publications. Publisher PDFs and private engineering documents are **not** included in the application or public repository. The application's original source is MIT licensed; third-party libraries and data have separate terms. See [LICENSE](../LICENSE) and [third-party release checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
