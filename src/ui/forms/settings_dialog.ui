@@ -219,7 +219,7 @@ The reference publications are not distributed with the application.</string></p
        <item>
         <widget class="QLabel" name="about_text">
          <property name="text">
-          <string>ZeroFlagLabs Static &amp; Dynamic Radial O-Ring Calculator  ·  v1.0.0
+          <string>ZeroFlagLabs Static &amp; Dynamic Radial O-Ring Calculator  ·  v1.0.1
 
 Dimensional screening for static and dynamic (reciprocating) radial O-ring seals.
 

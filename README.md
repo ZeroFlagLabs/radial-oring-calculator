@@ -1,6 +1,6 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs** · Windows desktop application · v1.0.0
+**ZeroFlagLabs** · Windows desktop application · v1.0.1
 
 A desktop application for **dimensional screening of static and reciprocating dynamic radial O-ring seals**. Supports piston (male) and cylinder (female) arrangements with rectangular and symmetrical double-dovetail gland profiles.
 
@@ -19,10 +19,9 @@ A desktop application for **dimensional screening of static and reciprocating dy
 
 ## Download for Windows
 
-**Only one file is needed:** [**Radial-ORing-Calculator-v1.0.0-Windows-Portable.zip**](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/latest).
-Download that ZIP, extract the entire folder and run
-`Static & Dynamic Radial O-Ring Calculator v1.0.0.exe`. Keep `_internal` with the EXE. No installer, Python or other
-downloads are required.
+**Only one file is needed:** [**Radial-ORing-Calculator-v1.0.1-Windows-Portable.zip**](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/latest).
+Download that ZIP, extract the **single EXE** and run
+`Static & Dynamic Radial O-Ring Calculator v1.0.1.exe`. No `_internal` folder, installer, Python or other downloads are required.
 
 **Unsigned application:** Microsoft Defender SmartScreen may display
 “Windows protected your PC” on first launch. If the ZIP came from this official
@@ -57,7 +56,7 @@ The app uses **PySide6** (Qt for Python), not PyQt6. Qt Designer `.ui` source fi
 
 ## Build (Windows, developer use)
 
-The approved **one-folder** Windows candidate was generated with PyInstaller 6.22.3 and PySide6 6.12.0. See [development/release guidance](docs/DEVELOPMENT.md) and [Windows packaging](docs/WINDOWS_PACKAGING.md). A separate, older one-file build script remains available for development; **do not treat that as the approved public distribution format**.
+The preferred **one-EXE** v1.0.1 Windows ZIP uses PyInstaller 6.22.3 and PySide6 6.12.0. See [one-file rebuild and LGPL information](docs/ONEFILE_REBUILD_AND_LGPL.md). The earlier v1.0.0 one-folder release remains available.
 
 ## Engineering scope
 

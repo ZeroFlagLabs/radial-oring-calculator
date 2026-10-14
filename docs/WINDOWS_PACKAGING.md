@@ -1,3 +1,5 @@
+> **Current Windows format (v1.0.1):** One ZIP containing one standalone EXE. Rebuild and Qt relinking details: [ONEFILE_REBUILD_AND_LGPL.md](ONEFILE_REBUILD_AND_LGPL.md). The description below records the earlier v1.0.0 one-folder build.
+
 # Windows packaging and release notes
 
 This app has a tested **one-folder** PyInstaller v1.0.0 build. Use the bundled Qt libraries and plugins with the executable, not the EXE by itself.
