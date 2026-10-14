@@ -4,8 +4,6 @@
 
 A desktop application for **dimensional screening of static and reciprocating dynamic radial O-ring seals**. Supports piston (male) and cylinder (female) arrangements with rectangular and symmetrical double-dovetail gland profiles.
 
-> **Publication preparation:** v1.0.0 has passed 231 Windows regression tests and standalone tests in both one-file and one-folder configurations. The recommended **public download is the one-folder ZIP**, after third-party redistribution compliance is completed. A GitHub Release is not available until the owner publishes it.
-
 ## Features
 
 - Static and reciprocating dynamic radial O-ring configurations.
@@ -19,16 +17,21 @@ A desktop application for **dimensional screening of static and reciprocating dy
 - **PASS**, **REVIEW** and invalid-input indications.
 - Optional GitHub update checks; the application does not auto-install releases.
 
-## Download and run
+## Download for Windows
 
-When published, the recommended Windows download will appear on [GitHub Releases](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases).
+**Only one file is needed:** [**Radial-ORing-Calculator-v1.0.0-Windows-Portable.zip**](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/latest).
+Download that ZIP, extract the entire folder and run
+`Static & Dynamic Radial O-Ring Calculator v1.0.0.exe`. Keep `_internal` with the EXE. No installer, Python or other
+downloads are required.
 
-1. Download the **v1.0.0 Windows portable ZIP**.
-2. Extract the entire ZIP to a folder you can write to.
-3. Run **Static & Dynamic Radial O-Ring Calculator v1.0.0.exe** inside the extracted application folder.
-4. **Keep the EXE and its `_internal` folder together.** Python need not be installed.
+**Unsigned application:** Microsoft Defender SmartScreen may display
+“Windows protected your PC” on first launch. If the ZIP came from this official
+GitHub repository and you trust it, choose **More info > Run anyway** where
+Windows offers that option. Smart App Control or employer policies may prevent
+running unsigned programs. Do not disable security protections to proceed.
 
-Check the SHA-256 file supplied with the release to verify the archive. There is no installer or automatic update installation. The application intentionally starts with zero-valued numeric inputs rather than a sample design.
+The separate checksum and Qt/PySide6 source archives are optional verification
+and open-source licensing resources, **not prerequisites for using the app**.
 
 ## Screenshots
 

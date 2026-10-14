@@ -29,8 +29,8 @@ The audited v1.0.0 bundle initially included unused Qt Virtual Keyboard componen
 
 A historical review-only script and its manifest are under `tools/release-audit/`, provided for reproducibility for that precise build. They do not automatically establish redistribution compliance for any different build.
 
-## Publication gate
+## Published ZIP and component notices
 
-Before making the ZIP public, include MIT, LGPLv3 and GPLv3 licence texts, Python and other applicable third-party notices, and a **genuine corresponding-source and compatible-library replacement arrangement for Qt/PySide6**. See [Third-party release checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
+The v1.0.0 Windows portable ZIP provides the MIT, LGPLv3 and GPLv3 licence texts, Python and OpenSSL licence texts, `THIRD_PARTY_NOTICES.md`, `THIRD_PARTY_COMPONENTS.md`, and `QT_SOURCE_AND_REPLACEMENT.md`. The same GitHub Release carries the matching Qt 6.12.0 and PySide6 6.12.0 source archives and their checksums. These licence/source assets are **not needed to run the application**. For the distribution scope and applicable third-party terms, see the [Third-party release checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
 
 Do not upload the original private `references/` or `design-assets/` folders, the `venv/`, `.spec` files, build directories, or internal company/customer material.

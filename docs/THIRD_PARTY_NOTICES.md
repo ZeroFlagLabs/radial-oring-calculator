@@ -14,7 +14,7 @@ Built using **PySide6 6.12.0**, **PySide6-Essentials 6.12.0**, **PySide6-Addons 
 
 The approved one-folder candidate excludes the two unnecessary Qt Virtual Keyboard binaries identified in the v1.0.0 audit. The bundled Qt libraries remain independently licensed. Their recipients retain applicable LGPL rights, including modification and replacement of compatible dynamic libraries. The LGPLv3 and GPLv3 texts are provided under `licenses/`; this does not alone discharge every LGPL requirement.
 
-**Qt/PySide6 corresponding-source supply or valid written-offer details must be finalised before the public binary release.** See [licensing checklist](THIRD_PARTY_RELEASE_CHECKLIST.md). Do not claim this offer is active until the source and delivery procedure have actually been secured.
+Matching Qt 6.12.0 and PySide6/Shiboken6 6.12.0 source archives are provided as distributor-hosted companion assets on the [v1.0.0 GitHub Release](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v1.0.0), together with SHA-256 checksums. The Windows ZIP includes `QT_SOURCE_AND_REPLACEMENT.md` describing how recipients can replace compatible Qt/PySide6 libraries. The source archives are **not** required to run the application. See [licensing checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
 
 Qt references: https://doc.qt.io/qt-6/licensing.html ; https://doc.qt.io/qt-6/licenses-used-in-qt.html ; https://doc.qt.io/qtforpython-6/licenses.html ; https://www.qt.io/development/open-source-lgpl-obligations
 
@@ -28,4 +28,4 @@ The frozen Windows binary embeds the Python **3.13.16** runtime, licensed under 
 
 ## Other notices
 
-The final Windows folder must be inspected against Qt's **version-specific third-party licences/SBOM** and any dependencies actually distributed (such as image codecs and cryptographic libraries). Only required component licences apply; don't ascribe one licence to every DLL indiscriminately. This is a release-preparation document, not a legal clearance certificate.
+The Windows ZIP includes `THIRD_PARTY_COMPONENTS.md`, which documents the shipped Qt module/plugin families and references Qt's version-specific third-party attribution index and the corresponding-source archives. It also includes applicable licence texts for LGPLv3, GPLv3, Python and OpenSSL. Individual bundled components retain their own licences, and this notice is not a legal clearance certificate.
