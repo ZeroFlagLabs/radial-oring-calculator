@@ -64,7 +64,7 @@ This is **dimensional screening**, not full seal design qualification. **PASS** 
 
 ## Licence, data and third-party components
 
-Original application code, documentation and project-owned artwork are released under [MIT](LICENSE), **except where separately attributed**. The AS568 dataset is included with the project owner's stated redistribution permission; this does not license the source manufacturers' manuals or standards. The original reference publications are not included.
+Original application code, documentation and project-owned artwork are released under [MIT](LICENSE), **except where separately attributed**. The AS568 dataset is included for reference purposes only and does not grant any rights to reproduce or redistribute the source manufacturers' manuals or standards. The original reference publications are not included.
 
 Qt/PySide6, Python and other bundled components are separately licensed. Read [third-party notices](docs/THIRD_PARTY_NOTICES.md), [redistribution checklist](docs/THIRD_PARTY_RELEASE_CHECKLIST.md) and the licence texts in `licenses/`. Publication of a Windows binary is subject to fulfilling the corresponding-source and replacement obligations of the applicable Qt licences.
 
