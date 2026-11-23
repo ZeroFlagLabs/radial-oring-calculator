@@ -1,4 +1,4 @@
-# Windows packaging - v2.1.0
+# Windows packaging - v2.1.2
 
 The official Windows download is **one ZIP containing one unsigned portable EXE**, retaining the v1.0.1 single-file packaging model.
 
@@ -17,16 +17,16 @@ py -3.13 -m venv venv
 & '.\venv\Scripts\python.exe' .\tools\Build-OneFile-Portable.py --project (Get-Location).Path
 ~~~
 
-This builder creates a PyInstaller one-file specification, removes two unused binaries (`Qt6VirtualKeyboard.dll` and `qtvirtualkeyboardplugin.dll`) after dependency analysis and validates their absence from the executable. The embedded inventory must contain all eight Dimension Guides, the three Qt Designer forms, icons and the AS568 reference JSON.
+This builder creates a PyInstaller one-file specification, removes two unused binaries (`Qt6VirtualKeyboard.dll` and `qtvirtualkeyboardplugin.dll`) after dependency analysis, and validates their absence. **As of v2.1.2, it also explicitly packages and verifies Qt's Windows TLS plugin (`PySide6/plugins/tls/qschannelbackend.dll`)**, required for reliable HTTPS update checks in the portable EXE. The embedded inventory must contain all eight Dimension Guides, the three Qt Designer forms, icons and the AS568 reference JSON.
 
 The output is:
 
-- `Radial-ORing-Calculator-v2.1.0-Windows-Portable.zip` containing only `Static & Dynamic Radial O-Ring Calculator v2.1.0.exe`
-- `Radial-ORing-Calculator-v2.1.0-Windows-Portable.zip.sha256` to verify the ZIP integrity
+- `Radial-ORing-Calculator-v2.1.2-Windows-Portable.zip` containing only `Static & Dynamic Radial O-Ring Calculator v2.1.2.exe`
+- `Radial-ORing-Calculator-v2.1.2-Windows-Portable.zip.sha256` to verify the ZIP integrity
 
 ## Executable smoke testing
 
-Launch the packaged EXE itself on Windows and verify the v2.1.0 version in the main window and Settings, Detail/Simplified switching, male/female examples, squeeze/fit/fill results, all eight guide pictures, Inspector calculations, clipboard/PNG reporting, keyboard navigation, reset, app icon and GitHub update status. Test actual Windows dark mode where available.
+Launch the packaged EXE itself on Windows and verify the v2.1.2 version in the main window and Settings, Detail/Simplified switching, male/female examples, squeeze/fit/fill results, all eight guide pictures, Inspector calculations, clipboard/PNG reporting, keyboard navigation, reset, app icon and GitHub update status. Test actual Windows dark mode where available.
 
 The one-file PyInstaller bootloader extracts its Qt DLLs temporarily at startup. No Python installation, `_internal` directory or installer is needed for normal users.
 

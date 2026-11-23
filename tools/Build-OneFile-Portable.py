@@ -81,6 +81,13 @@ def main():
         cmd += ['--add-data', str(root/src)+';'+target]
     if (root/'src/resources/images').is_dir():
         cmd += ['--add-data', str(root/'src/resources/images')+';src/resources/images']
+    # PyInstaller's PySide6 hook can omit the native Windows Schannel TLS
+    # plugin. Without it the one-file EXE cannot check GitHub over HTTPS.
+    from PySide6 import __file__ as pyside_file
+    schannel = Path(pyside_file).resolve().parent/'plugins/tls/qschannelbackend.dll'
+    if not schannel.is_file():
+        raise RuntimeError('Required Qt Windows Schannel TLS backend is missing: ' + str(schannel))
+    cmd += ['--add-binary', str(schannel)+';PySide6/plugins/tls']
     cmd.append(root/'src/main.py')
     run(cmd, root)
     spec = specdir / (name+'.spec')
@@ -117,6 +124,8 @@ print('Excluded Qt Virtual Keyboard files:', _removed, flush=True)
                    '--list', '--recursive', '--brief', exe], root, True).lower()
     if any(s in listing for s in BLOCKED):
         raise RuntimeError('GPL-only Virtual Keyboard component still present.')
+    if 'qschannelbackend.dll' not in listing:
+        raise RuntimeError('Windows Schannel TLS backend missing from one-file EXE.')
     for s in (*GUIDES,'main_window.ui','settings_dialog.ui','inspect_results.ui',
               'as568_reference.json','settings-gear.png','app-icon.png'):
         if s.lower() not in listing:

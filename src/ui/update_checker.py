@@ -1,15 +1,15 @@
 """Non-blocking, opt-out update notifications for the portable application.
 
-Only GitHub stable Releases metadata is requested. No software is downloaded
-or installed. A missing/unpublished repository is a normal offline-style state.
+Only GitHub's public latest-release redirect is requested. No personal data,
+credentials, software downloads or installation actions are involved. Checking
+the public release redirect avoids the unauthenticated GitHub REST API rate limit.
 """
-import json
 import re
 
 from PySide6.QtCore import QObject, QSettings, QTimer, QUrl, Signal
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 
-from src.app_info import APP_TITLE, APP_VERSION, RELEASE_API_URL, RELEASES_URL
+from src.app_info import APP_TITLE, APP_VERSION, GITHUB_URL, RELEASES_URL
 
 
 class UpdateChecker(QObject):
@@ -41,20 +41,23 @@ class UpdateChecker(QObject):
             return
         self.status = 'Checking GitHub Releases…'
         self.state_changed.emit()
-        request = QNetworkRequest(QUrl(RELEASE_API_URL))
+        request = QNetworkRequest(QUrl(RELEASES_URL))
         request.setRawHeader(b'User-Agent', b'ZeroFlagLabs-ORing-Calculator')
-        request.setRawHeader(b'Accept', b'application/vnd.github+json')
-        self._reply = self.network.get(request)
+        # HEAD follows GitHub's /releases/latest -> /releases/tag/vX.Y.Z
+        # without downloading a release page or consuming REST API quota.
+        request.setAttribute(
+            QNetworkRequest.Attribute.RedirectPolicyAttribute,
+            QNetworkRequest.RedirectPolicy.NoLessSafeRedirectPolicy,
+        )
+        self._reply = self.network.head(request)
         reply = self._reply
         reply.finished.connect(lambda: self._finished(reply))
-        # A parent-owned timer is cancelled with this checker. Unlike a
-        # singleShot closure it cannot call a reply after window destruction.
         timer = QTimer(self)
         timer.setSingleShot(True)
         timer.timeout.connect(reply.abort)
         reply.finished.connect(timer.stop)
         reply.finished.connect(timer.deleteLater)
-        timer.start(7000)
+        timer.start(10000)
 
     def _finished(self, reply):
         if reply is not self._reply:
@@ -67,28 +70,35 @@ class UpdateChecker(QObject):
             if http_status == 404:
                 self.status = 'No published GitHub release found yet.'
             elif reply.error() != QNetworkReply.NetworkError.NoError:
-                self.status = 'Unable to check updates. Try again when online.'
-            else:
-                metadata = json.loads(bytes(reply.readAll()).decode('utf8'))
-                if metadata.get('draft') or metadata.get('prerelease'):
-                    self.status = 'No newer stable release found.'
+                if http_status in (403, 429):
+                    self.status = 'GitHub is limiting update checks. Try again later.'
+                elif http_status:
+                    self.status = f'GitHub update check failed (HTTP {http_status}).'
                 else:
-                    tag = str(metadata.get('tag_name', ''))
+                    self.status = 'Unable to reach GitHub. Check your internet connection.'
+            else:
+                latest = reply.url()
+                prefix = QUrl(GITHUB_URL).path() + '/releases/tag/'
+                if (latest.scheme() != 'https' or
+                        latest.host().lower() != 'github.com' or
+                        not latest.path().startswith(prefix)):
+                    # A repository without stable releases can redirect to its
+                    # general Releases page rather than a specific version.
+                    self.status = 'No published GitHub release found yet.'
+                else:
+                    tag = latest.path()[len(prefix):]
                     version = self._parse_version(tag)
                     current = self._parse_version(APP_VERSION)
                     if version is None or current is None:
                         self.status = 'GitHub release version could not be read.'
                     elif version > current:
-                        url = metadata.get('html_url', '')
-                        if not (isinstance(url, str) and url.startswith('https://github.com/')):
-                            url = RELEASES_URL
-                        self.release_url = url
+                        # The version tag is strictly numeric and safe to
+                        # construct as a canonical, query-free release URL.
+                        self.release_url = GITHUB_URL + '/releases/tag/' + tag
                         self.release_version = tag
                         self.status = f'{tag} available. Open GitHub to download.'
                     else:
                         self.status = 'Up to date.'
-        except (ValueError, KeyError, TypeError, UnicodeError):
-            self.status = 'Unable to read GitHub release information.'
         finally:
             reply.deleteLater()
             self.state_changed.emit()

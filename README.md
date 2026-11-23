@@ -1,14 +1,21 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs | Windows desktop application | v2.1.1**
+**ZeroFlagLabs | Windows desktop application | v2.1.2**
 
 A portable calculator for dimensional screening of **static and reciprocating dynamic radial O-ring seals**. It supports male/piston and female/cylinder glands, rectangular and symmetrical double-dovetail profiles, diameter/depth entry modes, and optional groove radii/angles.
 
 ## Windows download
 
-Download [Radial-ORing-Calculator-v2.1.1-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.1). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.1.exe`. No installer, Python environment or `_internal` folder is required.
+Download [Radial-ORing-Calculator-v2.1.2-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.2). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.2.exe`. No installer, Python environment or `_internal` folder is required.
 
 The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
+
+## v2.1.2 GitHub update-check repair
+
+- The Updates tab checks the **public GitHub Latest Release redirect** instead of the REST API, avoiding GitHub's unauthenticated API rate-limit failures.
+- The Windows single-file build now **bundles Qt's Schannel TLS backend** to support HTTPS checks without requiring separately installed OpenSSL libraries.
+- HTTP failures and connectivity errors have separate explanations; a GitHub rate limit is no longer misreported as an internet outage.
+- No engineering calculations, reports or input layouts were changed.
 
 ## v2.1.1 presentation maintenance
 
@@ -106,12 +113,13 @@ Run the tests:
 & '.\venv\Scripts\python.exe' .\tools\Build-OneFile-Portable.py --project (Get-Location).Path
 ~~~
 
-The v2 package retains the v1.0.1 one-file builder: it embeds all eight guides, UI forms, icons and AS568 data, removes two unnecessary Qt Virtual Keyboard binaries, checks the EXE inventory, and creates an EXE-only ZIP plus SHA-256 checksum.
+The v2 package retains the v1.0.1 one-file builder: it embeds all eight guides, UI forms, icons and AS568 data, removes two unnecessary Qt Virtual Keyboard binaries, explicitly bundles Qt's native Windows TLS backend, checks the EXE inventory, and creates an EXE-only ZIP plus SHA-256 checksum.
 
 See [Windows packaging](docs/WINDOWS_PACKAGING.md), [Qt rebuild and LGPL obligations](docs/ONEFILE_REBUILD_AND_LGPL.md), and [development instructions](docs/DEVELOPMENT.md).
 
 ## Documentation
 
+- [v2.1.2 maintenance release notes](docs/RELEASE_NOTES_v2.1.2.md)
 - [v2.1.1 maintenance release notes](docs/RELEASE_NOTES_v2.1.1.md)
 - [v2.1.0 release notes](docs/RELEASE_NOTES_v2.1.0.md)
 - [v2.0.1 maintenance release notes](docs/RELEASE_NOTES_v2.0.1.md)
