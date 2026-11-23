@@ -1,14 +1,20 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs | Windows desktop application | v2.1.0**
+**ZeroFlagLabs | Windows desktop application | v2.1.1**
 
 A portable calculator for dimensional screening of **static and reciprocating dynamic radial O-ring seals**. It supports male/piston and female/cylinder glands, rectangular and symmetrical double-dovetail profiles, diameter/depth entry modes, and optional groove radii/angles.
 
 ## Windows download
 
-Download [Radial-ORing-Calculator-v2.1.0-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.0). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.0.exe`. No installer, Python environment or `_internal` folder is required.
+Download [Radial-ORing-Calculator-v2.1.1-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.1). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.1.exe`. No installer, Python environment or `_internal` folder is required.
 
 The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
+
+## v2.1.1 presentation maintenance
+
+- **Tolerance status bar:** symmetrical +/- entry now has an explanation, matching the existing Min/Max limits explanation. With mixed input modes, the status bar explains the active limits.
+- **PNG and clipboard:** Minimum, Nominal and Maximum headings and values in the dimensional screening block have moved 50 pixels left, without changing the 101-pixel column-centre spacing, the report canvas or the rest of the layout.
+- The engineering equations, tolerance endpoints, screening criteria, AS568 catalogue, and input geometry have not changed.
 
 ## v2.1.0 feature: symmetrical tolerances or absolute limits
 
@@ -106,6 +112,7 @@ See [Windows packaging](docs/WINDOWS_PACKAGING.md), [Qt rebuild and LGPL obligat
 
 ## Documentation
 
+- [v2.1.1 maintenance release notes](docs/RELEASE_NOTES_v2.1.1.md)
 - [v2.1.0 release notes](docs/RELEASE_NOTES_v2.1.0.md)
 - [v2.0.1 maintenance release notes](docs/RELEASE_NOTES_v2.0.1.md)
 - [v2.0.0 feature release notes](docs/RELEASE_NOTES_v2.0.0.md)

@@ -175,9 +175,9 @@ def _render_image(description, rows, screening, inputs, *, sketch=None,
         # Only a heading divider and row separators: never individual cell boxes.
         headings = [
             (29, 'CHECK', 'left', 0),
-            (207, 'MINIMUM', 'center', 100),
-            (308, 'NOMINAL', 'center', 100),
-            (409, 'MAXIMUM', 'center', 100),
+            (157, 'MINIMUM', 'center', 100),
+            (258, 'NOMINAL', 'center', 100),
+            (359, 'MAXIMUM', 'center', 100),
             (541, 'ACCEPTANCE CRITERION', 'left', 0),
             (852, 'STATUS', 'center', 82),
         ]
@@ -186,7 +186,7 @@ def _render_image(description, rows, screening, inputs, *, sketch=None,
                   colour=MUTED, align=align, width=width)
         _line(painter, 547)
 
-        centers = [257, 358, 459]
+        centers = [207, 308, 409]  # Shift results block 50 px left, preserving 101 px spacing.
         for i, (name, values, check) in enumerate(rows[:3]):
             # Begin directly below the heading rule: each row is exactly
             # 40px high, including the first squeeze row (previously 44px

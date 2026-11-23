@@ -473,16 +473,16 @@ class MethodUiChecks(unittest.TestCase):
                     top_values=[c for c in calls if c[1]==top+2 and c[3]==18]
                     bottom_values=[c for c in calls if c[1]==top+20 and c[3]==18]
                     if top_values:
-                        self.assertEqual([c[0] for c in top_values],[209,310,411])
-                        self.assertEqual([c[0] for c in bottom_values],[209,310,411])
+                        self.assertEqual([c[0] for c in top_values],[159,260,361])
+                        self.assertEqual([c[0] for c in bottom_values],[159,260,361])
                         self.assertEqual((top_values[0][1]+top_values[0][3]/2 +
                                           bottom_values[0][1]+bottom_values[0][3]/2)/2,
                                          top+20)
                     else:
                         self.assertEqual(
                             [c[0] for c in calls if c[1]==top and c[3]==40
-                             and c[0] in (209,310,411)],
-                            [209,310,411])
+                             and c[0] in (159,260,361)],
+                            [159,260,361])
         finally:w.close()
 
     def test_snapshot_squeeze_row_has_same_height_as_other_rows(self):

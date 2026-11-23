@@ -20,6 +20,15 @@ class LiveToleranceConversionTests(unittest.TestCase):
         self.addCleanup(w.close)
         return w
 
+    def test_status_bar_explains_both_tolerance_representations(self):
+        w = self.make_window()
+        row = w.shared_rows['width']
+        self.assertIn('Symmetrical:', w.statusBar().currentMessage())
+        row.mode_limits.click()
+        self.assertIn('Limits:', w.statusBar().currentMessage())
+        row.mode_sym.click()
+        self.assertIn('Symmetrical:', w.statusBar().currentMessage())
+
     def test_all_17_fields_roundtrip_unchanged_without_input_edits(self):
         w = self.make_window()
         rows = [r for group in (w.rows,w.female_rows,w.shared_rows)

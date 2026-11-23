@@ -1403,7 +1403,9 @@ class MainWindow(QMainWindow):
                 'Limits: Nominal results use the midpoint of entered Min/Max; '
                 'all tolerance extrema use the actual entered limits.')
         else:
-            self.statusBar().clearMessage()
+            self.statusBar().showMessage(
+                'Symmetrical: Nominal results use the entered dimensions; '
+                'tolerance extrema use nominal ± tolerance.')
         self._last_inputs = inputs
         self._last_evaluation = evaluation
         self._last_result = output

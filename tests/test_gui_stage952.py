@@ -148,7 +148,7 @@ class Stage952GuiTests(unittest.TestCase):
             self.assertIn('Simplified',dialog.windowTitle())
             dialog.close()
             self.assertIsNotNone(w._snapshot_pixmap())
-            self.assertEqual(w.statusBar().currentMessage(),'')
+            self.assertIn('Symmetrical:', w.statusBar().currentMessage())
             w.calculation_method.setCurrentIndex(0)
             self.app.processEvents()
             self.assertEqual(w._collect(),initial)
