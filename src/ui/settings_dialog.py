@@ -7,6 +7,7 @@ from PySide6.QtUiTools import QUiLoader
 
 from src.app_info import APP_TITLE, APP_VERSION, GITHUB_URL
 from src.ui.update_checker import UpdateChecker
+from src.ui.dialog_style import set_standard_action_width
 
 
 class SettingsDialog:
@@ -22,7 +23,10 @@ class SettingsDialog:
             form.close()
         if not isinstance(self.dialog, QDialog):
             raise RuntimeError('Settings Designer form must be a QDialog')
-        self.dialog.findChild(QDialogButtonBox, 'buttons').rejected.connect(self.dialog.reject)
+        buttons = self.dialog.findChild(QDialogButtonBox, 'buttons')
+        close_button = buttons.button(QDialogButtonBox.StandardButton.Close)
+        set_standard_action_width(close_button)
+        buttons.rejected.connect(self.dialog.reject)
         self.checker = parent.update_checker if parent is not None else UpdateChecker(self.dialog)
         self.check_on_launch = self.dialog.findChild(QCheckBox, 'check_on_launch')
         self.check_now = self.dialog.findChild(QPushButton, 'check_now_button')

@@ -1,84 +1,81 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs** · Windows desktop application · v1.0.1
+**ZeroFlagLabs | Windows desktop application | v2.0.0**
 
-A desktop application for **dimensional screening of static and reciprocating dynamic radial O-ring seals**. Supports piston (male) and cylinder (female) arrangements with rectangular and symmetrical double-dovetail gland profiles.
+A portable calculator for dimensional screening of **static and reciprocating dynamic radial O-ring seals**. It supports male/piston and female/cylinder glands, rectangular and symmetrical double-dovetail profiles, diameter/depth entry modes, and optional groove radii/angles.
+
+## Windows download
+
+Download [Radial-ORing-Calculator-v2.0.0-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.0.0). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.0.0.exe`. No installer, Python environment or `_internal` folder is required.
+
+The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
+
+## Detailed and Simplified calculation methods (new in v2.0.0)
+
+Select **Calculation method** directly in Application setup, and change it on the fly without re-entering dimensions.
+
+- **Detailed (default):** Manufacturer-informed installed-condition calculations. For positive ID stretch in male/piston glands, radial squeeze uses an empirical installed compression cross-section. Material area for gland fill uses a **separate constant-volume section correction**.
+- **Simplified:** Uses the **free-state O-ring cross-section** for radial squeeze and the free-state circular material area for gland fill, **without stretch-related section or material-area reductions**.
+
+Both methods use **identical groove geometry, dimensional tolerance evaluation, installation-fit calculations and screening limits**. Female-cylinder results are identical in both methods. The adjacent information icon explains the alternatives.
+
+**Inspect Results** displays the chosen method's equations and controlling tolerance cases. **Copy Snapshot** and **Save PNG** record which method was used. Selecting Simplified does not change the acceptance limits or certify a seal application.
 
 ## Features
 
-- Static and reciprocating dynamic radial O-ring configurations.
-- Piston/male and cylinder/female gland types.
-- Rectangular and symmetrical double-dovetail grooves, with supported depth or diameter entry modes.
-- AS568 reference-size catalogue and manual O-ring dimensions.
-- Minimum, nominal and maximum dimensional checks for radial squeeze, ID stretch or OD interference, and gland fill.
-- Two-dimensional (2D) gland geometry using wall angles, opening radii and base radii.
-- **Inspect Results** with equations, numerical substitutions and intermediate results.
-- Eight purpose-made **Dimension Guides** and compact **PNG summary reporting**.
-- **PASS**, **REVIEW** and invalid-input indications.
-- Optional GitHub update checks; the application does not auto-install releases.
+- Static and reciprocating-dynamic radial seals, male and female glands.
+- Rectangular and double-dovetail groove profiles, optional wall angles and opening/base radii.
+- AS568 reference catalogue or manually entered O-ring ID and cross-section.
+- Minimum, nominal and maximum radial squeeze, ID stretch/OD interference and gland fill.
+- **Inspect Results** with method-specific workings, substitutions and tolerance witnesses.
+- Eight approved Dimension Guides, compact PNG/clipboard reports and PASS/REVIEW/INVALID screening.
+- Readable text and dropdowns with Windows dark mode, consistent UI spacing and convenient keyboard progression through input dimensions.
 
-## Download for Windows
+## Shared dimensional screening limits
 
-**Only one file is needed:** [**Radial-ORing-Calculator-v1.0.1-Windows-Portable.zip**](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/latest).
-Download that ZIP, extract the **single EXE** and run
-`Static & Dynamic Radial O-Ring Calculator v1.0.1.exe`. No `_internal` folder, installer, Python or other downloads are required.
+| Measure | PASS criterion |
+|---|---|
+| Minimum radial squeeze | >= 0.007 in |
+| Maximum squeeze, static | <= 30% |
+| Maximum squeeze, reciprocating dynamic | <= 16% |
+| Male/piston installed ID stretch | 0-5% |
+| Female/cylinder installed OD interference | 0-2% |
+| Gland fill | 60-85% |
 
-**Unsigned application:** Microsoft Defender SmartScreen may display
-“Windows protected your PC” on first launch. If the ZIP came from this official
-GitHub repository and you trust it, choose **More info > Run anyway** where
-Windows offers that option. Smart App Control or employer policies may prevent
-running unsigned programs. Do not disable security protections to proceed.
+Limits are inclusive. **PASS** indicates the selected dimensional criteria are satisfied, **REVIEW** requires engineering assessment rather than automatic rejection, and **INVALID** indicates unevaluable dimensions/geometry. This is not pressure, material, extrusion or seal-life qualification. See [Engineering scope](docs/ENGINEERING_SCOPE.md).
 
-The separate checksum and Qt/PySide6 source archives are optional verification
-and open-source licensing resources, **not prerequisites for using the app**.
+## Run from source on Windows
 
-## Screenshots
-
-A populated screen capture and example PNG report will be added when available. No proprietary customer drawings are distributed.
-
-## Run from source (Windows)
-
-Install Python and use PowerShell at the repository root:
-
-```powershell
-py -3 -m venv venv
+~~~powershell
+py -3.13 -m venv venv
 & '.\venv\Scripts\python.exe' -m pip install -r requirements.txt
 & '.\venv\Scripts\python.exe' -m src.main
-```
+~~~
 
-Run the regression tests:
+Run the tests:
 
-```powershell
+~~~powershell
 & '.\venv\Scripts\python.exe' -m unittest discover -s tests -q
-```
+~~~
 
-The app uses **PySide6** (Qt for Python), not PyQt6. Qt Designer `.ui` source files are included for all three application dialogs.
+## Rebuild the single portable EXE
 
-## Build (Windows, developer use)
+~~~powershell
+& '.\venv\Scripts\python.exe' -m pip install -r requirements-build.txt
+& '.\venv\Scripts\python.exe' .\tools\Build-OneFile-Portable.py --project (Get-Location).Path
+~~~
 
-The preferred **one-EXE** v1.0.1 Windows ZIP uses PyInstaller 6.22.3 and PySide6 6.12.0. See [one-file rebuild and LGPL information](docs/ONEFILE_REBUILD_AND_LGPL.md). The earlier v1.0.0 one-folder release remains available.
+The v2 package retains the v1.0.1 one-file builder: it embeds all eight guides, UI forms, icons and AS568 data, removes two unnecessary Qt Virtual Keyboard binaries, checks the EXE inventory, and creates an EXE-only ZIP plus SHA-256 checksum.
 
-## Engineering scope
+See [Windows packaging](docs/WINDOWS_PACKAGING.md), [Qt rebuild and LGPL obligations](docs/ONEFILE_REBUILD_AND_LGPL.md), and [development instructions](docs/DEVELOPMENT.md).
 
-This is **dimensional screening**, not full seal design qualification. **PASS** means selected screening criteria are satisfied for the evaluated conditions. **REVIEW** means further engineering assessment is needed, not automatic rejection. Available gland area uses a two-dimensional (2D) representation of the groove section and radial-clearance strip; see [Engineering scope and limitations](docs/ENGINEERING_SCOPE.md) and the application's Assumptions and References tabs.
+## Documentation
 
-## Licence, data and third-party components
+- [v2.0.0 release notes](docs/RELEASE_NOTES_v2.0.0.md)
+- [Engineering methods, scope and limitations](docs/ENGINEERING_SCOPE.md)
+- [Windows build and packaging](docs/WINDOWS_PACKAGING.md)
+- [Third-party notices](docs/THIRD_PARTY_NOTICES.md), [release checklist](docs/THIRD_PARTY_RELEASE_CHECKLIST.md) and [licence texts](licenses/)
 
-Original application code, documentation and project-owned artwork are released under [MIT](LICENSE), **except where separately attributed**. The AS568 dataset is included for reference purposes only and does not grant any rights to reproduce or redistribute the source manufacturers' manuals or standards. The original reference publications are not included.
+## Licensing and privacy
 
-Qt/PySide6, Python and other bundled components are separately licensed. Read [third-party notices](docs/THIRD_PARTY_NOTICES.md), [redistribution checklist](docs/THIRD_PARTY_RELEASE_CHECKLIST.md) and the licence texts in `licenses/`. Publication of a Windows binary is subject to fulfilling the corresponding-source and replacement obligations of the applicable Qt licences.
-
-## Project layout
-
-| Path | Purpose |
-|---|---|
-| `src/calculations/` | Geometry, dimensional checks and tolerance machinery |
-| `src/catalog/`, `src/resources/data/` | O-ring catalogue/reference dimensions |
-| `src/ui/`, `src/ui/forms/` | Application interface and Qt Designer layouts |
-| `src/resources/guides/` | Eight approved Dimension Guides |
-| `src/resources/icons/` | Original project artwork and application icon |
-| `tests/` | Current and historical regression coverage |
-| `tools/` | Developer commands and packaging tools |
-| `docs/`, `licenses/` | Engineering methods, guidance and legal notices |
-
-Private CAD masters, proprietary reference PDFs, local development environments and generated executable builds are not distributed as source.
+Original project code and project-created artwork are provided under [MIT](LICENSE), except independently licensed components. Qt/PySide6, Python and bundled dependencies retain their own licences and attribution/source obligations. The AS568 data is reference information and does not grant reproduction rights for manufacturer publications or underlying standards. No proprietary engineering publications, private drawings or local verification material are distributed.

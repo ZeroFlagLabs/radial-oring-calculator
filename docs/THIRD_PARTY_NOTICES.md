@@ -1,4 +1,4 @@
-# Third-party notices — Static & Dynamic Radial O-Ring Calculator v1.0.0
+# Third-party notices — Static & Dynamic Radial O-Ring Calculator v2.0.0
 
 **Publisher:** ZeroFlagLabs
 
@@ -12,9 +12,9 @@ Original calculator code and documentation are under [MIT](../LICENSE). The eigh
 
 Built using **PySide6 6.12.0**, **PySide6-Essentials 6.12.0**, **PySide6-Addons 6.12.0**, **shiboken6 6.12.0**, and Qt 6.12 libraries/plugins. Copyright The Qt Company Ltd., the Qt Project and their contributors, as applicable. Open-source PySide6 and many Qt libraries are under LGPLv3 (or available under alternative licence terms). Certain other Qt modules have different terms.
 
-The approved one-folder candidate excludes the two unnecessary Qt Virtual Keyboard binaries identified in the v1.0.0 audit. The bundled Qt libraries remain independently licensed. Their recipients retain applicable LGPL rights, including modification and replacement of compatible dynamic libraries. The LGPLv3 and GPLv3 texts are provided under `licenses/`; this does not alone discharge every LGPL requirement.
+The one-file release excludes the two unnecessary Qt Virtual Keyboard binaries identified in the v1.0.0 audit. The bundled Qt libraries remain independently licensed. Their recipients retain applicable LGPL rights, including modification and replacement of compatible dynamic libraries. The LGPLv3 and GPLv3 texts are provided under `licenses/`; this does not alone discharge every LGPL requirement.
 
-Matching Qt 6.12.0 and PySide6/Shiboken6 6.12.0 source archives are provided as distributor-hosted companion assets on the [v1.0.0 GitHub Release](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v1.0.0), together with SHA-256 checksums. The Windows ZIP includes `QT_SOURCE_AND_REPLACEMENT.md` describing how recipients can replace compatible Qt/PySide6 libraries. The source archives are **not** required to run the application. See [licensing checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
+Matching Qt 6.12.0 and PySide6/Shiboken6 6.12.0 source archives are provided as distributor-hosted companion assets on the [v1.0.0 GitHub Release](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v1.0.0), together with SHA-256 checksums. The earlier v1.0.0 release ZIP provides `QT_SOURCE_AND_REPLACEMENT.md`, while the current repository contains one-file rebuilding/relinking instructions for compatible Qt/PySide6 libraries. The source archives are **not** required to run the application. See [licensing checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
 
 Qt references: https://doc.qt.io/qt-6/licensing.html ; https://doc.qt.io/qt-6/licenses-used-in-qt.html ; https://doc.qt.io/qtforpython-6/licenses.html ; https://www.qt.io/development/open-source-lgpl-obligations
 
@@ -28,4 +28,4 @@ The frozen Windows binary embeds the Python **3.13.16** runtime, licensed under 
 
 ## Other notices
 
-The Windows ZIP includes `THIRD_PARTY_COMPONENTS.md`, which documents the shipped Qt module/plugin families and references Qt's version-specific third-party attribution index and the corresponding-source archives. It also includes applicable licence texts for LGPLv3, GPLv3, Python and OpenSSL. Individual bundled components retain their own licences, and this notice is not a legal clearance certificate.
+The public source and companion release materials provide `THIRD_PARTY_COMPONENTS.md`, which documents the shipped Qt module/plugin families and references Qt's version-specific third-party attribution index and the corresponding-source archives. It also includes applicable licence texts for LGPLv3, GPLv3, Python and OpenSSL. Individual bundled components retain their own licences, and this notice is not a legal clearance certificate.

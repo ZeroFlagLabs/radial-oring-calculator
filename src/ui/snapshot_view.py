@@ -51,6 +51,27 @@ def _text(painter, x, baseline, value, *, size=9, bold=False,
         painter.drawText(int(x), int(baseline), value)
 
 
+
+def _row_cell(painter, x, top, width, height, value, *, size=9,
+              bold=False, colour=INK, align='left', wrap=False):
+    """Vertically centre report-table content in a known row rectangle."""
+    value = str(value)
+    font = _font(size, bold)
+    painter.setFont(font)
+    painter.setPen(QColor(colour))
+    metrics = QFontMetrics(font)
+    if not wrap and metrics.horizontalAdvance(value) > width:
+        value = metrics.elidedText(value, Qt.TextElideMode.ElideRight, width)
+    horizontal = (Qt.AlignmentFlag.AlignHCenter if align == 'center'
+                  else Qt.AlignmentFlag.AlignRight if align == 'right'
+                  else Qt.AlignmentFlag.AlignLeft)
+    flags = horizontal | Qt.AlignmentFlag.AlignVCenter
+    if wrap:
+        flags |= Qt.TextFlag.TextWordWrap
+    painter.drawText(QRect(int(x), int(top), int(width), int(height)),
+                     flags, value)
+
+
 def _line(painter, y, x1=28, x2=938, *, colour=RULE):
     painter.setPen(QPen(QColor(colour), 1))
     painter.drawLine(x1, y, x2, y)
@@ -106,18 +127,20 @@ def _render_image(description, rows, screening, inputs, *, sketch=None,
         _text(painter, 28, 91, 'APPLICATION CONFIGURATION', size=10,
               bold=True, colour=BLUE)
         items = context or [('Selected calculation', description)]
-        for i, (name, value) in enumerate(items[:5]):
-            y = 114 + i*20
+        # Give all six configuration rows the same 22-pixel rhythm as the
+        # input dimension rows below, while retaining the report canvas size.
+        for i, (name, value) in enumerate(items[:6]):
+            y = 114 + i*22
             _text(painter, 29, y, name, size=9, colour=MUTED)
             _text(painter, 439, y, value, size=9, bold=True,
                   align='right', width=254)
 
-        _line(painter, 214, 28, 442)
-        _text(painter, 28, 238, 'INPUT DIMENSIONS', size=10,
+        _line(painter, 246, 28, 442)
+        _text(painter, 28, 270, 'INPUT DIMENSIONS', size=10,
               bold=True, colour=BLUE)
         for i, (name, value) in enumerate(inputs):
-            y = 261 + i*22
-            if y >= 463:
+            y = 293 + i*22
+            if y >= 491:
                 # Nine entries is the supported arrangement for both gland types.
                 raise ValueError('Input list exceeds the compact report area')
             _text(painter, 29, y, name, size=9, colour=MUTED)
@@ -127,7 +150,7 @@ def _render_image(description, rows, screening, inputs, *, sketch=None,
         # Right column: exact selected guide (same scaling rule for every case).
         _text(painter, 480, 91, 'DIMENSION GUIDE', size=10,
               bold=True, colour=BLUE)
-        image_box = QRect(508, 111, 382, 355)
+        image_box = QRect(508, 97, 382, 355)
         painter.fillRect(image_box, QColor('white'))
         if sketch is not None and not sketch.isNull():
             # Keep the same common display envelope for every case, but make
@@ -165,22 +188,35 @@ def _render_image(description, rows, screening, inputs, *, sketch=None,
 
         centers = [257, 358, 459]
         for i, (name, values, check) in enumerate(rows[:3]):
-            y = 571 + i*40
+            # Begin directly below the heading rule: each row is exactly
+            # 40px high, including the first squeeze row (previously 44px
+            # from heading rule to its separator).
+            row_top = 548 + i*40
             label = str(name).replace(' (%)','')
-            _text(painter, 29, y, label, size=10, bold=True, colour=INK)
+            _row_cell(painter, 29, row_top, 178, 40, label,
+                      size=10, bold=True, colour=INK)
             for j, value in enumerate(values):
-                _text(painter, centers[j]-48, y, value, size=10, bold=True,
-                      align='center', width=96)
-                if detail_rows and i < len(detail_rows) and detail_rows[i]:
-                    _text(painter, centers[j]-48, y+14, detail_rows[i][j],
-                          size=8, colour=MUTED, align='center', width=96)
-            _text(painter, 541, y, check.criterion, size=8, colour=MUTED)
+                cell_left = centers[j]-48
+                has_detail = bool(detail_rows and i < len(detail_rows)
+                                  and detail_rows[i])
+                if has_detail:
+                    _row_cell(painter, cell_left, row_top+2, 96, 18, value,
+                              size=10, bold=True, align='center')
+                    _row_cell(painter, cell_left, row_top+20, 96, 18,
+                              detail_rows[i][j], size=8, colour=MUTED,
+                              align='center')
+                else:
+                    _row_cell(painter, cell_left, row_top, 96, 40, value,
+                              size=10, bold=True, align='center')
+            _row_cell(painter, 541, row_top, 292, 40, check.criterion,
+                      size=8, colour=MUTED, wrap=True)
             passed = check.within_limits
-            _text(painter, 851, y, 'PASS' if passed else 'REVIEW',
-                  size=10, bold=True, colour='#18744F' if passed else '#B42318',
-                  align='center', width=84)
+            _row_cell(painter, 851, row_top, 84, 40,
+                      'PASS' if passed else 'REVIEW', size=10, bold=True,
+                      colour='#18744F' if passed else '#B42318',
+                      align='center')
             if i < 2:
-                _line(painter, y+20)
+                _line(painter, 588 + i*40)
     finally:
         painter.end()
     return image

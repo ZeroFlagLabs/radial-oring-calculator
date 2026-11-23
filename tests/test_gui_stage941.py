@@ -81,8 +81,9 @@ class Stage941GuiTests(unittest.TestCase):
             self.assertRegex(table.item(table.rowCount()-1,2).text(),r'^-?\d+\.\d{3}$')
             self.assertRegex(table.item(3,2).text(),r'^-?\d+\.\d{3}$')
             inspector.close()
-            for row in (1,2,3):
-                self.assertEqual(w.overview_grid.rowMinimumHeight(row),39)
+            # Published compact layout: all three rows have equal heights.
+            self.assertEqual([w.overview_grid.rowMinimumHeight(row)
+                              for row in (1,2,3)],[39,39,39])
         finally:
             w.close()
 

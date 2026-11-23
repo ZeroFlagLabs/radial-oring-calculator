@@ -1,31 +1,46 @@
-# Engineering scope and limitations
+# Engineering methods, scope and limitations
 
-## Purpose
+## Purpose and output
 
-The **Static & Dynamic Radial O-Ring Calculator** provides dimensional screening for static and reciprocating radial O-ring seals. It is not a qualification test, certification, finite-element simulation, or substitute for application-specific engineering assessment.
+The Static & Dynamic Radial O-Ring Calculator performs **dimensional screening**, not seal qualification, certification, pressure design or life prediction. Supported cases include static and reciprocating dynamic male/piston and female/cylinder radial glands, rectangular and symmetrical double-dovetail profiles, diameter/depth entry and optional groove angles/radii.
 
-For supported piston (male) and cylinder (female) configurations, it evaluates **minimum, nominal and maximum** radial squeeze, installed fit (piston ID stretch or cylinder OD interference), and gland fill. The **Inspect Results** window shows equations, substitutions and supporting explanations.
+For each metric, the engine evaluates permissible independent input tolerance endpoints and provides **minimum / nominal / maximum** outputs with input witnesses in **Inspect Results**. Tolerance extrema are not arbitrary independent stacks of displayed worst cases.
 
-**PASS** means the evaluated dimensions meet the selected screening criteria. **REVIEW** requires engineering evaluation; it does not automatically mean the seal cannot function. **INVALID** means the inputs or geometry could not be evaluated.
+## Two calculation methods
 
-## Two-dimensional gland geometry
+**Detailed (default):** For positively stretched male O-rings, uses a published empirical relationship for the installed **compression cross-section** in squeeze calculations. Separately uses an approximately volume-conserved **area-equivalent cross-section** for gland fill. The compression-section approximation is not squared to obtain material area. When a permitted tolerance interval crosses the piecewise 3% ID-stretch transition, squeeze extrema include states on both sides of the transition.
 
-Available gland area is a **two-dimensional (2D) representation** of the machined groove cross-section, accounting for relevant wall angles, base radii and opening radii, plus the rectangular radial-clearance area extending from the actual groove opening to the opposing component surface. It is not the full three-dimensional annular seal volume.
+**Simplified:** Uses the **free-state O-ring section** for radial squeeze and its free-state circular cross-sectional material area for gland fill. It does not reduce either for male installation stretch.
 
-For piston squeeze, the manufacturer's published section-reduction equations transition at **3% ID stretch**. The calculator evaluates both sides where the permitted stretch range crosses that transition. See **Settings → Assumptions**, **Settings → References** and **Inspect Results** for the documented method.
+**Common to both:** All input dimensions, tolerances, gland geometry, installed fit and acceptance criteria are unchanged. Both methods use the same 2D cavity area. Female groove calculations use free-state section in both methods; results are identical. Non-positively-stretched male cases may likewise give identical results. The method is recorded on Inspector/PNG/clipboard outputs.
 
-## Outside the dimensional screening
+These are alternative assumptions for the same dimensional checks, not two separate sets of acceptance criteria. Neither method is itself a seal-performance guarantee.
 
-Evaluate independently as applicable: pressure and extrusion clearance, backup rings, elastomer materials and compatibility, temperature and thermal expansion, surface finish and hardness, lubrication and friction, dynamic duty/speed, pressure cycling, rapid gas decompression, installation damage and manufacturing constraints.
+## Installed fit and gland geometry
 
-The eight Dimension Guides identify relevant datums; **they are not to scale**.
+Male fit is calculated from installed gland OD relative to free O-ring ID. Female fit is **OD interference** of free O-ring OD relative to gland ID. The female calculation is not obtained by comparing rod OD with free ring ID.
 
-## Validation evidence and limitations
+Gland area is a **two-dimensional machined groove cross-section plus the actual assembled radial clearance area**, including the optional wall angles, opening radii and base radii as entered. The dovetail taper is restricted to the machined groove depth and is not extrapolated into the clearance strip. It is not the three-dimensional annular seal volume. Dimension Guides are indicative and not to scale.
 
-Pre-release evaluation included comparisons against **six historic Mathcad examples**, **three independent SolidWorks 2D double-dovetail area checks**, and the **3% stretch transition** regression cases. Differences in methodology, notably installed-section handling and female-groove interference, are explained within the application. The evaluated examples do not prove every possible seal configuration.
+## Dimensional screening criteria
 
-Before publishing v1.0.0, complete the Windows GUI regression suite, portable EXE and embedded-resource smoke tests, links and updater checks, and third-party source/data redistribution review.
+| Test | PASS condition |
+|---|---|
+| Minimum radial squeeze | >= 0.007 in |
+| Maximum squeeze (static) | <= 30% |
+| Maximum squeeze (reciprocating dynamic) | <= 16% |
+| Male installed ID stretch | 0-5% |
+| Female installed OD interference | 0-2% |
+| Gland fill | 60-85% |
 
-## References and licensing
+Criteria are inclusive. **PASS** means the dimensional screening limits have been met. **REVIEW** means engineering evaluation is appropriate; it is not automatic seal rejection. **INVALID** means geometry/inputs are not evaluable.
 
-The in-app References tab cites Parker, Freudenberg and James Walker engineering publications. Publisher PDFs and private engineering documents are **not** included in the application or public repository. The application's original source is MIT licensed; third-party libraries and data have separate terms. See [LICENSE](../LICENSE) and [third-party release checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
+## Other engineering responsibilities
+
+Evaluate pressure and extrusion gap, backup rings, elastomer compound and fluid compatibility, temperature and differential expansion, surface finish/hardness, friction and lubrication, reciprocating duty and speed, pressure cycling, decompression, installation damage and manufacturing controls independently. Screening alone cannot approve an application.
+
+## Validation and engineering references
+
+The release contains extensive automated numeric, tolerance, geometry, method-reporting and GUI regression tests. They do not establish correctness for every operating condition. Technical references relevant to the Detailed method and screening criteria are identified in the application's **Settings > References** panel. Manufacturer engineering publications are cited, not redistributed.
+
+See [v2 release notes](RELEASE_NOTES_v2.0.0.md), [third-party notices](THIRD_PARTY_NOTICES.md) and [licensing checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).

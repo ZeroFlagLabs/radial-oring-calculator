@@ -3,6 +3,8 @@
 import re
 
 from PySide6.QtCore import Qt
+from src.ui.dialog_style import set_standard_action_width
+
 from PySide6.QtWidgets import (
     QDialog, QFrame, QHeaderView, QHBoxLayout, QLabel, QLineEdit, QPushButton,
     QTableWidget, QTableWidgetItem, QVBoxLayout,
@@ -88,6 +90,10 @@ class SizeGuide(QDialog):
         self.choose.clicked.connect(self._choose)
         close = QPushButton("Close")
         close.clicked.connect(self.reject)
+        # Use the same readable action width as the Settings and Method dialogs.
+        set_standard_action_width(self.choose)
+        set_standard_action_width(close)
+        self.close_button = close
         buttons.addWidget(self.choose)
         buttons.addStretch()
         buttons.addWidget(close)

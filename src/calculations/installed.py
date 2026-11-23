@@ -16,6 +16,9 @@ Parker compression diameter to derive material area.
 from dataclasses import dataclass, replace
 from itertools import product
 from math import pi, isclose
+from typing import Literal
+
+CalculationMethod = Literal["detailed", "simplified"]
 
 from .rectangular import (
     Dimension, Range, MaleRectangularInputs, FemaleRectangularInputs,
@@ -45,6 +48,7 @@ class InstalledEvaluation:
     results: object
     cases: dict  # keys: ("Squeeze", "Minimum"), ("Gland fill", ...) etc.
     male: bool
+    method: CalculationMethod = "detailed"
 
 
 def observed_compression_section(free_section: float, stretch_pct: float) -> float:
@@ -155,7 +159,7 @@ def _male_specs(inputs):
     return dims
 
 
-def _male_case(s):
+def _male_case(s, method: CalculationMethod = "detailed"):
     gland = s['gland'] if 'gland' in s else s['rod'] - 2*s['depth']
     depth = s['depth'] if 'depth' in s else (s['rod']-gland)/2
     clearance = (s['cylinder']-s['rod'])/2
@@ -163,8 +167,15 @@ def _male_case(s):
                                   s['angle'], s['bottom'], s['top']).area_sq_in
     height = (s['cylinder']-gland)/2
     stretch = 100*(gland/s['ring_id']-1)
-    compress_cs = observed_compression_section(s['section'], stretch)
-    area_cs = volume_equivalent_section(s['ring_id'], s['section'], gland)
+    # Detailed uses two separate installed-section corrections: Parker's
+    # empirical compression diameter for squeeze and constant-volume material
+    # area for fill. Simplified uses the free-state section for BOTH metrics.
+    # Neither method changes the actual available gland geometry.
+    # Never square Parker's compression diameter to calculate material area.
+    compress_cs = (observed_compression_section(s['section'], stretch)
+                   if method == "detailed" else s['section'])
+    area_cs = (volume_equivalent_section(s['ring_id'], s['section'], gland)
+               if method == "detailed" else s['section'])
     sq = compress_cs-height
     return InstalledCase(tuple(s.items()), sq, 100*sq/compress_cs,
                          stretch, 100*pi*area_cs**2/(4*area), compress_cs,
@@ -200,8 +211,16 @@ def _female_specs(inputs):
     return dims
 
 
-def calculate_installed(inputs) -> InstalledEvaluation:
-    """Unified Stage 8 entry point, preserving existing profile area results."""
+def calculate_installed(inputs, *, method: CalculationMethod = "detailed") -> InstalledEvaluation:
+    """Evaluate installed-condition screening using the chosen squeeze method.
+
+    "detailed" preserves all existing results by default. "simplified"
+    uses the free-state O-ring section for both male squeeze and material-area
+    fill. Geometry, tolerance endpoints, fit, and acceptance limits are
+    unchanged. Female results use free-state section in both methods.
+    """
+    if method not in ("detailed", "simplified"):
+        raise ValueError("Calculation method must be 'detailed' or 'simplified'.")
     male = isinstance(inputs, (MaleRectangularInputs, MaleDovetailInputs))
     if isinstance(inputs, MaleRectangularInputs):
         raw = calculate_male_rectangular(inputs)
@@ -219,7 +238,7 @@ def calculate_installed(inputs) -> InstalledEvaluation:
     # TWO O-ring dimensions: section and ID. Those two dimensions are coupled
     # to the installed section and fit and cannot be stacked independently.
     dimensions.update(ring_id=inputs.o_ring_id, section=inputs.o_ring_section)
-    casefn = _male_case if male else _female_case
+    casefn = (lambda state: _male_case(state, method)) if male else _female_case
     extrema = []
     for state in _dimension_states(dimensions):
         try:
@@ -227,7 +246,11 @@ def calculate_installed(inputs) -> InstalledEvaluation:
         except ValueError as exc:
             raise ValueError('Invalid installed condition at tolerance endpoints: '+str(exc)) from exc
     nominal = casefn({name: d.nominal for name,d in dimensions.items()})
-    squeeze_cases = extrema + [nominal] + (list(_male_transition_cases(dimensions)) if male else [])
+    # Only the detailed male empirical relation has a discontinuous 3%
+    # branch transition. The simplified squeeze formula is continuous.
+    squeeze_cases = extrema + [nominal] + (
+        list(_male_transition_cases(dimensions))
+        if male and method == "detailed" else [])
     fields = {
         'Squeeze': 'squeeze_pct',
         'Fit': 'install_fit_pct',
@@ -249,7 +272,7 @@ def calculate_installed(inputs) -> InstalledEvaluation:
                         squeeze_percent=ranges['Squeeze'],
                         stretch_percent=ranges['Fit'],
                         gland_fill_percent=ranges['Gland fill'])
-    return InstalledEvaluation(corrected, witnesses, male)
+    return InstalledEvaluation(corrected, witnesses, male, method)
 
 
 def installed_result_traces(evaluation: InstalledEvaluation):
@@ -262,22 +285,29 @@ def installed_result_traces(evaluation: InstalledEvaluation):
     for label,attr in zip(labels, attrs):
         for metric, value, units, explanation in (
             ('Squeeze', getattr(results.squeeze_percent,attr), '%',
-             'Male: Parker observed installed compression diameter; female: free section. '
-             'Squeeze is calculated against the assembled radial cavity height.'),
+             ('Male: Parker observed installed compression diameter; female: free section. '
+              if evaluation.method == "detailed" else
+              'Simplified: free O-ring section for radial squeeze in both gland types. ')
+             + 'Squeeze is calculated against the assembled radial cavity height.'),
             ('ID stretch' if evaluation.male else 'OD interference',
              getattr(results.stretch_percent,attr), '%',
              'Male: installed gland OD / free O-ring ID - 1. '
              'Female: (free O-ring OD - bore gland ID) / free O-ring OD.'),
             ('Gland fill', getattr(results.gland_fill_percent,attr), '%',
-             'Male: constant-volume circular-equivalent material area, not the '
-             'empirical compression diameter squared. Female: free-state section area. '
-             'Denominator is CAD-validated 2D cavity area.')
+             (('Male: constant-volume circular-equivalent material area, not the '
+               'empirical compression diameter squared. Female: free-state section area. ')
+              if evaluation.method == 'detailed' else
+              ('Simplified: free-state O-ring material area without reduction '
+               'for installation stretch. '))
+             + 'Denominator is the same CAD-validated 2D cavity area.')
         ):
             key = 'Fit' if metric in ('ID stretch','OD interference') else metric
             sample = evaluation.cases[(key,label)]
             extra = (
-                ('Installed compression section',sample.compression_section),
-                ('Area-equivalent section',sample.equivalent_area_section),
+                (('Installed compression section' if evaluation.method == 'detailed'
+                  else 'Compression section used for squeeze'),sample.compression_section),
+                (('Area-equivalent section' if evaluation.method == 'detailed'
+                  else 'Material section used for fill'),sample.equivalent_area_section),
                 ('Cavity area (in²)',sample.cavity_area),
             )
             mapping = {'rod':'Rod OD','cylinder':'Cylinder ID','gland':
@@ -290,6 +320,6 @@ def installed_result_traces(evaluation: InstalledEvaluation):
             out[(metric,label)] = ExtremumTrace(metric,label,value,units,inputs,
                 explanation+(
                     ' Piston squeeze also considers the two sides of the 3% Parker stretch transition.'
-                    if evaluation.male and key == 'Squeeze' else
+                    if evaluation.male and key == 'Squeeze' and evaluation.method == 'detailed' else
                     ' All evaluated extrema use independent input tolerance endpoints.'))
     return out

@@ -63,6 +63,7 @@ def explain_case(evaluation, metric, condition, entered=None, places=3):
     """
     f = lambda v: f'{v:.{places}f}'
     male = evaluation.male
+    method = evaluation.method
     key = 'Fit' if metric in ('ID stretch', 'OD interference') else metric
     case = evaluation.cases[(key, condition)]
     s = dict(case.values)
@@ -112,7 +113,7 @@ def explain_case(evaluation, metric, condition, entered=None, places=3):
     def add(title,result,unit,symbolic,numeric,note='',sym_frac=None,num_frac=None):
         steps.append(ExplanationStep(title,result,unit,symbolic,numeric,note,sym_frac,num_frac))
     if metric == 'Squeeze':
-        if male:
+        if male and method == 'detailed':
             stretch = case.install_fit_pct
             add('O-ring ID stretch',stretch,'%', 'ID stretch', 'ID stretch',
                 'Determines how much the free O-ring ID is extended around the groove.',
@@ -142,22 +143,34 @@ def explain_case(evaluation, metric, condition, entered=None, places=3):
                 'dᵢ = d₀ × (1 − R ÷ 100)',
                 f'dᵢ = {f(free_section)} × (1 − {f(reduction)} ÷ 100)',
                 'The installed section is used for radial squeeze, not for the material-area calculation.')
+        elif male:
+            add('Free-state compression section',case.compression_section,'in',
+                'd\u2080 = O-ring free cross-section',f'd\u2080 = {f(free_section)}',
+                'Simplified uses the free-state cross-section without a stretch-related squeeze correction.')
         else:
-            add('Installed compression section',case.compression_section,'in',
-                'dᵢ = d₀',f'dᵢ = {f(free_section)}',
-                'For a cylinder groove, no ID-stretch correction is applied to the free section.')
+            if method == 'simplified':
+                add('Free-state compression section',case.compression_section,'in',
+                    'd\u2080 = O-ring free cross-section',f'd\u2080 = {f(free_section)}',
+                    'The free-state cross-section is used for cylinder grooves in both methods.')
+            else:
+                add('Installed compression section',case.compression_section,'in',
+                    'dᵢ = d₀',f'dᵢ = {f(free_section)}',
+                    'For a cylinder groove, no ID-stretch correction is applied to the free section.')
         a,b=(('Cylinder ID','Groove OD') if male else ('Groove ID','Piston OD'))
         x,y=((cylinder,groove) if male else (groove,piston))
         add('Available radial seal space',space,'in','h','h',
             'Radial separation between the groove base and the opposing sealing surface.',
             ('h',a+' − '+b,'2',''),('h',f(x)+' − '+f(y),'2',''))
-        add('Radial squeeze',case.squeeze_in,'in','S = dᵢ − h',
-            f'S = {f(case.compression_section)} − {f(space)}',
-            'Installed compression section minus available radial seal space.')
+        section_symbol = 'd\u2080' if method == 'simplified' else 'd\u1d62'
+        section_note = ('Free-state cross-section' if method == 'simplified'
+                        else 'Installed compression section')
+        add('Radial squeeze',case.squeeze_in,'in',f'S = {section_symbol} \u2212 h',
+            f'S = {f(case.compression_section)} \u2212 {f(space)}',
+            section_note + ' minus available radial seal space.')
         add('Squeeze percentage',case.squeeze_pct,'%','Squeeze','Squeeze',
-            'Expresses the radial squeeze as a percentage of installed compression section.',
-            ('Squeeze','S','dᵢ','× 100'),
-            ('Squeeze',f(case.squeeze_in),f(case.compression_section),'× 100'))
+            'Expresses the radial squeeze as a percentage of the ' + section_note.lower() + '.',
+            ('Squeeze','S',section_symbol,'\u00d7 100'),
+            ('Squeeze',f(case.squeeze_in),f(case.compression_section),'\u00d7 100'))
     elif metric in ('ID stretch','OD interference'):
         if male:
             add('ID stretch',case.install_fit_pct,'%','ID stretch','ID stretch',
@@ -174,7 +187,11 @@ def explain_case(evaluation, metric, condition, entered=None, places=3):
                 ('OD interference','O-ring free OD − Groove ID','O-ring free OD','× 100'),
                 ('OD interference',f'{f(outer)} − {f(groove)}',f(outer),'× 100'))
     else:
-        if male:
+        if male and method == 'simplified':
+            add('O-ring material section',area_section,'in','d\u2090 = d\u2080',
+                f'd\u2090 = {f(free_section)}',
+                'Simplified uses the free-state O-ring cross-section for gland fill; no stretch-related area reduction.')
+        elif male:
             installed_id=groove
             if installed_id <= free_id:
                 add('O-ring material section',area_section,'in','dₐ = d₀',

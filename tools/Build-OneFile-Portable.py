@@ -68,14 +68,14 @@ def main():
         if not (root / src).exists():
             raise RuntimeError('Missing application resource: ' + src)
     print('PyInstaller:', run([sys.executable, '-m', 'PyInstaller', '--version'], root, True).strip())
-    import shutil
-    maker = shutil.which('pyi-makespec', path=str(Path(sys.executable).parent))
-    if maker is None:
-        raise RuntimeError('pyi-makespec not found beside selected Python environment.')
+    # The Python module entry point is equivalent to pyi-makespec.exe but
+    # avoids an entry-point launcher failure observed on some Windows hosts.
+    # This keeps the builder usable without changing its PyInstaller output.
+    maker = [sys.executable, '-m', 'PyInstaller.utils.cliutils.makespec']
     specdir, workdir, distdir = (dest/'spec', dest/'work', dest/'exe')
     for d in (specdir, workdir, distdir):
         d.mkdir(parents=True, exist_ok=True)
-    cmd = [maker, '--onefile', '--windowed', '--name', name,
+    cmd = [*maker, '--onefile', '--windowed', '--name', name,
            '--paths', root, '--specpath', specdir, '--icon', icon]
     for src, target in DATA:
         cmd += ['--add-data', str(root/src)+';'+target]

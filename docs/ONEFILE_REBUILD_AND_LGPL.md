@@ -1,9 +1,9 @@
-# One-file Windows build, LGPL source and rebuild instructions (v1.0.1)
+# One-file Windows build, LGPL source and rebuild instructions (v2.0.0)
 
 ## Ordinary Windows users
 
-Download **only** `Radial-ORing-Calculator-v1.0.1-Windows-Portable.zip` from the
-[v1.0.1 release](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v1.0.1).
+Download **only** `Radial-ORing-Calculator-v2.0.0-Windows-Portable.zip` from the
+[v2.0.0 release](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.0.0).
 The ZIP has one EXE. Extract it and double-click the EXE. No Python installation
 or additional downloads are required to run it. The program may take a little
 longer to start because PyInstaller extracts libraries to a temporary directory.
@@ -11,7 +11,7 @@ The unsigned app may trigger Windows SmartScreen; do not disable Windows securit
 
 ## Source and licences
 
-The original application's source is at this repository, tagged `v1.0.1`, MIT
+The original application's source is at this repository, tagged `v2.0.0`, MIT
 licensed except separately attributed material. The executable includes
 PySide6/Qt 6.12.0 and other independently licensed components. The repository
 contains the MIT, LGPLv3 and GPLv3 texts under `licenses/`, and component
@@ -31,7 +31,7 @@ Accordingly, the application source and a rebuild path are offered here.
 
 Use Windows, Python **3.13.16**, PySide6 **6.12.0**, PySide6-Essentials and
 PySide6-Addons **6.12.0**, shiboken6 **6.12.0**, and PyInstaller **6.22.3**.
-Start from the v1.0.1 tag and use a fresh environment; do not alter the public
+Start from the v2.0.0 tag and use a fresh environment; do not alter the public
 release asset. For the published unmodified build, run:
 
 ```powershell
@@ -56,7 +56,7 @@ libraries into the new one-file EXE. No software signing key or publisher-only
 installation permission is required to build and run the modified EXE.
 
 This is a method and source-availability description, **not** a claim that a
-modified Qt rebuild was separately demonstrated in the v1.0.1 release process.
+modified Qt rebuild was separately demonstrated in the v2.0.0 release process.
 Users are free to debug their library modifications and rebuild the package
 under the applicable licences. Preserve all required component attributions.
 

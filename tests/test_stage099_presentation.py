@@ -29,7 +29,7 @@ class PresentationSourceTests(unittest.TestCase):
                        'Screening interpretation and design responsibility'):
             self.assertIn(header,html)
         self.assertEqual(html.count('color:#164f8a'),3)
-        self.assertEqual(html.count('• '),8)
+        self.assertEqual(html.count('• '),10)
         for phrase in ('two-dimensional (2D) representation', 'opening radii',
                        'actual groove opening width','constant-volume model',
                        'PASS indicates','REVIEW indicates','INVALID indicates',
@@ -43,8 +43,8 @@ class PresentationSourceTests(unittest.TestCase):
         html=root.find('.//widget[@name="assumptions_text"]/property[@name="text"]/string').text
         self.assertEqual(html.count('margin:28px 0 7px 0; color:#164f8a; font-weight:600;'),2)
         self.assertIn('Scope and tolerance evaluation',html)
-        self.assertEqual(html.count('• '),8)
-        self.assertEqual(html.count('margin:0 0 10px 0;'),8)
+        self.assertEqual(html.count('• '),10)
+        self.assertEqual(html.count('margin:0 0 10px 0;'),10)
         # Both subsequent headings have the larger vertical gap; the initial
         # heading and the individual bullet spacing are preserved.
         self.assertIn('margin:0 0 7px 0; color:#164f8a;',html)
@@ -68,17 +68,17 @@ class PresentationSourceTests(unittest.TestCase):
     def test_assumptions_explains_three_percent_boundary(self):
         root=ET.parse(ROOT/'src/ui/forms/settings_dialog.ui').getroot()
         html=root.find('.//widget[@name="assumptions_text"]/property[@name="text"]/string').text
-        self.assertIn('Piston squeeze additionally checks both sides of the 3% ID-stretch transition',html)
+        self.assertIn('Detailed piston squeeze additionally checks both sides of the 3% ID-stretch transition',html)
         for phrase in (
             "Parker's published empirical relationships",
             'one equation for 0–3% ID stretch',
             'The equations do not meet exactly at 3%',
             'calculated squeeze can change abruptly',
             'minimum and nominal are identical despite dimensional tolerances',
-            'the calculator evaluates both sides of the transition',
+            'Only Detailed evaluates both sides of the transition',
         ):
             self.assertIn(phrase,html)
-        self.assertEqual(html.count('• '),8)
+        self.assertEqual(html.count('• '),10)
 
     def test_updates_native_layout_spacers_preserve_every_control(self):
         root=ET.parse(ROOT/'src/ui/forms/settings_dialog.ui').getroot()

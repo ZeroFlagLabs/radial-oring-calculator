@@ -20,7 +20,7 @@ class InterfaceSourceTests(unittest.TestCase):
             widths.append((w.find('./property[@name="minimumSize"]/size/width').text,
                            w.find('./property[@name="maximumSize"]/size/width').text))
         self.assertEqual(len(set(widths)),1)
-        self.assertEqual(widths[0],('152','152'))
+        self.assertEqual(widths[0],('112','112'))
     def test_no_example_values_in_designer_and_dovetail_unset(self):
         r=ET.parse(ROOT/'src/ui/forms/main_window.ui').getroot()
         for w in r.iter('widget'):

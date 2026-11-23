@@ -22,8 +22,10 @@ class Stage952SourceTests(unittest.TestCase):
     def test_sentence_case_and_dimension_labels(self):
         r=ET.parse(ROOT/'src/ui/forms/main_window.ui').getroot()
         self.assertEqual(txt(widget(r,'window_title')),APP)
-        for control in ('application','configuration','groove_type','entry_mode_stack','ring_size'):
-            self.assertEqual(int(widget(r,control).find('./property[@name="minimumSize"]/size/width').text),184)
+        # v2.0 layout: six equal-width dropdowns, with method first.
+        for control in ('calculation_method','application','configuration',
+                        'groove_type','entry_mode_stack','ring_size'):
+            self.assertEqual(int(widget(r,control).find('./property[@name="minimumSize"]/size/width').text),164)
         self.assertEqual(int(r.find('.//layout[@name="mainLayout"]/property[@name="spacing"]/number').text),4)
         self.assertEqual(int(r.find('.//layout[@name="mainLayout"]/property[@name="bottomMargin"]/number').text),4)
         for n in ('male_group','female_group'):
@@ -80,6 +82,176 @@ class Stage952GuiTests(unittest.TestCase):
     def setUpClass(cls):
         from PySide6.QtWidgets import QApplication
         cls.app=QApplication.instance() or QApplication([])
+
+    def test_method_selector_layout_preview(self):
+        from PySide6.QtWidgets import QWidget
+        from src.ui.main_window import MainWindow
+        w=MainWindow();w.show()
+        try:
+            self.app.processEvents()
+            names=('calculation_method','application','configuration',
+                   'groove_type','entry_mode_stack','ring_size')
+            controls=[w.findChild(QWidget,name) for name in names]
+            self.assertTrue(all(controls))
+            self.assertEqual([x.width() for x in controls],[164]*6)
+            positions=[x.mapTo(w,x.rect().topLeft()) for x in controls]
+            self.assertEqual([p.x() for p in positions],sorted(p.x() for p in positions))
+            self.assertEqual(len({p.y() for p in positions}),1)
+            ring=w.ring_size
+            heading=w.findChild(QWidget,'selector_ring_size_label')
+            info=w.guide_button
+            self.assertEqual(ring.mapTo(w,ring.rect().topLeft()).x(),
+                             heading.mapTo(w,heading.rect().topLeft()).x())
+            self.assertEqual(info.mapTo(w,info.rect().topLeft()).x(),
+                             ring.mapTo(w,ring.rect().topLeft()).x()+ring.width()+4)
+            self.assertEqual(w.calculation_method.currentData(),'detailed')
+            # Both methods now support results inspection and reporting.
+            self.assertTrue(w.calculation_method.model().item(1).isEnabled())
+        finally:w.close()
+
+    def test_simplified_live_preview_preserves_inputs_and_reports(self):
+        from src.ui.main_window import MainWindow
+        from src.calculations.installed import calculate_installed
+        from src.calculations.criteria import screen_rectangular
+        w=MainWindow();seed_sample(w);w.show()
+        try:
+            self.app.processEvents()
+            initial=w._collect()
+            expected_detailed=calculate_installed(initial,method='detailed')
+            expected_simple=calculate_installed(initial,method='simplified')
+            self.assertEqual(w._last_result,expected_detailed.results)
+            self.assertTrue(w.trace_button.isEnabled())
+            self.assertTrue(w.snapshot_button.isEnabled())
+            self.assertTrue(w.save_snapshot_button.isEnabled())
+            w.calculation_method.setCurrentIndex(1)
+            self.app.processEvents()
+            self.assertEqual(w.calculation_method.currentData(),'simplified')
+            self.assertEqual(w._collect(),initial)
+            self.assertEqual(w._last_evaluation,expected_simple)
+            self.assertEqual(w._last_result,expected_simple.results)
+            self.assertNotEqual(w._last_result.squeeze_percent.nominal,
+                                expected_detailed.results.squeeze_percent.nominal)
+            self.assertEqual(w._last_result.stretch_percent,
+                             expected_detailed.results.stretch_percent)
+            self.assertNotEqual(w._last_result.gland_fill_percent,
+                                expected_detailed.results.gland_fill_percent)
+            self.assertEqual(w._last_result.cavity_area_sq_in,
+                             expected_detailed.results.cavity_area_sq_in)
+            self.assertEqual(w._last_screening.checks[1:],
+                             screen_rectangular(expected_detailed.results,
+                                                w.application.currentData()).checks[1:])
+            self.assertTrue(w.trace_button.isEnabled())
+            self.assertTrue(w.snapshot_button.isEnabled())
+            self.assertTrue(w.save_snapshot_button.isEnabled())
+            dialog=w._make_tolerance_trace_dialog()
+            self.assertIsNotNone(dialog)
+            self.assertIn('Simplified',dialog.windowTitle())
+            dialog.close()
+            self.assertIsNotNone(w._snapshot_pixmap())
+            self.assertEqual(w.statusBar().currentMessage(),'')
+            w.calculation_method.setCurrentIndex(0)
+            self.app.processEvents()
+            self.assertEqual(w._collect(),initial)
+            self.assertEqual(w._last_evaluation,expected_detailed)
+            self.assertTrue(w.trace_button.isEnabled())
+            self.assertTrue(w.snapshot_button.isEnabled())
+            self.assertTrue(w.save_snapshot_button.isEnabled())
+            dialog=w._make_tolerance_trace_dialog()
+            self.assertIsNotNone(dialog)
+            dialog.close()
+        finally:w.close()
+
+    def test_equal_dimension_and_guide_frame_widths(self):
+        from PySide6.QtWidgets import QGroupBox, QWidget
+        from src.ui.main_window import MainWindow
+        w=MainWindow();w.show()
+        try:
+            self.app.processEvents()
+            names=('male_group','female_group','shared_group',
+                   'ring_group','drawing_group')
+            frames=[w.findChild(QGroupBox,name) for name in names]
+            self.assertEqual([frame.width() for frame in frames],[520]*5)
+            self.assertEqual(w.findChild(QWidget,'input_panel').width(),530)
+            self.assertEqual(w.findChild(QWidget,'guide_panel').width(),520)
+            self.assertEqual(w.minimumSize(),w.maximumSize())
+            app_left=w.application.mapTo(w,w.application.rect().topLeft()).x()
+            for name in ('spin_male_cylinder_id_nom','spin_shared_width_nom',
+                         'spin_male_ring_id_nom'):
+                field=w.findChild(QWidget,name)
+                self.assertEqual(field.mapTo(w,field.rect().topLeft()).x(),app_left)
+            self.assertEqual(w.findChild(QWidget,'spin_shared_width_tol').mapTo(
+                w,w.findChild(QWidget,'spin_shared_width_tol').rect().topLeft()).x(),app_left+194)
+            # Toggling male/female must retain the equal-column layout.
+            w.configuration.setCurrentIndex(1)
+            self.app.processEvents()
+            self.assertEqual(w.findChild(QGroupBox,'female_group').width(),520)
+            self.assertEqual(w.findChild(QGroupBox,'drawing_group').width(),520)
+            female_tol=w.findChild(QWidget,'spin_female_rod_od_tol')
+            female_frame=w.findChild(QGroupBox,'female_group')
+            self.assertEqual(
+                female_frame.mapTo(w,female_frame.rect().topLeft()).x()+female_frame.width(),
+                female_tol.mapTo(w,female_tol.rect().topLeft()).x()+female_tol.width()+14)
+        finally:w.close()
+
+    def test_right_edges_and_symmetric_dimension_padding(self):
+        from PySide6.QtWidgets import QGroupBox, QWidget
+        from src.ui.main_window import MainWindow
+        w=MainWindow();w.show()
+        try:
+            self.app.processEvents()
+            def left(name):
+                field=w.findChild(QWidget,name)
+                return field.mapTo(w,field.rect().topLeft()).x()
+            def right(name):
+                field=w.findChild(QWidget,name)
+                return left(name)+field.width()
+            # All three right edges meet, without the extra width at the right.
+            self.assertEqual(right('setup_group'),right('drawing_group'))
+            self.assertEqual(right('overview_box'),right('drawing_group'))
+            self.assertEqual(w.width(),1080)
+            left_pad=left('calculation_method')-left('setup_group')
+            right_pad=right('setup_group')-right('guide_button')
+            self.assertEqual(left_pad,right_pad)
+            self.assertEqual(left_pad,15)
+            # Dimension labels and tolerance controls have the same edge inset.
+            for label,field,group in (
+                ('label_male_cylinder_id','spin_male_cylinder_id_tol','male_group'),
+                ('label_shared_width','spin_shared_width_tol','shared_group'),
+                ('label_male_ring_id','spin_male_ring_id_tol','ring_group'),
+            ):
+                self.assertEqual(left(label)-left(group),right(group)-right(field))
+            self.assertEqual(w.height(),784)
+        finally:w.close()
+
+    def test_compact_screening_columns_and_status(self):
+        from PySide6.QtWidgets import QLabel, QWidget
+        from src.ui.main_window import MainWindow
+        w=MainWindow();seed_sample(w);w.show()
+        try:
+            self.app.processEvents()
+            def centre(name):
+                widget=w.findChild(QWidget,name)
+                return widget.mapTo(w,widget.rect().topLeft()).x()+widget.width()/2
+            positions=[centre('overview_header_'+str(i)) for i in (1,2,3)]
+            self.assertEqual(positions,[558,698,838])
+            self.assertEqual([b-a for a,b in zip(positions,positions[1:])],[140,140])
+            self.assertEqual(w.findChild(QWidget,'overview_box').height(),179)
+            # The corrected compact 112px button width preserves the right
+            # edge, while the Status column remains at its original centre.
+            self.assertEqual(centre('overview_header_4'),994)
+            save=w.findChild(QWidget,'save_snapshot_button')
+            results=w.findChild(QWidget,'overview_box')
+            self.assertEqual(save.mapTo(w,save.rect().topLeft()).x()+save.width(),
+                             results.mapTo(w,results.rect().topLeft()).x()+results.width())
+            self.assertEqual(save.width(),112)
+            for name in ('overview_squeeze_4','overview_fit_4','overview_fill_4'):
+                self.assertEqual(centre(name),centre('overview_header_4'))
+            for name in ('overview_squeeze_name','overview_fit_name','overview_fill_name'):
+                label=w.findChild(QLabel,name)
+                self.assertLessEqual(label.sizeHint().height(),label.height())
+                self.assertLessEqual(label.sizeHint().width(),label.width())
+                self.assertFalse(label.wordWrap())
+        finally:w.close()
 
     def test_status_and_frame_alignment(self):
         from PySide6.QtWidgets import QGroupBox, QWidget

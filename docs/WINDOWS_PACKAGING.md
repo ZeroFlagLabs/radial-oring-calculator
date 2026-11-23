@@ -1,38 +1,39 @@
-> **Current Windows format (v1.0.1):** One ZIP containing one standalone EXE. Rebuild and Qt relinking details: [ONEFILE_REBUILD_AND_LGPL.md](ONEFILE_REBUILD_AND_LGPL.md). The description below records the earlier v1.0.0 one-folder build.
+# Windows packaging - v2.0.0
 
-# Windows packaging and release notes
+The official Windows download is **one ZIP containing one unsigned portable EXE**, retaining the v1.0.1 single-file packaging model.
 
-This app has a tested **one-folder** PyInstaller v1.0.0 build. Use the bundled Qt libraries and plugins with the executable, not the EXE by itself.
+## Build environment
 
-## Tested environment
+- Windows 11 with Python 3.13.x.
+- Qt for Python/PySide6 6.12.0, including Essentials, Addons and shiboken6.
+- PyInstaller 6.22.3.
 
-- Windows 11, Python **3.13.16**
-- PySide6 / Qt for Python / Shiboken6 **6.12.0**
-- PyInstaller **6.22.3**
-- **231** Windows regression tests passed.
-- Standalone EXE tested outside the development folder, including all eight guides, Inspect Results, PNG export, Settings, About/GitHub, and update status.
-- A separate copy of the one-folder build was reviewed against a **112-binary SHA-256 manifest**, then two unused Qt Virtual Keyboard binaries were excluded. All **110** remaining binary entries were verified, and the cleaned copy passed a Windows smoke test.
+From the public source tree:
 
-The original one-file EXE was also tested, but the chosen public format is the one-folder ZIP. A one-folder layout makes compatible Qt DLL replacement more practical; it does **not** independently satisfy Qt LGPLv3 obligations.
-
-## Rebuild locally
-
-```powershell
+~~~powershell
+py -3.13 -m venv venv
 & '.\venv\Scripts\python.exe' -m pip install -r requirements-build.txt
-& powershell.exe -NoProfile -ExecutionPolicy Bypass -File '.\tools\Build-OneFolder-Portable.ps1' -ProjectRoot (Get-Location).Path
-```
+& '.\venv\Scripts\python.exe' -m unittest discover -s tests -q
+& '.\venv\Scripts\python.exe' .\tools\Build-OneFile-Portable.py --project (Get-Location).Path
+~~~
 
-The `Build-OneFolder-Portable.ps1` script uses **absolute paths** for assets, because PyInstaller resolves resources relative to the emitted `.spec` file. Rebuilt binaries may not match the published manifest if the toolchain or environment differs; perform a fresh manifest and licence review for such builds.
+This builder creates a PyInstaller one-file specification, removes two unused binaries (`Qt6VirtualKeyboard.dll` and `qtvirtualkeyboardplugin.dll`) after dependency analysis and validates their absence from the executable. The embedded inventory must contain all eight Dimension Guides, the three Qt Designer forms, icons and the AS568 reference JSON.
 
-The audited v1.0.0 bundle initially included unused Qt Virtual Keyboard components; the published candidate excluded exactly:
+The output is:
 
-- `_internal/PySide6/Qt6VirtualKeyboard.dll`
-- `_internal/PySide6/plugins/platforminputcontexts/qtvirtualkeyboardplugin.dll`
+- `Radial-ORing-Calculator-v2.0.0-Windows-Portable.zip` containing only `Static & Dynamic Radial O-Ring Calculator v2.0.0.exe`
+- `Radial-ORing-Calculator-v2.0.0-Windows-Portable.zip.sha256` to verify the ZIP integrity
 
-A historical review-only script and its manifest are under `tools/release-audit/`, provided for reproducibility for that precise build. They do not automatically establish redistribution compliance for any different build.
+## Executable smoke testing
 
-## Published ZIP and component notices
+Launch the packaged EXE itself on Windows and verify the v2.0.0 version in the main window and Settings, Detail/Simplified switching, male/female examples, squeeze/fit/fill results, all eight guide pictures, Inspector calculations, clipboard/PNG reporting, keyboard navigation, reset, app icon and GitHub update status. Test actual Windows dark mode where available.
 
-The v1.0.0 Windows portable ZIP provides the MIT, LGPLv3 and GPLv3 licence texts, Python and OpenSSL licence texts, `THIRD_PARTY_NOTICES.md`, `THIRD_PARTY_COMPONENTS.md`, and `QT_SOURCE_AND_REPLACEMENT.md`. The same GitHub Release carries the matching Qt 6.12.0 and PySide6 6.12.0 source archives and their checksums. These licence/source assets are **not needed to run the application**. For the distribution scope and applicable third-party terms, see the [Third-party release checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
+The one-file PyInstaller bootloader extracts its Qt DLLs temporarily at startup. No Python installation, `_internal` directory or installer is needed for normal users.
 
-Do not upload the original private `references/` or `design-assets/` folders, the `venv/`, `.spec` files, build directories, or internal company/customer material.
+## Security, licences and source
+
+This is an unsigned program. SmartScreen, Smart App Control or workplace policies may block it; do not disable security protections.
+
+Qt/PySide6 and other libraries in the EXE retain independent licences. A one-file executable does not itself settle LGPL source/relink requirements. The tagged public source contains build scripts, LGPL/GPL/MIT notices, third-party attributions and compatible-library rebuild instructions. The existing v1.0.0 release retains distributor-hosted matching Qt and PySide6 source archives and checksum evidence.
+
+See [Qt LGPL and rebuild guidance](ONEFILE_REBUILD_AND_LGPL.md), [third-party notices](THIRD_PARTY_NOTICES.md) and [third-party release checklist](THIRD_PARTY_RELEASE_CHECKLIST.md). Private engineering studies and proprietary reference publications must never be included in this ZIP or repository.

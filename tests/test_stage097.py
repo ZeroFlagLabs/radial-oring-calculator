@@ -33,7 +33,7 @@ class Stage097SourceTests(unittest.TestCase):
         self.assertIn('The reference publications are not distributed',txt('references_note'))
         self.assertIn('dynamic (reciprocating) radial',txt('about_text'))
         self.assertNotIn('Pre-release development build',txt('about_text'))
-        self.assertEqual(txt('assumptions_text').count('•'),8)
+        self.assertEqual(txt('assumptions_text').count('•'),10)
         self.assertIn('check_on_launch', [w.get('name') for w in r.iter('widget')])
         self.assertIn('background: white',ET.tostring(r,encoding='unicode'))
     def test_all_72_reconciled_formulas_and_formatted_values(self):

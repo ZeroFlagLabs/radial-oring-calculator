@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (QComboBox, QHBoxLayout, QHeaderView,
                                QTableWidgetItem, QTextBrowser, QLabel)
 from PySide6.QtUiTools import QUiLoader
 from src.ui.inspection_data import geometry_records, explain_case
+from src.ui.dialog_style import set_standard_action_width
 
 
 def _math(text):
@@ -131,6 +132,7 @@ def build_inspect_results(evaluation, output, female, inputs, parent=None, scree
         dialog=QUiLoader().load(file,parent)
         if dialog is None:raise RuntimeError(f'Cannot load results inspector: {form}')
     finally:file.close()
+    dialog.setWindowTitle(dialog.windowTitle() + ' | ' + evaluation.method.title())
     get=dialog.findChild
     selector_layout=get(QHBoxLayout,'traceSelectorsLayout')
     for idx in range(3):selector_layout.setStretch(idx,1)
@@ -141,6 +143,8 @@ def build_inspect_results(evaluation, output, female, inputs, parent=None, scree
     grid=get(QTableWidget,'geometry_table')
     tabs=get(QTabWidget,'result_tabs')
     close=get(QPushButton,'close_inspection')
+    if close is not None:
+        set_standard_action_width(close)
     tolerance_footer=get(QLabel,'trace_disclaimer')
     geometry_footer=get(QLabel,'geometry_note')
     if any(x is None for x in (precision,measure,condition,text,grid,tabs,close,

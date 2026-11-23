@@ -7,7 +7,7 @@ from pathlib import Path
 from html import escape as _escape_html
 import re
 from PySide6.QtWidgets import (
-    QComboBox, QDialog, QDoubleSpinBox, QFormLayout, QFrame,
+    QApplication, QComboBox, QDialog, QDoubleSpinBox, QFormLayout, QFrame,
     QGridLayout, QGroupBox, QHBoxLayout, QLabel, QMainWindow, QPlainTextEdit,
     QPushButton, QScrollArea, QStackedWidget, QSizePolicy, QVBoxLayout, QWidget,
 )
@@ -22,6 +22,7 @@ from src.ui.inspect_results import build_inspect_results
 from src.ui.groove_diagram import GrooveDiagram
 from src.ui.precision import format_input, format_result
 from src.ui.size_guide import SizeGuide
+from src.ui.dialog_style import set_standard_action_width
 from src.ui.settings_dialog import SettingsDialog
 from src.calculations.criteria import ScreeningResults, screen_rectangular
 from src.calculations.profile_geometry import SignedDimension
@@ -122,6 +123,15 @@ class BoundDimensionRow:
 
 class MainWindow(QMainWindow):
     def __init__(self):
+        # The Designer UI deliberately uses a light colour scheme. On Windows
+        # dark mode, otherwise unstyled labels inherit white system text over
+        # the white form panels, and combo popups inherit dark system colours.
+        # Request Qt's native *application-only* light scheme before creating
+        # any widgets. This does not change Windows theme settings or the
+        # established colours, dimensions, or calculations in light mode.
+        app = QApplication.instance()
+        if app is not None and app.styleHints().colorScheme() == Qt.ColorScheme.Dark:
+            app.styleHints().setColorScheme(Qt.ColorScheme.Light)
         super().__init__()
         self.setWindowTitle(APP_TITLE)
         self.resize(1000, 830)
@@ -148,6 +158,18 @@ class MainWindow(QMainWindow):
         self._stabilise_input_heights()
         self._align_dimension_frames()
         self._fix_main_window_size()
+        # Designer finalises the header-label width on first show. Position
+        # once then, so the button sits after the actual visible label text.
+        QTimer.singleShot(0, self._position_calculation_method_info_icon)
+
+    def _position_calculation_method_info_icon(self):
+        """Position the info button immediately after the actual label text."""
+        label = self.findChild(QLabel,'selector_calculation_method_label')
+        button = self.calculation_method_info_button
+        x = min(label.width()-button.width(),
+                label.fontMetrics().horizontalAdvance(label.text())+4)
+        button.move(max(0,x),2)
+        button.raise_()
 
     def _stabilise_input_heights(self):
         """Hold stacked entry fields and dimension panels at their natural heights."""
@@ -207,7 +229,7 @@ class MainWindow(QMainWindow):
         layout.activate()
         minimum = self.centralWidget().minimumSizeHint()
         chrome = self.statusBar().sizeHint().height()
-        width = max(1000, minimum.width() + 12)
+        width = max(1000, minimum.width())
         # Do not impose the old 680px height floor: spare height allocated to
         # the nested dimension-row layout created a visually oversized gap
         # above screening. The actual minimum includes every visible control.
@@ -256,13 +278,14 @@ class MainWindow(QMainWindow):
 
         # Fixed widget names connect the editable layout with the calculation
         # engine. Users may alter positions/text/spacing but must not rename.
-        for name in ('application','configuration','groove_type','entry_mode',
+        for name in ('calculation_method','application','configuration','groove_type','entry_mode',
                      'female_entry_mode','ring_size'):
             setattr(self,name,get(name,QComboBox))
         for name in ('entry_mode_stack','gland_entry','female_gland_entry'):
             setattr(self,name,get(name,QStackedWidget))
         for name in ('guide_button','trace_button','snapshot_button',
-                     'save_snapshot_button','reset_button','settings_button'):
+                     'save_snapshot_button','reset_button','settings_button',
+                     'calculation_method_info_button'):
             setattr(self,name,get(name,QPushButton))
         for name in ('male_group','female_group'):
             setattr(self,name,get(name,QGroupBox))
@@ -276,6 +299,13 @@ class MainWindow(QMainWindow):
             setattr(self,name,get(name,layout_type))
         self._root_layout = get('mainLayout',QVBoxLayout)
 
+        # Both calculation methods share the existing input layout and report
+        # formats. The calculation engine supplies method-specific witnesses.
+        self.calculation_method.addItem('Detailed', 'detailed')
+        self.calculation_method.addItem('Simplified', 'simplified')
+        self.calculation_method.setToolTip(
+            'Detailed: manufacturer-informed installed-condition corrections. '
+            'Simplified: free-state O-ring section for squeeze and gland fill.')
         self.application.addItem('Static', 'static')
         self.application.addItem('Dynamic (reciprocating)', 'dynamic')
         self.configuration.addItem('Piston groove (male)', 'male')
@@ -290,7 +320,20 @@ class MainWindow(QMainWindow):
         for size in self.as568_sizes:
             self.ring_size.addItem(size.label, size.dash)
         self.ring_size.setMaxVisibleItems(20)
+        # Prevent long dropdown item texts from enlarging the six-column
+        # Application setup grid. Actual widths remain Designer-owned.
+        for selector in (self.calculation_method, self.application,
+                         self.configuration, self.groove_type,
+                         self.entry_mode, self.female_entry_mode,
+                         self.ring_size):
+            selector.setSizeAdjustPolicy(
+                QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
+            selector.setMinimumContentsLength(8)
         self.ring_size.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        # Keep the O-ring selector and its guide button together at the left
+        # of their wider grid column, aligned with the O-ring heading.
+        for name in ('oringHeaderLayout', 'oringGuideLayout'):
+            get(name, QHBoxLayout).setAlignment(Qt.AlignmentFlag.AlignLeft)
 
         self.rows = {}
         self.female_rows = {}
@@ -350,6 +393,10 @@ class MainWindow(QMainWindow):
         get('window_title',QLabel).setStyleSheet('font-size:19px; font-weight:700; color:#123b6c;')
         get('version_label',QLabel).setStyleSheet('color:#6c7e94; font-size:11px;')
         get('version_label',QLabel).setText('v' + APP_VERSION)
+        self.calculation_method_info_button.setIcon(QIcon(str(icon_dir / 'info-guide.png')))
+        self.calculation_method_info_button.setIconSize(QSize(13, 13))
+        self.calculation_method_info_button.setToolTip('About calculation methods')
+        self.calculation_method_info_button.clicked.connect(self._show_calculation_method_info)
         self.guide_button.setToolTip('Open O-Ring Size Reference (currently AS568 sizes)')
         self.guide_button.setIcon(QIcon(str(icon_dir / 'info-guide.png')))
         self.guide_button.setIconSize(QSize(18, 18))
@@ -415,6 +462,9 @@ class MainWindow(QMainWindow):
         for key,part in (('Squeeze','squeeze'),('Fit','fit'),('Gland fill','fill')):
             name=get(f'overview_{part}_name',QLabel)
             name.setStyleSheet('color:#17436b; font-weight:600;')
+            # Preserve the released compact results-row presentation.
+            # The full criterion stays visible without line wrapping.
+            name.setWordWrap(False)
             self.overview_cells[(key,0)]=name
             for col in (1,2,3,4):
                 cell=get(f'overview_{part}_{col}',QLabel)
@@ -424,11 +474,10 @@ class MainWindow(QMainWindow):
         for col in range(5):
             get(f'overview_header_{col}',QLabel).setStyleSheet(
                 'color:#657c94; font-size:11px; font-weight:600;')
-        # Pixel-reference centres at ~417, 557, 699 and 939px in a 1018px capture.
-        # Reserve fixed equal numerical cells, leaving spare width only in the
-        # intentional spacer before the Status column.
+        # Preserve released compact numerical-column spacing and full-width
+        # criterion labels. Keep Status aligned with the Save PNG button.
         for col in range(6): self.overview_grid.setColumnStretch(col,0)
-        for col,width in ((0,326),(1,136),(2,136),(3,136),(5,72)):
+        for col,width in ((0,326),(1,136),(2,136),(3,136),(5,102)):
             self.overview_grid.setColumnMinimumWidth(col,width)
         self.overview_grid.setColumnStretch(4,1)
         for row_index in (1,2,3):
@@ -450,6 +499,7 @@ class MainWindow(QMainWindow):
         self.diagram=GrooveDiagram(self)
         self.diagram.hide()
         self._register_focus_inputs()
+        self._set_dimension_tab_order()
         self.statusBar().showMessage(
             'Example inputs only; not approved dimensions. Mouse wheel cannot change dimension values.')
         self.entry_mode.currentIndexChanged.connect(self._change_mode)
@@ -457,6 +507,7 @@ class MainWindow(QMainWindow):
         self.configuration.currentIndexChanged.connect(self._change_configuration)
         self.groove_type.currentIndexChanged.connect(self._change_groove)
         self.application.currentIndexChanged.connect(self._recalculate)
+        self.calculation_method.currentIndexChanged.connect(self._recalculate)
         self.ring_size.currentIndexChanged.connect(self._change_ring_size)
         self._change_groove()
         # Qt Designer is allowed to save either stacked page as the visible
@@ -472,6 +523,38 @@ class MainWindow(QMainWindow):
                 for spin in (row.nominal,row.tolerance):
                     self._focus_fields[spin]=key
                     spin.installEventFilter(self)
+
+    def _set_dimension_tab_order(self):
+        """Follow the visible component and groove dimensions in either mode.
+
+        Qt Designer's default focus chain skips the selected groove's first
+        field, especially on female grooves. A single ordered chain containing
+        both female entry variants works for ID and Depth because Qt skips
+        hidden stacked-page controls. It also preserves the existing male
+        component-to-groove transitions.
+        """
+        for component_key, groove_key in (
+            ('direct_rod_od', 'gland_od'),
+            ('rod_od', 'groove_depth'),
+        ):
+            component = self.rows[component_key]
+            groove = self.rows[groove_key]
+            self.setTabOrder(component.tolerance, groove.nominal)
+            self.setTabOrder(groove.nominal, groove.tolerance)
+
+        female_sequence = []
+        for key in (
+            'direct_cylinder_id', 'cylinder_id', 'rod_od',
+            'gland_id', 'groove_depth',
+        ):
+            row = self.female_rows[key]
+            female_sequence.extend((row.nominal, row.tolerance))
+        female_sequence.extend((
+            self.shared_rows['width'].nominal,
+            self.shared_rows['width'].tolerance,
+        ))
+        for current, following in zip(female_sequence, female_sequence[1:]):
+            self.setTabOrder(current, following)
 
     def eventFilter(self,obj,event):
         if (event.type()==QEvent.Type.FocusIn and
@@ -689,6 +772,7 @@ class MainWindow(QMainWindow):
         sketch = self._reference_pixmaps[state]
         entry_mode = self.female_entry_mode if female else self.entry_mode
         context = [
+            ('Calculation method', self.calculation_method.currentText()),
             ('Application', self.application.currentText()),
             ('Gland type', self.configuration.currentText()),
             ('Groove profile', self.groove_type.currentText()),
@@ -809,6 +893,74 @@ class MainWindow(QMainWindow):
         self.snapshot_button.setEnabled(False)
         self.save_snapshot_button.setEnabled(False)
         self._update_diagram(invalid=True)
+
+    def _make_calculation_method_info_dialog(self):
+        """Quiet compact dialog matching Settings / O-Ring Size Reference."""
+        dialog = QDialog(self)
+        dialog.setObjectName('calculation_method_info_dialog')
+        dialog.setWindowTitle(f'Calculation Method | {APP_TITLE}')
+        dialog.setFixedWidth(485)
+
+        # Same heading/rule/subtitle positions as Settings and Size Reference.
+        layout = QVBoxLayout(dialog)
+        layout.setContentsMargins(11, 11, 11, 11)
+        layout.setSpacing(6)
+
+        heading = QLabel('Calculation Method', dialog)
+        heading.setObjectName('method_dialog_heading')
+        heading.setStyleSheet('font-size:17px; font-weight:700; color:#164f8a;')
+        layout.addWidget(heading)
+
+        rule = QFrame(dialog)
+        rule.setObjectName('method_dialog_heading_rule')
+        rule.setFrameShape(QFrame.Shape.HLine)
+        rule.setFrameShadow(QFrame.Shadow.Plain)
+        layout.addWidget(rule)
+
+        app_name = QLabel(APP_TITLE, dialog)
+        app_name.setObjectName('method_dialog_app_name')
+        app_name.setStyleSheet('color:#71849a; font-size:11px;')
+        layout.addWidget(app_name)
+        layout.addSpacing(4)
+
+        for title, explanation in (
+            ('Detailed',
+             'Uses manufacturer-informed installed-condition calculations, '
+             'including cross-section and material-area corrections for stretched O-rings.'),
+            ('Simplified',
+             'Uses the free-state O-ring cross-section for radial squeeze and gland fill.'),
+        ):
+            title_label = QLabel(title, dialog)
+            title_label.setObjectName('method_heading_' + title.lower())
+            title_label.setStyleSheet('font-weight:600; color:#164f8a;')
+            layout.addWidget(title_label)
+
+            description = QLabel(explanation, dialog)
+            description.setObjectName('method_description_' + title.lower())
+            description.setWordWrap(True)
+            description.setFixedHeight(
+                max(description.fontMetrics().height(),
+                    description.heightForWidth(dialog.width()-22)))
+            layout.addWidget(description)
+
+            if title == 'Detailed':
+                layout.addSpacing(4)
+
+        footer = QHBoxLayout()
+        close = QPushButton('Close', dialog)
+        close.setObjectName('close_method_information')
+        set_standard_action_width(close)
+        close.setFixedHeight(30)
+        close.clicked.connect(dialog.accept)
+        footer.addStretch()
+        footer.addWidget(close)
+        layout.addLayout(footer)
+        dialog.adjustSize()
+        dialog.setFixedHeight(dialog.sizeHint().height())
+        return dialog
+
+    def _show_calculation_method_info(self):
+        self._make_calculation_method_info_dialog().exec()
 
     def _show_settings(self):
         dialog = SettingsDialog(self)
@@ -954,7 +1106,8 @@ class MainWindow(QMainWindow):
             return
         try:
             inputs = self._collect()
-            evaluation = calculate_installed(inputs)
+            method = self.calculation_method.currentData()
+            evaluation = calculate_installed(inputs, method=method)
             output = evaluation.results
             female = self.configuration.currentData() == "female"
             screening = screen_rectangular(output, self.application.currentData(), female=female)
