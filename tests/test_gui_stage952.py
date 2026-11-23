@@ -180,7 +180,7 @@ class Stage952GuiTests(unittest.TestCase):
                 field=w.findChild(QWidget,name)
                 self.assertEqual(field.mapTo(w,field.rect().topLeft()).x(),app_left)
             self.assertEqual(w.findChild(QWidget,'spin_shared_width_tol').mapTo(
-                w,w.findChild(QWidget,'spin_shared_width_tol').rect().topLeft()).x(),app_left+194)
+                w,w.findChild(QWidget,'spin_shared_width_tol').rect().topLeft()).x(),app_left+218)
             # Toggling male/female must retain the equal-column layout.
             w.configuration.setCurrentIndex(1)
             self.app.processEvents()
@@ -219,7 +219,10 @@ class Stage952GuiTests(unittest.TestCase):
                 ('label_shared_width','spin_shared_width_tol','shared_group'),
                 ('label_male_ring_id','spin_male_ring_id_tol','ring_group'),
             ):
-                self.assertEqual(left(label)-left(group),right(group)-right(field))
+                self.assertEqual(left(label)-left(group), 14)
+                # Both sides of each dimension group retain the same 14px inset.
+                # The first nominal field remains anchored at its original X.
+                self.assertEqual(right(group)-right(field), 14)
             self.assertEqual(w.height(),784)
         finally:w.close()
 

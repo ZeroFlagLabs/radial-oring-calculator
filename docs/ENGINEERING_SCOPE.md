@@ -16,6 +16,28 @@ For each metric, the engine evaluates permissible independent input tolerance en
 
 These are alternative assumptions for the same dimensional checks, not two separate sets of acceptance criteria. Neither method is itself a seal-performance guarantee.
 
+## Tolerance input representations (v2.1.0)
+
+Any dimension may be entered as a nominal dimension with a symmetrical
+plus/minus tolerance, or as two absolute permitted endpoints. On a per-row
+basis these representations are mathematically equivalent:
+
+- minimum = nominal - tolerance; maximum = nominal + tolerance
+- nominal = (minimum + maximum)/2
+- tolerance = (maximum - minimum)/2
+
+The nominal result for a limit-based input therefore uses the **midpoint**,
+not a separately specified basic dimension. The software may show a seventh
+decimal place in a converted field to preserve two six-place input limits.
+Switching representations does not change the engineering equations or the
+actual physical range. Min greater than Max is invalid.
+
+The AS568 catalogue controls retain fixed reference dimensions even when
+their display is switched between these representations. The snapshots
+continue to show each physical interval in the existing nominal plus/minus
+format, with the report's usual display precision; calculations use the
+unrounded stored values.
+
 ## Installed fit and gland geometry
 
 Male fit is calculated from installed gland OD relative to free O-ring ID. Female fit is **OD interference** of free O-ring OD relative to gland ID. The female calculation is not obtained by comparing rod OD with free ring ID.
@@ -43,4 +65,4 @@ Evaluate pressure and extrusion gap, backup rings, elastomer compound and fluid 
 
 The release contains extensive automated numeric, tolerance, geometry, method-reporting and GUI regression tests. They do not establish correctness for every operating condition. Technical references relevant to the Detailed method and screening criteria are identified in the application's **Settings > References** panel. Manufacturer engineering publications are cited, not redistributed.
 
-See [v2.0.1 notes](RELEASE_NOTES_v2.0.1.md) and [original v2.0.0 method notes](RELEASE_NOTES_v2.0.0.md), [third-party notices](THIRD_PARTY_NOTICES.md) and [licensing checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
+See [v2.1.0 notes](RELEASE_NOTES_v2.1.0.md), [v2.0.1 notes](RELEASE_NOTES_v2.0.1.md) and [original v2.0.0 method notes](RELEASE_NOTES_v2.0.0.md), [third-party notices](THIRD_PARTY_NOTICES.md) and [licensing checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).

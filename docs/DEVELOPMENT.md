@@ -1,4 +1,4 @@
-# Development and release guidance - v2.0.1
+# Development and release guidance - v2.1.0
 
 ## Code and resource architecture
 
@@ -31,7 +31,7 @@ py -3.13 -m venv venv
 
 ## Single-EXE release builder
 
-The preferred v2.0.1 builder is the published v1.0.1 `tools/Build-OneFile-Portable.py` mechanism:
+The preferred v2.1.0 builder is the published v1.0.1 `tools/Build-OneFile-Portable.py` mechanism:
 
 ~~~powershell
 & '.\venv\Scripts\python.exe' .\tools\Build-OneFile-Portable.py --project (Get-Location).Path

@@ -16,7 +16,13 @@ class DesignerLayoutStructureTests(unittest.TestCase):
         self.assertEqual(len(names), len(set(names)))
         self.assertGreaterEqual(len(names), 140)  # detailed panels intentionally removed in 9.5
         spins = [w for w in root.iter('widget') if w.get('class') == 'AdaptiveSpinBox']
-        self.assertEqual(len(spins), 34)
+        original_spins = [w for w in spins if w.get('name', '').startswith('spin_')]
+        limit_spins = [w for w in spins if w.get('name', '').startswith('limit_')]
+        # v2.1 preview retains all 34 original nominal/symmetrical input
+        # controls and adds 34 native arrowed Min/Max inputs (17 rows).
+        self.assertEqual(len(original_spins), 34)
+        self.assertEqual(len(limit_spins), 34)
+        self.assertEqual(len(spins), 68)
         self.assertIn('src.ui.main_window', ET.tostring(root, encoding='unicode'))
         for name in ('appSurface','male_group','female_group','overview_squeeze_2',
                      'spin_shared_width_nom','match_slot','guide_placeholder'):

@@ -4,11 +4,12 @@ from PySide6.QtCore import Qt, QEvent, QFile, QIODevice, QSize, QSignalBlocker, 
 from PySide6.QtGui import QFont, QIcon, QPixmap
 from PySide6.QtUiTools import QUiLoader
 from pathlib import Path
+from decimal import Decimal
 from html import escape as _escape_html
 import re
 from PySide6.QtWidgets import (
     QApplication, QComboBox, QDialog, QDoubleSpinBox, QFormLayout, QFrame,
-    QGridLayout, QGroupBox, QHBoxLayout, QLabel, QMainWindow, QPlainTextEdit,
+    QGridLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QMainWindow, QPlainTextEdit,
     QPushButton, QScrollArea, QStackedWidget, QSizePolicy, QVBoxLayout, QWidget,
 )
 
@@ -38,14 +39,28 @@ from src.calculations.dovetail import (
 
 
 class AdaptiveSpinBox(QDoubleSpinBox):
-    """Keep six-decimal stored precision, with compact but lossless display."""
+    """Compact dimension entry, retaining precision after mode conversions.
+
+    Manually entered values normally use six decimal places. Converting
+    six-place *limits* to nominal +/- tolerance can require seven places:
+    e.g. 0.141001 to 0.148500 -> 0.1447505 +/- 0.0037495.
+    Preserve that half-microinch instead of silently rounding the endpoints.
+    """
 
     def __init__(self, parent=None):
         self.minimum_display_decimals = 3
         super().__init__(parent)
 
     def textFromValue(self, value: float) -> str:
-        return format_input(value, self.minimum_display_decimals)
+        if self.decimals() <= 6:
+            return format_input(value, self.minimum_display_decimals)
+        # Keep existing compact three/one-place presentation unless extra
+        # precision is genuinely required to represent the converted value.
+        exact = Decimal(str(value)).normalize()
+        needed = max(0, -exact.as_tuple().exponent)
+        displayed = max(self.minimum_display_decimals,
+                        min(self.decimals(), needed))
+        return f'{value:.{displayed}f}'
 
     def set_display_decimals(self, decimals: int):
         self.minimum_display_decimals = decimals
@@ -115,9 +130,27 @@ class BoundDimensionRow:
     def set_display_decimals(self, decimals):
         self.nominal.set_display_decimals(decimals)
         self.tolerance.set_display_decimals(decimals)
+        for name in ('limit_min', 'limit_max'):
+            editor = getattr(self, name, None)
+            if editor is not None:
+                editor.set_display_decimals(decimals)
+
+    def effective_nominal(self):
+        # Limits have no independent nominal entry. Their midpoint is the
+        # precisely defined reference used for the Nominal result column.
+        if getattr(self, 'limit_mode', False):
+            return (self.limit_min.value() + self.limit_max.value()) / 2
+        return self.nominal.value()
 
     def dimension(self):
         kind = SignedDimension if self.signed else Dimension
+        if getattr(self, 'limit_mode', False):
+            low = self.limit_min.value()
+            high = self.limit_max.value()
+            if low > high:
+                name = getattr(self, 'field_name', self.widget.objectName())
+                raise ValueError(f'{name}: minimum limit exceeds maximum limit.')
+            return kind((low + high) / 2, (high - low) / 2)
         return kind(self.nominal.value(), self.tolerance.value())
 
 
@@ -351,10 +384,57 @@ class MainWindow(QMainWindow):
                 nominal=get(f'spin_{stem}_{key}_nom',AdaptiveSpinBox)
                 tolerance=get(f'spin_{stem}_{key}_tol',AdaptiveSpinBox)
                 angle=key in ('rect_angle','angle')
-                mapping[key]=BoundDimensionRow(container,nominal,tolerance,
+                row = BoundDimensionRow(container,nominal,tolerance,
                     on_change=self._recalculate, signed=key=='rect_angle')
+                mapping[key] = row
+                # Qt Designer owns the approved 106px input boxes and
+                # 92px +/- / Limits selector; only values are converted here.
+                base = f'{stem}_{key}'
+                row.mode_sym = get(f'mode_{base}_sym', QPushButton)
+                row.mode_limits = get(f'mode_{base}_limits', QPushButton)
+                row.nominal_stack = get(f'nominal_stack_{base}', QStackedWidget)
+                row.mode_stack = get(f'tolerance_stack_{base}', QStackedWidget)
+                # Both full-sized input areas must exactly match the nominal
+                # spinbox's native Windows or offscreen height. Qt Designer
+                # owns their widths, locations, and the middle toggle.
+                native_row_height = nominal.sizeHint().height()
+                row.nominal_stack.setFixedHeight(native_row_height)
+                row.mode_stack.setFixedHeight(native_row_height)
+                get(f'tolerance_mode_{base}').setFixedHeight(native_row_height)
+                row.limit_min = get(f'limit_{base}_min', AdaptiveSpinBox)
+                row.limit_max = get(f'limit_{base}_max', AdaptiveSpinBox)
+                # Use the exact same native arrowed spinbox and units as the
+                # symmetrical inputs. MIN/MAX appears on its right, before
+                # the stepper arrows, without obscuring the dimension value.
+                for which, editor in (('min', row.limit_min),
+                                      ('max', row.limit_max)):
+                    editor.setFixedHeight(native_row_height)
+                    editor.setSuffix(nominal.suffix())
+                    editor.setSingleStep(nominal.singleStep())
+                    editor.set_display_decimals(
+                        1 if angle else nominal.minimum_display_decimals)
+                    editor.lineEdit().setTextMargins(0, 0, 21, 0)
+                    tag = get(f'limit_tag_{base}_{which}', QLabel)
+                    tag.setAttribute(
+                        Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
+                    tag.raise_()
+                row.limit_mode = False
+                row.limits_initialized = False
+                row.field_name = get(f'label_{base}', QLabel).text()
+                # Native spinboxes retain typed precision and units and only
+                # commit their user-edited values once per completed edit.
+                row.limit_min.setKeyboardTracking(False)
+                row.limit_max.setKeyboardTracking(False)
+                row.limit_min.valueChanged.connect(self._recalculate)
+                row.limit_max.valueChanged.connect(self._recalculate)
+                row.mode_sym.clicked.connect(
+                    lambda checked=False, target=row:
+                    self._set_tolerance_mode(target, False))
+                row.mode_limits.clicked.connect(
+                    lambda checked=False, target=row:
+                    self._set_tolerance_mode(target, True))
                 if angle:
-                    mapping[key].set_display_decimals(1)
+                    row.set_display_decimals(1)
                 # Keep visible numeric zeros at startup and after Reset
                 # Dimensions. Optional radii, wall-angle and dovetail angle all
                 # remain user-editable with an explicit zero starting value.
@@ -451,7 +531,10 @@ class MainWindow(QMainWindow):
         } QPushButton#snapshot_button:hover {background:#e3f1fd;}""")
         self.save_snapshot_button.setStyleSheet("""QPushButton#save_snapshot_button {
             color:white; background:#176bc0; border:1px solid #176bc0; padding:3px 12px;
-        } QPushButton#save_snapshot_button:hover {background:#0e5ba7;}""")
+        } QPushButton#save_snapshot_button:hover {background:#0e5ba7;}
+        QPushButton#save_snapshot_button:disabled {
+            color:#8795a5; background:#eff2f5; border:1px solid #c4cdd8;
+        }""")
         self.reset_button.setToolTip('Clear all entered dimensions and tolerances; keep the selected application and geometry.')
         self.reset_button.clicked.connect(self._reset_dimensions)
         self.snapshot_button.clicked.connect(self._copy_snapshot)
@@ -528,6 +611,105 @@ class MainWindow(QMainWindow):
         # This also ensures correct male/female hardware visibility at startup.
         self._change_configuration()
 
+    @staticmethod
+    def _set_converted_spin_value(spin, exact: Decimal):
+        """Write a converted value without losing a needed half-micro unit.
+
+        Qt's QDoubleSpinBox rounds inputs to its configured decimals. Raise
+        that display/storage precision only when the computed result needs
+        it. Never update the screen dimensions, font or report layout.
+        """
+        digits = max(0, -exact.normalize().as_tuple().exponent)
+        if digits > 12:
+            raise ValueError('Converted tolerance exceeds 12 decimal places.')
+        with QSignalBlocker(spin):
+            spin.setDecimals(max(6, digits))
+            spin.setValue(float(exact))
+
+    def _set_tolerance_mode(self, row, use_limits: bool):
+        """Convert this row's *current* visible entry on every mode switch.
+
+        +/- -> Min/Max: nominal - tolerance, nominal + tolerance.
+        Min/Max -> +/-: (minimum + maximum)/2, (maximum - minimum)/2.
+        The screen layout, engineering input model and report remain unchanged.
+        """
+        if row.limit_mode == use_limits:
+            return
+
+        # The toggles are NoFocus buttons. Commit a pending typed spinbox
+        # edit before reading it (keyboardTracking is deliberately False).
+        source = ((row.nominal, row.tolerance)
+                  if use_limits else (row.limit_min, row.limit_max))
+        for spin in source:
+            spin.interpretText()
+        first, second = (Decimal(str(spin.value())) for spin in source)
+
+        if use_limits:
+            converted = (first - second, first + second)
+            targets = (row.limit_min, row.limit_max)
+        else:
+            if first > second:
+                # A reversed range has no equivalent non-negative tolerance.
+                # Keep the erroneous limits visible for correction.
+                row.mode_limits.setChecked(True)
+                self._recalculate()
+                return
+            converted = ((first + second)/2, (second - first)/2)
+            targets = (row.nominal, row.tolerance)
+
+        # Preflight both results before changing EITHER field. In particular,
+        # a 12-place pair may need a 13th decimal at its midpoint; never
+        # partly update one field before failing on the other.
+        for editor, value in zip(targets, converted):
+            too_precise = max(0, -value.normalize().as_tuple().exponent) > 12
+            out_of_range = not (
+                Decimal(str(editor.minimum())) <= value <=
+                Decimal(str(editor.maximum())))
+            if too_precise or out_of_range:
+                (row.mode_sym if not row.limit_mode
+                 else row.mode_limits).setChecked(True)
+                reason = ('requires more than 12 decimal places'
+                          if too_precise else
+                          'is outside the permitted input range')
+                self.statusBar().showMessage(
+                    f'Cannot convert {row.field_name}: the resulting '
+                    f'dimension {reason}.')
+                return
+
+        for spin, exact in zip(targets, converted):
+            self._set_converted_spin_value(spin, exact)
+
+        row.limits_initialized = True
+        row.limit_mode = use_limits
+        row.mode_sym.setChecked(not use_limits)
+        row.mode_limits.setChecked(use_limits)
+        row.nominal_stack.setCurrentIndex(1 if use_limits else 0)
+        row.mode_stack.setCurrentIndex(1 if use_limits else 0)
+        self._recalculate()
+
+    def _has_active_limits(self):
+        """Only dimensions used in this selected geometry contribute limits."""
+        female = self.configuration.currentData() == 'female'
+        mode = (self.female_entry_mode.currentData() if female
+                else self.entry_mode.currentData())
+        if female:
+            names = (('rod_od', 'gland_id', 'direct_cylinder_id')
+                     if mode == 'gland_id' else
+                     ('rod_od', 'cylinder_id', 'groove_depth'))
+            active = self.female_rows
+        else:
+            names = (('gland_od', 'direct_rod_od', 'cylinder_id')
+                     if mode == 'gland_od' else
+                     ('rod_od', 'groove_depth', 'cylinder_id'))
+            active = self.rows
+        selected = [active[name] for name in names]
+        selected.extend(self.shared_rows[name] for name in
+            ('width', 'radius', 'entrance_radius',
+             'angle' if self.groove_type.currentData() == 'dovetail'
+             else 'rect_angle'))
+        selected.extend(self.rows[name] for name in ('ring_id', 'section'))
+        return any(row.limit_mode for row in selected)
+
     def _register_focus_inputs(self):
         self._focus_fields={}
         for rows in (self.rows,self.female_rows,self.shared_rows):
@@ -577,21 +759,36 @@ class MainWindow(QMainWindow):
 
     @staticmethod
     def _fill_unused_dimension(source, target):
-        """Transfer a corresponding dimension only into an unused field.
+        """Carry a physical dimension into an unused counterpart only.
 
-        The two modes have different Designer widgets for the same physical
-        piston OD / cylinder ID, and the configurations have separate depth
-        fields. Values already entered in the destination
-        (including a non-zero tolerance) always take precedence. Never copy
-        a groove OD into a groove ID, or vice versa.
+        A source entered as Min/Max retains its exact two limits and selected
+        representation in the new configuration, without overwriting any
+        previously entered destination dimension.
         """
-        if target.nominal.value() != 0 or source.nominal.value() <= 0:
+        if target.effective_nominal() != 0 or source.effective_nominal() <= 0:
+            return
+        try:
+            dim = source.dimension()
+        except ValueError:
             return
         with QSignalBlocker(target.nominal):
-            target.nominal.setValue(source.nominal.value())
+            target.nominal.setValue(dim.nominal)
         if target.tolerance.value() == 0:
             with QSignalBlocker(target.tolerance):
-                target.tolerance.setValue(source.tolerance.value())
+                target.tolerance.setValue(dim.tolerance)
+        if source.limit_mode:
+            for target_spin, source_spin in (
+                (target.limit_min, source.limit_min),
+                (target.limit_max, source.limit_max),
+            ):
+                with QSignalBlocker(target_spin):
+                    target_spin.setValue(source_spin.value())
+            target.limits_initialized = True
+            target.limit_mode = True
+            target.nominal_stack.setCurrentIndex(1)
+            target.mode_stack.setCurrentIndex(1)
+            target.mode_sym.setChecked(False)
+            target.mode_limits.setChecked(True)
 
     def _fill_other_configuration(self, old_configuration, new_configuration):
         """Carry common hardware inputs into empty fields of the new view.
@@ -727,10 +924,11 @@ class MainWindow(QMainWindow):
         0.000000 at that storage resolution. Never omit a small non-zero
         tolerance or lose significant user-entered decimal places.
         """
-        nominal = format_input(row.nominal.value())
-        tolerance = row.tolerance.value()
+        dimension = row.dimension()
+        nominal = format_input(dimension.nominal)
+        tolerance = dimension.tolerance
         if tolerance > 0.0000005:
-            return f'{nominal} ± {format_input(tolerance)}'
+            return f'{nominal} {chr(177)} {format_input(tolerance)}'
         return nominal
 
     def _capture_inputs(self):
@@ -839,9 +1037,17 @@ class MainWindow(QMainWindow):
         """
         for rows in (self.rows, self.female_rows, self.shared_rows):
             for row in rows.values():
-                for spin in (row.nominal, row.tolerance):
+                for spin in (row.nominal, row.tolerance,
+                             row.limit_min, row.limit_max):
                     with QSignalBlocker(spin):
+                        spin.setDecimals(6)
                         spin.setValue(0.0)
+                row.limit_mode = False
+                row.limits_initialized = False
+                row.nominal_stack.setCurrentIndex(0)
+                row.mode_stack.setCurrentIndex(0)
+                row.mode_sym.setChecked(True)
+                row.mode_limits.setChecked(False)
         # Drop any selected AS568 designation after clearing the dimensions.
         self.ring_size.setCurrentIndex(0)
         self._change_ring_size()
@@ -858,11 +1064,11 @@ class MainWindow(QMainWindow):
             keys = ('gland_od', 'direct_rod_od', 'cylinder_id') if mode == 'gland_od' else (
                    'rod_od', 'groove_depth', 'cylinder_id')
             active = self.rows
-        missing = [k for k in keys if active[k].nominal.value() <= 0]
-        missing.extend(k for k in ('width',) if self.shared_rows[k].nominal.value() <= 0)
-        if self.groove_type.currentData() == 'dovetail' and self.shared_rows['angle'].nominal.value() <= 0:
+        missing = [k for k in keys if active[k].effective_nominal() <= 0]
+        missing.extend(k for k in ('width',) if self.shared_rows[k].effective_nominal() <= 0)
+        if self.groove_type.currentData() == 'dovetail' and self.shared_rows['angle'].effective_nominal() <= 0:
             missing.append('angle')
-        missing.extend(k for k in ('ring_id','section') if self.rows[k].nominal.value() <= 0)
+        missing.extend(k for k in ('ring_id','section') if self.rows[k].effective_nominal() <= 0)
         return missing
 
     def _align_screening_numbers(self, pending):
@@ -1011,11 +1217,16 @@ class MainWindow(QMainWindow):
         self._recalculate()
 
     def _change_ring_size(self, *_):
+        """Apply catalogue dimensions without locking the tolerance-mode toggle.
+
+        AS568 values are never editable when a designation is selected, but
+        either nominal +/- tolerance or Min/Max *display* can be chosen for
+        each O-ring field independently. On every catalogue selection update
+        both representations to the new catalogue endpoints to prevent any
+        stale manually entered limits from being used in calculations.
+        """
         dash = self.ring_size.currentData()
         manual = dash is None
-        for name in ("ring_id", "section"):
-            self.rows[name].nominal.setEnabled(manual)
-            self.rows[name].tolerance.setEnabled(manual)
         if not manual:
             size = next(item for item in self.as568_sizes if item.dash == dash)
             for name, nominal, tolerance in (
@@ -1023,12 +1234,27 @@ class MainWindow(QMainWindow):
                 ("section", size.cs_in, size.cs_tol_in),
             ):
                 row = self.rows[name]
-                row.nominal.blockSignals(True)
-                row.tolerance.blockSignals(True)
-                row.nominal.setValue(nominal)
-                row.tolerance.setValue(tolerance)
-                row.nominal.blockSignals(False)
-                row.tolerance.blockSignals(False)
+                for editor, value in (
+                    (row.nominal, nominal),
+                    (row.tolerance, tolerance),
+                    (row.limit_min, nominal - tolerance),
+                    (row.limit_max, nominal + tolerance),
+                ):
+                    with QSignalBlocker(editor):
+                        editor.setDecimals(6)  # Catalogue has six-place data
+                        editor.setValue(value)
+                # The selected representation is preserved on each new
+                # designation, but both values are always catalogue-derived.
+                row.limits_initialized = True
+        for name in ("ring_id", "section"):
+            row = self.rows[name]
+            for editor in (row.nominal, row.tolerance,
+                           row.limit_min, row.limit_max):
+                editor.setEnabled(manual)
+            # Only the representation toggle remains enabled for a selected
+            # catalogue O-ring. No editable dimension can override AS568.
+            row.mode_sym.setEnabled(True)
+            row.mode_limits.setEnabled(True)
         self._recalculate()
 
     def _update_manual_match_note(self):
@@ -1115,7 +1341,12 @@ class MainWindow(QMainWindow):
         )
 
     def _recalculate(self, *_):
-        self._update_manual_match_note()
+        # Manual AS568 matching is advisory. A temporarily reversed Min/Max
+        # must be treated as an input error, not an uncaught GUI exception.
+        try:
+            self._update_manual_match_note()
+        except ValueError:
+            self.match_note.hide()
         if self._missing_required_dimensions():
             self._show_pending_results()
             return
@@ -1143,7 +1374,9 @@ class MainWindow(QMainWindow):
                 reason = 'invalid groove geometry'
             else:
                 reason = 'invalid input geometry'
-            message = f'Cannot evaluate geometry: {reason}.'
+            message = (f'Invalid limits: {exc}' if
+                       'minimum limit exceeds maximum limit' in raw else
+                       f'Cannot evaluate geometry: {reason}.')
             self.overview_note.clear()
             self.overview_note.hide()
             self.statusBar().showMessage(message)
@@ -1165,7 +1398,12 @@ class MainWindow(QMainWindow):
             self.snapshot_button.setEnabled(False)
             self.save_snapshot_button.setEnabled(False)
             return
-        self.statusBar().clearMessage()
+        if self._has_active_limits():
+            self.statusBar().showMessage(
+                'Limits: Nominal results use the midpoint of entered Min/Max; '
+                'all tolerance extrema use the actual entered limits.')
+        else:
+            self.statusBar().clearMessage()
         self._last_inputs = inputs
         self._last_evaluation = evaluation
         self._last_result = output
@@ -1246,24 +1484,24 @@ class MainWindow(QMainWindow):
                 self.entry_mode.currentData()=='gland_od')
         if female:
             source=self.female_rows
-            cylinder=source['direct_cylinder_id'].nominal.value() if direct else source['cylinder_id'].nominal.value()
-            rod=source['rod_od'].nominal.value()
-            gland=source['gland_id'].nominal.value() if direct else cylinder+2*source['groove_depth'].nominal.value()
+            cylinder=source['direct_cylinder_id'].effective_nominal() if direct else source['cylinder_id'].effective_nominal()
+            rod=source['rod_od'].effective_nominal()
+            gland=source['gland_id'].effective_nominal() if direct else cylinder+2*source['groove_depth'].effective_nominal()
             depth=(gland-cylinder)/2
             diam={'rod_od':rod,'cylinder_id':cylinder,'gland_id':gland}
             mode=self.female_entry_mode.currentData()
         else:
             source=self.rows
-            cylinder=source['cylinder_id'].nominal.value()
-            rod=source['direct_rod_od'].nominal.value() if direct else source['rod_od'].nominal.value()
-            gland=source['gland_od'].nominal.value() if direct else rod-2*source['groove_depth'].nominal.value()
+            cylinder=source['cylinder_id'].effective_nominal()
+            rod=source['direct_rod_od'].effective_nominal() if direct else source['rod_od'].effective_nominal()
+            gland=source['gland_od'].effective_nominal() if direct else rod-2*source['groove_depth'].effective_nominal()
             depth=(rod-gland)/2
             diam={'piston_od':rod,'cylinder_id':cylinder,'gland_od':gland}
             mode=self.entry_mode.currentData()
-        angle=self.shared_rows['angle' if self.groove_type.currentData()=='dovetail' else 'rect_angle'].nominal.value()
-        features={'width':self.shared_rows['width'].nominal.value(),
-                  'radius':self.shared_rows['radius'].nominal.value(),
-                  'entrance_radius':self.shared_rows['entrance_radius'].nominal.value(),
+        angle=self.shared_rows['angle' if self.groove_type.currentData()=='dovetail' else 'rect_angle'].effective_nominal()
+        features={'width':self.shared_rows['width'].effective_nominal(),
+                  'radius':self.shared_rows['radius'].effective_nominal(),
+                  'entrance_radius':self.shared_rows['entrance_radius'].effective_nominal(),
                   'angle':angle,'depth':depth,**diam}
         self.diagram.set_model('female' if female else 'male',
                                self.groove_type.currentData(),mode,features,invalid)

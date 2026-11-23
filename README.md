@@ -1,14 +1,41 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs | Windows desktop application | v2.0.1**
+**ZeroFlagLabs | Windows desktop application | v2.1.0**
 
 A portable calculator for dimensional screening of **static and reciprocating dynamic radial O-ring seals**. It supports male/piston and female/cylinder glands, rectangular and symmetrical double-dovetail profiles, diameter/depth entry modes, and optional groove radii/angles.
 
 ## Windows download
 
-Download [Radial-ORing-Calculator-v2.0.1-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.0.1). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.0.1.exe`. No installer, Python environment or `_internal` folder is required.
+Download [Radial-ORing-Calculator-v2.1.0-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.0). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.0.exe`. No installer, Python environment or `_internal` folder is required.
 
 The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
+
+## v2.1.0 feature: symmetrical tolerances or absolute limits
+
+Each physical dimension now has its own **+/- / Limits** toggle, so groove
+diameter, width, radii, O-ring size and other fields can be entered in the
+representation used by your drawing or specification. Fields can be mixed
+freely: one row may use nominal +/- tolerance while another uses two
+absolute limits. Both calculation methods use the same actual dimensional
+endpoints.
+
+- In **+/- mode**, enter a nominal dimension and its symmetrical tolerance.
+- In **Limits mode**, enter the minimum and maximum permitted dimensions.
+  The nominal calculation uses the midpoint of those limits.
+- Switching modes converts the **currently displayed values**, in either
+  direction. Example: 1.000 +/- 0.003 in becomes
+  MIN 0.997 in / MAX 1.003 in, and vice versa.
+- Zero tolerance gives equal limits. Incompatible or reversed limits prevent
+  conversion rather than silently accepting invalid values.
+- Original six-decimal precision is retained; if a six-decimal limit pair
+  requires a seventh decimal in its midpoint and tolerance, the input fields
+  display the necessary digit to preserve the physical endpoints.
+- AS568 catalogue O-ring ID and cross-section inputs remain read-only, but
+  each may be displayed as either +/- or Limits.
+
+**Inspect Results** continues to show controlling tolerance cases, and the
+compact **Copy Snapshot / Save PNG** reports retain the established
+symmetrical *midpoint +/- half-range* presentation.
 
 ## v2.0.1 maintenance improvements
 
@@ -33,6 +60,7 @@ Both methods use **identical groove geometry, dimensional tolerance evaluation, 
 - Static and reciprocating-dynamic radial seals, male and female glands.
 - Rectangular and double-dovetail groove profiles, optional wall angles and opening/base radii.
 - AS568 reference catalogue or manually entered O-ring ID and cross-section.
+- Independent symmetrical or absolute Min/Max tolerance entry on every dimension, with live two-way conversion.
 - Minimum, nominal and maximum radial squeeze, ID stretch/OD interference and gland fill.
 - **Inspect Results** with method-specific workings, substitutions and tolerance witnesses.
 - Eight approved Dimension Guides, compact PNG/clipboard reports and PASS/REVIEW/INVALID screening.
@@ -78,7 +106,8 @@ See [Windows packaging](docs/WINDOWS_PACKAGING.md), [Qt rebuild and LGPL obligat
 
 ## Documentation
 
-- [v2.0.1 release notes](docs/RELEASE_NOTES_v2.0.1.md)
+- [v2.1.0 release notes](docs/RELEASE_NOTES_v2.1.0.md)
+- [v2.0.1 maintenance release notes](docs/RELEASE_NOTES_v2.0.1.md)
 - [v2.0.0 feature release notes](docs/RELEASE_NOTES_v2.0.0.md)
 - [Engineering methods, scope and limitations](docs/ENGINEERING_SCOPE.md)
 - [Windows build and packaging](docs/WINDOWS_PACKAGING.md)
