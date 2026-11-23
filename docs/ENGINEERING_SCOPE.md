@@ -43,4 +43,4 @@ Evaluate pressure and extrusion gap, backup rings, elastomer compound and fluid 
 
 The release contains extensive automated numeric, tolerance, geometry, method-reporting and GUI regression tests. They do not establish correctness for every operating condition. Technical references relevant to the Detailed method and screening criteria are identified in the application's **Settings > References** panel. Manufacturer engineering publications are cited, not redistributed.
 
-See [v2 release notes](RELEASE_NOTES_v2.0.0.md), [third-party notices](THIRD_PARTY_NOTICES.md) and [licensing checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).
+See [v2.0.1 notes](RELEASE_NOTES_v2.0.1.md) and [original v2.0.0 method notes](RELEASE_NOTES_v2.0.0.md), [third-party notices](THIRD_PARTY_NOTICES.md) and [licensing checklist](THIRD_PARTY_RELEASE_CHECKLIST.md).

@@ -1,14 +1,21 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs | Windows desktop application | v2.0.0**
+**ZeroFlagLabs | Windows desktop application | v2.0.1**
 
 A portable calculator for dimensional screening of **static and reciprocating dynamic radial O-ring seals**. It supports male/piston and female/cylinder glands, rectangular and symmetrical double-dovetail profiles, diameter/depth entry modes, and optional groove radii/angles.
 
 ## Windows download
 
-Download [Radial-ORing-Calculator-v2.0.0-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.0.0). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.0.0.exe`. No installer, Python environment or `_internal` folder is required.
+Download [Radial-ORing-Calculator-v2.0.1-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.0.1). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.0.1.exe`. No installer, Python environment or `_internal` folder is required.
 
 The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
+
+## v2.0.1 maintenance improvements
+
+- The Status heading and PASS/REVIEW indicators are centred above the Save PNG button.
+- Nominal begins at the left edge of the Dimension Guide frame; numeric-column spacing and result values remain consistent.
+- Suggested Save PNG filenames now begin with **Detailed** or **Simplified**, matching the method used, followed by the existing configuration details.
+- No engineering equations, tolerance rules or screening limits were changed.
 
 ## Detailed and Simplified calculation methods (new in v2.0.0)
 
@@ -71,7 +78,8 @@ See [Windows packaging](docs/WINDOWS_PACKAGING.md), [Qt rebuild and LGPL obligat
 
 ## Documentation
 
-- [v2.0.0 release notes](docs/RELEASE_NOTES_v2.0.0.md)
+- [v2.0.1 release notes](docs/RELEASE_NOTES_v2.0.1.md)
+- [v2.0.0 feature release notes](docs/RELEASE_NOTES_v2.0.0.md)
 - [Engineering methods, scope and limitations](docs/ENGINEERING_SCOPE.md)
 - [Windows build and packaging](docs/WINDOWS_PACKAGING.md)
 - [Third-party notices](docs/THIRD_PARTY_NOTICES.md), [release checklist](docs/THIRD_PARTY_RELEASE_CHECKLIST.md) and [licence texts](licenses/)

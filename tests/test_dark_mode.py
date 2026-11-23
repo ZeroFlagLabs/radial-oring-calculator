@@ -92,6 +92,55 @@ inspector.close()
 window.close()
 """)
 
+    def test_native_windows_text_alignment_matches_guide_and_save_button(self):
+        """Verify actual Windows glyph metrics, not inflated offscreen metrics."""
+        self._run_native(r"""
+from PySide6.QtWidgets import QApplication, QLabel, QWidget
+from PySide6.QtCore import QPoint
+from src.ui.main_window import MainWindow
+from tests.gui_sample import seed_sample
+app=QApplication([])
+w=MainWindow()
+seed_sample(w)
+w.show()
+app.processEvents()
+
+def left(widget):
+    return widget.mapTo(w,QPoint(0,0)).x()
+def cell_center(widget):
+    return left(widget)+widget.width()/2
+def text_center(widget):
+    rect=widget.contentsRect()
+    return left(widget)+rect.x()+rect.width()/2
+
+headers=[w.findChild(QLabel,'overview_header_'+str(i)) for i in (1,2,3)]
+assert all(headers)
+guide=w.findChild(QWidget,'guide_panel')
+save=w.findChild(QWidget,'save_snapshot_button')
+assert guide is not None and save is not None
+nominal=headers[1]
+# Nominal's N must start at the outer Dimension Guide frame.
+n_start=text_center(nominal)-nominal.fontMetrics().horizontalAdvance('Nominal')/2
+assert abs(n_start-left(guide))<=1,(n_start,left(guide))
+
+# Neither numerical grid geometry nor visible header/value spacing changes.
+assert [round(cell_center(h)) for h in headers]==[424,564,704]
+visual=[text_center(h) for h in headers]
+assert [b-a for a,b in zip(visual,visual[1:])]==[140,140],visual
+for row in ('squeeze','fit','fill'):
+    values=[w.findChild(QLabel,'overview_'+row+'_'+str(i)) for i in (1,2,3)]
+    assert [text_center(v) for v in values]==visual,row
+
+# Header and each PASS/REVIEW indicator must visually align with Save PNG.
+status_names=('overview_header_4','overview_squeeze_4',
+              'overview_fit_4','overview_fill_4')
+for name in status_names:
+    label=w.findChild(QLabel,name)
+    assert text_center(label)==cell_center(save),(name,text_center(label),cell_center(save))
+assert save.width()==112
+w.close()
+""")
+
     def test_native_light_scheme_preserves_original_window_size_and_palette(self):
         self._run_native(r"""
 from PySide6.QtCore import Qt

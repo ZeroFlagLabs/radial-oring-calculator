@@ -72,7 +72,7 @@ class Stage952SourceTests(unittest.TestCase):
         self.assertIn("title_label.setText(self._screening_label_markup(title, check.criterion))",main)
         self.assertIn('suggested, \'PNG images (*.png)\'',main)
         self.assertIn('guide.setFixedHeight(panel.maximumHeight())',main)
-        self.assertIn('status.setContentsMargins(0, 3, 0, 0)',main)
+        self.assertIn('status.setContentsMargins(40, 3, 0, 0)',main)
         self.assertIn('Static & Dynamic Radial O-Ring Calculator',(ROOT/'src/main.py').read_text(encoding='utf-8'))
         self.assertEqual(txt(widget(ET.parse(ROOT/'src/ui/forms/main_window.ui').getroot(),'setup_group'),'title'), 'Application setup')
 
@@ -246,6 +246,19 @@ class Stage952GuiTests(unittest.TestCase):
             self.assertEqual(save.width(),112)
             for name in ('overview_squeeze_4','overview_fit_4','overview_fill_4'):
                 self.assertEqual(centre(name),centre('overview_header_4'))
+            # Contents-only alignment: the actual rendered Status text is
+            # centred under Save PNG, not the original 102px grid cell.
+            def visible_centre(name):
+                label=w.findChild(QLabel,name)
+                rect=label.contentsRect()
+                return label.mapTo(w,rect.topLeft()).x()+rect.width()/2
+            self.assertEqual(visible_centre('overview_header_4'),centre('save_snapshot_button'))
+            for name in ('overview_squeeze_4','overview_fit_4','overview_fill_4'):
+                self.assertEqual(visible_centre(name),centre('save_snapshot_button'))
+            # All three numeric text centres move together; original column
+            # geometry and precisely 140px between headings remain intact.
+            shifted=[visible_centre('overview_header_'+str(i)) for i in (1,2,3)]
+            self.assertEqual([b-a for a,b in zip(shifted,shifted[1:])],[140,140])
             for name in ('overview_squeeze_name','overview_fit_name','overview_fill_name'):
                 label=w.findChild(QLabel,name)
                 self.assertLessEqual(label.sizeHint().height(),label.height())

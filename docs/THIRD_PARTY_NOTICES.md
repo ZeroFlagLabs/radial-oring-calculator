@@ -1,4 +1,4 @@
-# Third-party notices — Static & Dynamic Radial O-Ring Calculator v2.0.0
+# Third-party notices — Static & Dynamic Radial O-Ring Calculator v2.0.1
 
 **Publisher:** ZeroFlagLabs
 

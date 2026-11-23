@@ -474,8 +474,19 @@ class MainWindow(QMainWindow):
         for col in range(5):
             get(f'overview_header_{col}',QLabel).setStyleSheet(
                 'color:#657c94; font-size:11px; font-weight:600;')
-        # Preserve released compact numerical-column spacing and full-width
-        # criterion labels. Keep Status aligned with the Save PNG button.
+        # Preserve the 140px Minimum/Nominal/Maximum column-centre spacing.
+        # Inset each numerical label's text by 8px (16px left content margin)
+        # so the left edge of 'Nominal' aligns with the Dimension Guide frame.
+        # Adjust label contents only; never change the grid cell geometry.
+        for col in (1, 2, 3):
+            get(f'overview_header_{col}', QLabel).setContentsMargins(16, 0, 0, 0)
+            for part in ('squeeze', 'fit', 'fill'):
+                get(f'overview_{part}_{col}', QLabel).setContentsMargins(16, 0, 0, 0)
+        # Shift rendered Status text 20px right so its visual centre equals
+        # the centre of Save PNG, while keeping the results grid untouched.
+        status_header = get('overview_header_4', QLabel)
+        status_header.setFixedWidth(102)  # Existing released Status-column width.
+        status_header.setContentsMargins(40, 0, 0, 0)
         for col in range(6): self.overview_grid.setColumnStretch(col,0)
         for col,width in ((0,326),(1,136),(2,136),(3,136),(5,102)):
             self.overview_grid.setColumnMinimumWidth(col,width)
@@ -487,7 +498,8 @@ class MainWindow(QMainWindow):
         for key in ('squeeze','fit','fill'):
             status = get(f'overview_{key}_4', QLabel)
             status.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
-            status.setContentsMargins(0, 3, 0, 0)
+            status.setFixedWidth(102)  # Keep oversized offscreen font hints from widening the grid.
+            status.setContentsMargins(40, 3, 0, 0)
         self.overview_note.setStyleSheet('color:#657a91; font-size:11px;')
         self.overview_note.setWordWrap(False)
         self.overview_note.hide()
@@ -802,11 +814,12 @@ class MainWindow(QMainWindow):
         image = self._snapshot_pixmap()
         if image is None or image.isNull():
             return
+        method = 'Simplified' if self.calculation_method.currentData() == 'simplified' else 'Detailed'
         application = 'Dynamic' if self.application.currentData() == 'dynamic' else 'Static'
         component = 'Cylinder' if self.configuration.currentData() == 'female' else 'Piston'
         profile = 'Double Dovetail' if self.groove_type.currentData() == 'dovetail' else 'Rectangular'
         designation = self.ring_size.currentText() if self.ring_size.currentData() is not None else ''
-        suggested = ' - '.join(part for part in (application,component,profile,designation) if part)
+        suggested = ' - '.join(part for part in (method,application,component,profile,designation) if part)
         suggested = re.sub(r'[^A-Za-z0-9 ._\-]', '-', suggested) + '.png'
         path, _ = QFileDialog.getSaveFileName(self, 'Save calculation snapshot',
                                               suggested, 'PNG images (*.png)')
@@ -866,7 +879,9 @@ class MainWindow(QMainWindow):
             for col in (1, 2, 3):
                 cell = self.overview_cells[(name, col)]
                 cell.setAlignment(alignment)
-                cell.setContentsMargins(0, 3 if pending else 0, 0, 0)
+                # Preserve the matching 8px visible text offset after each
+                # pending/valid recalculation, as well as at initial setup.
+                cell.setContentsMargins(16, 3 if pending else 0, 0, 0)
 
     def _show_pending_results(self):
         """Neutral initial/reset state, distinct from an invalid calculation."""

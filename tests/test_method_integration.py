@@ -118,6 +118,52 @@ class MethodUiChecks(unittest.TestCase):
                 show.assert_called_once()
         finally:w.close()
 
+    def test_save_png_suggested_filename_starts_with_current_method(self):
+        """Method name leads the filename; the existing context is unchanged."""
+        from PySide6.QtGui import QPixmap
+        from PySide6.QtWidgets import QFileDialog
+
+        w=MainWindow()
+        w.show()
+        try:
+            self.app.processEvents()
+            image=QPixmap(2,2)
+            image.fill()
+            with (patch.object(w, '_snapshot_pixmap', return_value=image),
+                  patch.object(QFileDialog, 'getSaveFileName',
+                               return_value=('', '')) as picker):
+                # Original default context remains after the new method prefix.
+                w._save_snapshot()
+                self.assertEqual(picker.call_args.args[2],
+                                 'Detailed - Static - Piston - Rectangular.png')
+
+                # Changing calculation method must immediately update the
+                # proposed filename, without saving or reusing an old method.
+                w.calculation_method.setCurrentIndex(1)
+                w._save_snapshot()
+                self.assertEqual(picker.call_args.args[2],
+                                 'Simplified - Static - Piston - Rectangular.png')
+
+                # The existing application, component, profile and catalogue
+                # designation fields follow the method in their original order.
+                w.application.setCurrentIndex(1)
+                w.configuration.setCurrentIndex(1)
+                w.groove_type.setCurrentIndex(1)
+                w.ring_size.setCurrentIndex(1)
+                w._save_snapshot()
+                proposed=picker.call_args.args[2]
+                self.assertTrue(proposed.startswith(
+                    'Simplified - Dynamic - Cylinder - Double Dovetail - '),
+                    proposed)
+                self.assertTrue(proposed.endswith('.png'),proposed)
+
+                w.calculation_method.setCurrentIndex(0)
+                w._save_snapshot()
+                self.assertEqual(picker.call_args.args[2],
+                                 'Detailed'+proposed[len('Simplified'):])
+        finally:
+            w.close()
+
     def test_two_inspectors_show_correct_equations_and_witnesses(self):
         w=MainWindow();seed_sample(w);w.show()
         try:
