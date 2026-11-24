@@ -1,14 +1,19 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs | Windows desktop application | v2.1.3**
+**ZeroFlagLabs | Windows desktop application | v2.1.4**
 
 A portable calculator for dimensional screening of **static and reciprocating dynamic radial O-ring seals**. It supports male/piston and female/cylinder glands, rectangular and symmetrical double-dovetail profiles, diameter/depth entry modes, and optional groove radii/angles.
 
 ## Windows download
 
-Download [Radial-ORing-Calculator-v2.1.3-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.3). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.3.exe`. No installer, Python environment or `_internal` folder is required.
+Download [Radial-ORing-Calculator-v2.1.4-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.4). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.4.exe`. No installer, Python environment or `_internal` folder is required.
 
 The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
+
+## v2.1.4 tolerance conversion maintenance
+
+- Improved tolerance mode conversion for partially entered positive-only dimensional limits, allowing users to return to symmetrical tolerance mode without losing the populated dimension.
+- Zero endpoints for radii and angles retain their literal meaning. Engineering calculations and validation are unchanged.
 
 ## v2.1.3 keyboard navigation maintenance
 
@@ -124,6 +129,7 @@ See [Windows packaging](docs/WINDOWS_PACKAGING.md), [Qt rebuild and LGPL obligat
 
 ## Documentation
 
+- [v2.1.4 maintenance release notes](docs/RELEASE_NOTES_v2.1.4.md)
 - [v2.1.3 maintenance release notes](docs/RELEASE_NOTES_v2.1.3.md)
 - [v2.1.2 maintenance release notes](docs/RELEASE_NOTES_v2.1.2.md)
 - [v2.1.1 maintenance release notes](docs/RELEASE_NOTES_v2.1.1.md)

@@ -386,6 +386,13 @@ class MainWindow(QMainWindow):
                 angle=key in ('rect_angle','angle')
                 row = BoundDimensionRow(container,nominal,tolerance,
                     on_change=self._recalculate, signed=key=='rect_angle')
+                # Only physically positive linear dimensions treat a lone
+                # zero limit as incomplete on an explicit mode conversion.
+                # Radii and both flank angles retain literal zero endpoints.
+                row.zero_limit_is_incomplete = key in (
+                    'gland_od', 'direct_rod_od', 'rod_od', 'groove_depth',
+                    'cylinder_id', 'ring_id', 'section', 'gland_id',
+                    'direct_cylinder_id', 'width')
                 mapping[key] = row
                 # Qt Designer owns the approved 106px input boxes and
                 # 92px +/- / Limits selector; only values are converted here.
@@ -631,6 +638,8 @@ class MainWindow(QMainWindow):
 
         +/- -> Min/Max: nominal - tolerance, nominal + tolerance.
         Min/Max -> +/-: (minimum + maximum)/2, (maximum - minimum)/2.
+        For positive-only dimensions, a lone zero endpoint denotes an
+        incomplete entry only during this explicit representation switch.
         The screen layout, engineering input model and report remain unchanged.
         """
         if row.limit_mode == use_limits:
@@ -648,13 +657,18 @@ class MainWindow(QMainWindow):
             converted = (first - second, first + second)
             targets = (row.limit_min, row.limit_max)
         else:
-            if first > second:
-                # A reversed range has no equivalent non-negative tolerance.
-                # Keep the erroneous limits visible for correction.
-                row.mode_limits.setChecked(True)
-                self._recalculate()
-                return
-            converted = ((first + second)/2, (second - first)/2)
+            if row.zero_limit_is_incomplete and (
+                    (first == 0 and second > 0) or
+                    (second == 0 and first > 0)):
+                converted = (max(first, second), Decimal(0))
+            else:
+                if first > second:
+                    # A reversed range has no equivalent non-negative tolerance.
+                    # Keep the erroneous limits visible for correction.
+                    row.mode_limits.setChecked(True)
+                    self._recalculate()
+                    return
+                converted = ((first + second)/2, (second - first)/2)
             targets = (row.nominal, row.tolerance)
 
         # Preflight both results before changing EITHER field. In particular,

@@ -63,6 +63,103 @@ class LiveToleranceConversionTests(unittest.TestCase):
         row.mode_sym.click()
         self.assertEqual(row.tolerance.value(),0)
 
+    def test_partial_limits_all_positive_only_rows(self):
+        w = self.make_window()
+        groups = (
+            (w.rows, ('gland_od', 'direct_rod_od', 'rod_od', 'groove_depth',
+                      'cylinder_id', 'ring_id', 'section')),
+            (w.female_rows, ('gland_id', 'direct_cylinder_id', 'cylinder_id',
+                             'groove_depth', 'rod_od')),
+            (w.shared_rows, ('width',)),
+        )
+        for group, keys in groups:
+            for key in keys:
+                row = group[key]
+                for low, high, expected in (
+                        (1.0, 0.0, (1.0, 0.0)),
+                        (0.0, 1.0, (1.0, 0.0)),
+                        (0.0, 0.0, (0.0, 0.0)),
+                        (1.0, 1.0, (1.0, 0.0)),
+                        (.997, 1.003, (1.0, .003))):
+                    with self.subTest(key=key, low=low, high=high):
+                        row.mode_limits.click()
+                        row.limit_min.setValue(low)
+                        row.limit_max.setValue(high)
+                        self.assertTrue(row.limit_mode)
+                        row.mode_sym.click()
+                        self.assertFalse(row.limit_mode)
+                        self.assertEqual((row.nominal.value(),
+                                          row.tolerance.value()), expected)
+                        row.mode_limits.click()
+                        self.assertEqual(row.limit_min.value(),
+                                         expected[0] - expected[1])
+                        self.assertAlmostEqual(row.limit_max.value(),
+                                               expected[0] + expected[1], places=12)
+                        row.mode_sym.click()
+
+    def test_zero_endpoint_radii_and_angles_remain_literal(self):
+        w = self.make_window()
+        for key in ('radius', 'entrance_radius', 'angle', 'rect_angle'):
+            row = w.shared_rows[key]
+            with self.subTest(key=key):
+                row.mode_limits.click()
+                row.limit_min.setValue(0)
+                row.limit_max.setValue(.004)
+                row.mode_sym.click()
+                self.assertFalse(row.limit_mode)
+                self.assertEqual((row.nominal.value(), row.tolerance.value()),
+                                 (.002, .002))
+                row.mode_limits.click()
+                self.assertEqual((row.limit_min.value(), row.limit_max.value()),
+                                 (0, .004))
+                row.limit_min.setValue(.004)
+                row.limit_max.setValue(0)
+                row.mode_sym.click()
+                self.assertTrue(row.limit_mode)
+        row = w.shared_rows['rect_angle']
+        row.limit_min.setValue(-2)
+        row.limit_max.setValue(0)
+        row.mode_sym.click()
+        self.assertEqual((row.nominal.value(), row.tolerance.value()), (-1, 1))
+        row.mode_limits.click()
+        self.assertEqual((row.limit_min.value(), row.limit_max.value()), (-2, 0))
+
+    def test_partial_limits_not_substituted_during_calculation(self):
+        w = self.make_window()
+        row = w.shared_rows['width']
+        row.mode_limits.click()
+        row.limit_min.setValue(0)
+        row.limit_max.setValue(.146)
+        self.assertEqual(row.dimension().minimum, 0)
+        self.assertEqual(row.effective_nominal(), .073)
+        self.assertIsNone(w._last_result)
+        row.limit_min.setValue(.146)
+        row.limit_max.setValue(0)
+        with self.assertRaisesRegex(ValueError, 'minimum limit exceeds maximum'):
+            row.dimension()
+        self.assertIsNone(w._last_result)
+        row.mode_sym.click()
+        self.assertEqual((row.nominal.value(), row.tolerance.value()), (.146, 0))
+        self.assertIsNotNone(w._last_result)
+
+    def test_partial_limits_preserve_precision_over_repeated_conversions(self):
+        w = self.make_window()
+        row = w.shared_rows['width']
+        for low, high in ((.141000000001, 0), (0, .141000000001)):
+            row.mode_limits.click()
+            for editor in (row.limit_min, row.limit_max):
+                editor.setDecimals(12)
+            row.limit_min.setValue(low)
+            row.limit_max.setValue(high)
+            for _ in range(5):
+                row.mode_sym.click()
+                self.assertEqual(row.nominal.value(), .141000000001)
+                self.assertEqual(row.tolerance.value(), 0)
+                row.mode_limits.click()
+                self.assertEqual((row.limit_min.value(), row.limit_max.value()),
+                                 (.141000000001, .141000000001))
+            row.mode_sym.click()
+
     def test_new_symmetrical_values_reconvert_not_old_stale_limits(self):
         w = self.make_window()
         row = w.shared_rows['width']
