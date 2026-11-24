@@ -1,14 +1,19 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs | Windows desktop application | v2.1.2**
+**ZeroFlagLabs | Windows desktop application | v2.1.3**
 
 A portable calculator for dimensional screening of **static and reciprocating dynamic radial O-ring seals**. It supports male/piston and female/cylinder glands, rectangular and symmetrical double-dovetail profiles, diameter/depth entry modes, and optional groove radii/angles.
 
 ## Windows download
 
-Download [Radial-ORing-Calculator-v2.1.2-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.2). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.2.exe`. No installer, Python environment or `_internal` folder is required.
+Download [Radial-ORing-Calculator-v2.1.3-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.3). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.3.exe`. No installer, Python environment or `_internal` folder is required.
 
 The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
+
+## v2.1.3 keyboard navigation maintenance
+
+- Tab and Shift+Tab now follow the same dimension sequence with any combination of symmetrical and Min/Max tolerance inputs. Hidden fields and locked AS568 catalogue dimensions are skipped.
+- The v2.1.2 update checker, calculations and report layout are unchanged.
 
 ## v2.1.2 GitHub update-check repair
 
@@ -119,6 +124,7 @@ See [Windows packaging](docs/WINDOWS_PACKAGING.md), [Qt rebuild and LGPL obligat
 
 ## Documentation
 
+- [v2.1.3 maintenance release notes](docs/RELEASE_NOTES_v2.1.3.md)
 - [v2.1.2 maintenance release notes](docs/RELEASE_NOTES_v2.1.2.md)
 - [v2.1.1 maintenance release notes](docs/RELEASE_NOTES_v2.1.1.md)
 - [v2.1.0 release notes](docs/RELEASE_NOTES_v2.1.0.md)

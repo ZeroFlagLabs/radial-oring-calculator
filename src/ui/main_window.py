@@ -714,40 +714,41 @@ class MainWindow(QMainWindow):
         self._focus_fields={}
         for rows in (self.rows,self.female_rows,self.shared_rows):
             for key,row in rows.items():
-                for spin in (row.nominal,row.tolerance):
+                for spin in (row.nominal, row.limit_min,
+                             row.tolerance, row.limit_max):
                     self._focus_fields[spin]=key
                     spin.installEventFilter(self)
 
     def _set_dimension_tab_order(self):
-        """Follow the visible component and groove dimensions in either mode.
+        """Preserve the original dimension sequence in every tolerance mode.
 
-        Qt Designer's default focus chain skips the selected groove's first
-        field, especially on female grooves. A single ordered chain containing
-        both female entry variants works for ID and Depth because Qt skips
-        hidden stacked-page controls. It also preserves the existing male
-        component-to-groove transitions.
+        Each row has two alternate editors for its first value (nominal/min)
+        and two for its second (tolerance/max). Include all four in the
+        focus chain, in that order. Qt skips hidden stacked-page controls,
+        inactive geometry rows and disabled catalogue editors automatically.
+        No rebuild of the chain is required when a representation changes.
         """
-        for component_key, groove_key in (
-            ('direct_rod_od', 'gland_od'),
-            ('rod_od', 'groove_depth'),
-        ):
-            component = self.rows[component_key]
-            groove = self.rows[groove_key]
-            self.setTabOrder(component.tolerance, groove.nominal)
-            self.setTabOrder(groove.nominal, groove.tolerance)
+        ordered_rows = [
+            self.rows[key] for key in
+            ('cylinder_id', 'direct_rod_od', 'rod_od',
+             'gland_od', 'groove_depth')
+        ]
+        ordered_rows.extend(self.female_rows[key] for key in
+            ('direct_cylinder_id', 'cylinder_id', 'rod_od',
+             'gland_id', 'groove_depth'))
+        ordered_rows.extend(self.shared_rows[key] for key in
+            ('width', 'radius', 'entrance_radius', 'rect_angle', 'angle'))
+        ordered_rows.extend(self.rows[key] for key in ('ring_id', 'section'))
 
-        female_sequence = []
-        for key in (
-            'direct_cylinder_id', 'cylinder_id', 'rod_od',
-            'gland_id', 'groove_depth',
-        ):
-            row = self.female_rows[key]
-            female_sequence.extend((row.nominal, row.tolerance))
-        female_sequence.extend((
-            self.shared_rows['width'].nominal,
-            self.shared_rows['width'].tolerance,
-        ))
-        for current, following in zip(female_sequence, female_sequence[1:]):
+        sequence = [
+            self.calculation_method, self.application, self.configuration,
+            self.groove_type, self.entry_mode, self.female_entry_mode,
+            self.ring_size, self.guide_button,
+        ]
+        for row in ordered_rows:
+            sequence.extend((row.nominal, row.limit_min,
+                             row.tolerance, row.limit_max))
+        for current, following in zip(sequence, sequence[1:]):
             self.setTabOrder(current, following)
 
     def eventFilter(self,obj,event):
