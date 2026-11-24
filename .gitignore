@@ -44,6 +44,14 @@ Thumbs.db
 /*.zip
 /*.ps1
 
-# Non-public audit contents
+# Non-public audit contents (from published baseline)
 /_review/
 /_publication_staging/
+
+# Private engineering outputs and technical references: NEVER publish
+/deliverables/
+/mathcad_sheets*/
+/docs/private/
+
+# Generated one-file builder output
+/dist-onefile/
