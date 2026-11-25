@@ -3,6 +3,7 @@
 from PySide6.QtCore import Qt, QEvent, QFile, QIODevice, QSize, QSignalBlocker, QTimer
 from PySide6.QtGui import QFont, QIcon, QPixmap
 from PySide6.QtUiTools import QUiLoader
+from src.status_bar import CenteredStatusBar
 from pathlib import Path
 from decimal import Decimal
 from html import escape as _escape_html
@@ -183,11 +184,8 @@ class MainWindow(QMainWindow):
         # Keep track of the previous component selection so an unused
         # counterpart can inherit shared physical dimensions on first use.
         self._previous_configuration = None
+        self.setStatusBar(CenteredStatusBar(self))
         self._build_ui()
-        bar = self.statusBar()
-        bar.setSizeGripEnabled(False)
-        bar.setFixedHeight(21)
-        bar.setStyleSheet("QStatusBar {background:#f0f0f0;color:#243d58;font: 9pt 'Segoe UI';}")
         self._startup_selectors = {name:getattr(self,name).currentIndex() for name in ("calculation_method","application","configuration","groove_type","entry_mode","female_entry_mode","ring_size")}
         self._reset_dimensions()
         # Parent-owned timer cannot fire after the window is closed (also
