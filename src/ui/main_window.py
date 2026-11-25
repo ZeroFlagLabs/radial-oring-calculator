@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.app_info import APP_TITLE, APP_VERSION
+from src.ui.spin_suffix import protect_suffix
 from src.ui.update_checker import UpdateChecker
 from src.catalog.as568 import load_as568
 from src.catalog.matching import matching_sizes
@@ -50,6 +51,7 @@ class AdaptiveSpinBox(QDoubleSpinBox):
     def __init__(self, parent=None):
         self.minimum_display_decimals = 3
         super().__init__(parent)
+        protect_suffix(self)
 
     def textFromValue(self, value: float) -> str:
         if self.decimals() <= 6:

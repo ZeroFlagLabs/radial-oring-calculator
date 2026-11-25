@@ -1,12 +1,17 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs | Windows desktop application | v2.1.4**
+**ZeroFlagLabs | Windows desktop application | v2.1.5**
+
+
+## v2.1.5 input maintenance
+
+Numeric input selection excludes unit suffixes; the calculation engine and input formatting are unchanged.
 
 A portable calculator for dimensional screening of **static and reciprocating dynamic radial O-ring seals**. It supports male/piston and female/cylinder glands, rectangular and symmetrical double-dovetail profiles, diameter/depth entry modes, and optional groove radii/angles.
 
 ## Windows download
 
-Download [Radial-ORing-Calculator-v2.1.4-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.4). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.4.exe`. No installer, Python environment or `_internal` folder is required.
+Download [Radial-ORing-Calculator-v2.1.5-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.5). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.5.exe`. No installer, Python environment or `_internal` folder is required.
 
 The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
 
