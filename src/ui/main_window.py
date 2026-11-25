@@ -24,6 +24,7 @@ from src.ui.inspect_results import build_inspect_results
 from src.ui.groove_diagram import GrooveDiagram
 from src.ui.precision import format_input, format_result
 from src.ui.size_guide import SizeGuide
+from src.ui.dialog_position import exec_centered
 from src.ui.dialog_style import set_standard_action_width
 from src.ui.settings_dialog import SettingsDialog
 from src.calculations.criteria import ScreeningResults, screen_rectangular
@@ -1200,7 +1201,7 @@ class MainWindow(QMainWindow):
         return dialog
 
     def _show_calculation_method_info(self):
-        self._make_calculation_method_info_dialog().exec()
+        exec_centered(self._make_calculation_method_info_dialog(), self)
 
     def _show_settings(self):
         dialog = SettingsDialog(self)
@@ -1208,7 +1209,7 @@ class MainWindow(QMainWindow):
 
     def _show_size_guide(self):
         dialog = SizeGuide(self.as568_sizes, self)
-        if dialog.exec() and dialog.chosen_dash is not None:
+        if exec_centered(dialog, self) and dialog.chosen_dash is not None:
             index = self.ring_size.findData(dialog.chosen_dash)
             if index >= 0:
                 self.ring_size.setCurrentIndex(index)
@@ -1300,7 +1301,7 @@ class MainWindow(QMainWindow):
     def _show_tolerance_trace(self):
         dialog = self._make_tolerance_trace_dialog()
         if dialog is not None:
-            dialog.exec()
+            exec_centered(dialog, self)
 
     def _make_tolerance_trace_dialog(self):
         """Editable two-tab inspector, keeping complete tolerance witnesses."""

@@ -7,6 +7,7 @@ from PySide6.QtUiTools import QUiLoader
 
 from src.app_info import APP_TITLE, APP_VERSION, GITHUB_URL
 from src.ui.update_checker import UpdateChecker
+from src.ui.dialog_position import exec_centered
 from src.ui.dialog_style import set_standard_action_width
 
 
@@ -70,4 +71,4 @@ class SettingsDialog:
             pass
 
     def exec(self):
-        return self.dialog.exec()
+        return exec_centered(self.dialog, self.dialog.parentWidget())
