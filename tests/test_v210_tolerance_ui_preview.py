@@ -82,8 +82,8 @@ class ToleranceModeFunctionalTests(unittest.TestCase):
             self.assertEqual(row.mode_sym.focusPolicy(),Qt.FocusPolicy.NoFocus)
             self.assertEqual(row.mode_limits.focusPolicy(),Qt.FocusPolicy.NoFocus)
             self.assertFalse(row.limit_mode)
-            self.assertEqual(row.limit_min.suffix(),row.nominal.suffix())
-            self.assertEqual(row.limit_max.suffix(),row.nominal.suffix())
+            self.assertEqual(row.limit_min._inline_unit.label.text(),row.nominal._inline_unit.label.text())
+            self.assertEqual(row.limit_max._inline_unit.label.text(),row.nominal._inline_unit.label.text())
             self.assertEqual(row.limit_min.buttonSymbols(),QAbstractSpinBox.ButtonSymbols.UpDownArrows)
             self.assertEqual(row.limit_max.buttonSymbols(),QAbstractSpinBox.ButtonSymbols.UpDownArrows)
             stem=row.nominal.objectName().removeprefix('spin_').removesuffix('_nom')
@@ -175,8 +175,8 @@ class ToleranceModeFunctionalTests(unittest.TestCase):
             row.mode_limits.click()
             for editor in (row.limit_min,row.limit_max):
                 editor.setValue(value)
-                self.assertEqual(editor.suffix(),suffix)
-                self.assertTrue(editor.text().endswith(suffix))
+                self.assertEqual(editor._inline_unit.label.text(),suffix)
+                self.assertNotIn(suffix.strip(),editor.lineEdit().text())
                 option=QStyleOptionSpinBox()
                 editor.initStyleOption(option)
                 rect=editor.style().subControlRect(

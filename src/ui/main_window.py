@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from src.app_info import APP_TITLE, APP_VERSION
-from src.ui.spin_suffix import protect_suffix
+from src.ui.spin_suffix import install_inline_unit, unit_suffix
 from src.ui.update_checker import UpdateChecker
 from src.catalog.as568 import load_as568
 from src.catalog.matching import matching_sizes
@@ -105,7 +105,7 @@ class DimensionRow(QWidget):
         item.setSingleStep(0.001)
         item.setValue(value)
         item.setSuffix(suffix)
-        protect_suffix(item)
+        install_inline_unit(item)
         item.setKeyboardTracking(False)
         item.setMinimumHeight(24)
         return item
@@ -732,9 +732,8 @@ class MainWindow(QMainWindow):
             for key,row in rows.items():
                 for spin in (row.nominal, row.limit_min,
                              row.tolerance, row.limit_max):
-                    # QUiLoader can replace the constructor-time native editor.
-                    # Bind selection protection to the final Designer-loaded editor.
-                    protect_suffix(spin)
+                    # Install display-only units after loading the final native editors.
+                    install_inline_unit(spin)
                     self._focus_fields[spin]=key
                     spin.installEventFilter(self)
 
