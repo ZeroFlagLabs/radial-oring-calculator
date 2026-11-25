@@ -67,7 +67,7 @@ class MethodUiChecks(unittest.TestCase):
         w=MainWindow();w.show()
         try:
             self.app.processEvents()
-            self.assertEqual((w.width(),w.height()),(1080,782))
+            self.assertEqual((w.width(),w.height()),(1080,781))
             button=w.calculation_method_info_button
             self.assertEqual((button.width(),button.height()),(15,15))
             self.assertTrue(button.isVisible())
@@ -301,7 +301,7 @@ class MethodUiChecks(unittest.TestCase):
         w=MainWindow();w.show()
         try:
             self.app.processEvents()
-            self.assertEqual((w.width(),w.height()),(1080,782))
+            self.assertEqual((w.width(),w.height()),(1080,781))
             names=('trace_button','reset_button','snapshot_button',
                    'save_snapshot_button')
             buttons=[w.findChild(QPushButton,name) for name in names]

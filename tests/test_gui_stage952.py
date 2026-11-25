@@ -223,7 +223,7 @@ class Stage952GuiTests(unittest.TestCase):
                 # Both sides of each dimension group retain the same 14px inset.
                 # The first nominal field remains anchored at its original X.
                 self.assertEqual(right(group)-right(field), 14)
-            self.assertEqual(w.height(),782)
+            self.assertEqual(w.height(),781)
         finally:w.close()
 
     def test_compact_screening_columns_and_status(self):

@@ -1,7 +1,11 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs | Windows desktop application | v2.1.10**
+**ZeroFlagLabs | Windows desktop application | v2.1.11**
 
+
+## v2.1.11 status bar maintenance
+
+Standardised the full-width status bar: Segoe UI 9 pt regular, dark blue text, neutral grey background and disabled resize grip. Calculation engine unchanged.
 
 ## v2.1.10 interface maintenance
 
@@ -23,7 +27,7 @@ A portable calculator for dimensional screening of **static and reciprocating dy
 
 ## Windows download
 
-Download [Radial-ORing-Calculator-v2.1.10-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.10). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.10.exe`. No installer, Python environment or `_internal` folder is required.
+Download [Radial-ORing-Calculator-v2.1.11-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.11). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.11.exe`. No installer, Python environment or `_internal` folder is required.
 
 The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
 

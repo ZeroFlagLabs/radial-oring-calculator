@@ -209,7 +209,7 @@ class LiveToleranceConversionTests(unittest.TestCase):
             self.assertAlmostEqual(row.limit_min.value(),.141001,delta=1e-12)
             self.assertAlmostEqual(row.limit_max.value(),.148500,delta=1e-12)
         self.assertEqual(w.width(),1080)
-        self.assertIn(w.height(),(782,799))  # offscreen Qt vs native Windows font metrics
+        self.assertIn(w.height(),(781,799))  # offscreen Qt vs native Windows font metrics
 
     def test_signed_wall_angle_negative_min_max_and_zero_tolerance(self):
         w = self.make_window()

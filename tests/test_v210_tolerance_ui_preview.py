@@ -65,7 +65,7 @@ class ToleranceModeFunctionalTests(unittest.TestCase):
         w=self.window()
         self.assertEqual(w.width(),1080)
         # Native Windows is 799 px; offscreen Qt uses shorter font metrics.
-        self.assertIn(w.height(),(782,799))
+        self.assertIn(w.height(),(781,799))
         controls=[r for group in (w.rows,w.female_rows,w.shared_rows) for r in group.values()]
         self.assertEqual(len(controls),17)
         for row in controls:

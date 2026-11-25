@@ -184,6 +184,10 @@ class MainWindow(QMainWindow):
         # counterpart can inherit shared physical dimensions on first use.
         self._previous_configuration = None
         self._build_ui()
+        bar = self.statusBar()
+        bar.setSizeGripEnabled(False)
+        bar.setFixedHeight(21)
+        bar.setStyleSheet("QStatusBar {background:#f0f0f0;color:#243d58;font: 9pt 'Segoe UI';}")
         self._startup_selectors = {name:getattr(self,name).currentIndex() for name in ("calculation_method","application","configuration","groove_type","entry_mode","female_entry_mode","ring_size")}
         self._reset_dimensions()
         # Parent-owned timer cannot fire after the window is closed (also
@@ -265,7 +269,7 @@ class MainWindow(QMainWindow):
         layout = self.centralWidget().layout()
         layout.activate()
         minimum = self.centralWidget().minimumSizeHint()
-        chrome = self.statusBar().sizeHint().height()
+        chrome = self.statusBar().height()
         width = max(1000, minimum.width())
         # Do not impose the old 680px height floor: spare height allocated to
         # the nested dimension-row layout created a visually oversized gap
