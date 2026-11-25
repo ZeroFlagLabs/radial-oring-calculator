@@ -82,10 +82,20 @@ class InlineUnit(QObject):
         opt = QStyleOptionFrame()
         e.initStyleOption(opt)
         area = e.style().subElementRect(QStyle.SubElement.SE_LineEditContents,opt,e)
-        # Cursor geometry incorporates native style, focus border and horizontal scrolling.
-        caret = e.inputMethodQuery(Qt.InputMethodQuery.ImCursorRectangle)
-        x = caret.x() + caret.width()//2 + fm.horizontalAdvance(e.text()[e.cursorPosition():])
-        x = min(max(area.left()+self.base.left(),x),area.right()-self.base.right()-width+1)
+        # Measure the entire numeric string once when it fits. Summing separately
+        # rounded caret and remaining-text advances causes a one-pixel jump on
+        # focus or cursor movement. Qt's line edit has a 2px internal text margin.
+        left = area.left() + self.base.left()
+        right = area.right() - self.base.right() - width + 1
+        natural_end = left + 2 + fm.horizontalAdvance(e.text())
+        if natural_end <= right - 2:
+            x = natural_end
+        else:
+            # Long precision values can scroll horizontally; keep the original
+            # native caret-based geometry only when scrolling may be necessary.
+            caret = e.inputMethodQuery(Qt.InputMethodQuery.ImCursorRectangle)
+            x = caret.x() + caret.width()//2 + fm.horizontalAdvance(e.text()[e.cursorPosition():])
+        x = min(max(left,x),right)
         self.label.setGeometry(x,0,width,e.height())
         self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         self.label.show()

@@ -1,7 +1,11 @@
 # Static & Dynamic Radial O-Ring Calculator
 
-**ZeroFlagLabs | Windows desktop application | v2.1.8**
+**ZeroFlagLabs | Windows desktop application | v2.1.9**
 
+
+## v2.1.9 stationary inline units
+
+Inline units remain stationary when focus or the caret changes and the numeric value fits the field. Long values retain native horizontal scrolling. Calculations and input precision are unchanged.
 
 ## v2.1.8 dialogue positioning
 
@@ -15,7 +19,7 @@ A portable calculator for dimensional screening of **static and reciprocating dy
 
 ## Windows download
 
-Download [Radial-ORing-Calculator-v2.1.8-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.8). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.8.exe`. No installer, Python environment or `_internal` folder is required.
+Download [Radial-ORing-Calculator-v2.1.9-Windows-Portable.zip](https://github.com/ZeroFlagLabs/radial-oring-calculator/releases/tag/v2.1.9). Extract its single executable and run `Static & Dynamic Radial O-Ring Calculator v2.1.9.exe`. No installer, Python environment or `_internal` folder is required.
 
 The EXE is unsigned: SmartScreen or workplace policies may warn or block it. Only run software you trust, and do not disable Windows security protections.
 
