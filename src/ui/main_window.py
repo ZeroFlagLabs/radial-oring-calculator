@@ -51,7 +51,6 @@ class AdaptiveSpinBox(QDoubleSpinBox):
     def __init__(self, parent=None):
         self.minimum_display_decimals = 3
         super().__init__(parent)
-        protect_suffix(self)
 
     def textFromValue(self, value: float) -> str:
         if self.decimals() <= 6:
@@ -106,6 +105,7 @@ class DimensionRow(QWidget):
         item.setSingleStep(0.001)
         item.setValue(value)
         item.setSuffix(suffix)
+        protect_suffix(item)
         item.setKeyboardTracking(False)
         item.setMinimumHeight(24)
         return item
@@ -732,6 +732,9 @@ class MainWindow(QMainWindow):
             for key,row in rows.items():
                 for spin in (row.nominal, row.limit_min,
                              row.tolerance, row.limit_max):
+                    # QUiLoader can replace the constructor-time native editor.
+                    # Bind selection protection to the final Designer-loaded editor.
+                    protect_suffix(spin)
                     self._focus_fields[spin]=key
                     spin.installEventFilter(self)
 
