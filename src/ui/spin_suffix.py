@@ -1,11 +1,15 @@
 """Keep native Qt spin-box suffixes visible but outside the editable selection."""
 
+from shiboken6 import isValid
+
 def protect_suffix(spin):
     editor = spin.lineEdit()
     adjusting = False
 
     def limit_selection(*_):
         nonlocal adjusting
+        if not isValid(spin) or not isValid(editor):
+            return
         suffix = spin.suffix()
         text = editor.text()
         if adjusting or not suffix or not text.endswith(suffix):
