@@ -92,6 +92,7 @@ class SizeGuide(QDialog):
         close.clicked.connect(self.reject)
         # Use the same readable action width as the Settings and Method dialogs.
         set_standard_action_width(self.choose)
+        self.choose.setFixedWidth(112)  # Longer action label.
         set_standard_action_width(close)
         self.close_button = close
         buttons.addWidget(self.choose)

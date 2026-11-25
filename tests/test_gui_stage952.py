@@ -72,7 +72,7 @@ class Stage952SourceTests(unittest.TestCase):
         self.assertIn("title_label.setText(self._screening_label_markup(title, check.criterion))",main)
         self.assertIn('suggested, \'PNG images (*.png)\'',main)
         self.assertIn('guide.setFixedHeight(panel.maximumHeight())',main)
-        self.assertIn('status.setContentsMargins(40, 3, 0, 0)',main)
+        self.assertIn('status.setContentsMargins(46, 3, 0, 0)',main)
         self.assertIn('Static & Dynamic Radial O-Ring Calculator',(ROOT/'src/main.py').read_text(encoding='utf-8'))
         self.assertEqual(txt(widget(ET.parse(ROOT/'src/ui/forms/main_window.ui').getroot(),'setup_group'),'title'), 'Application setup')
 
@@ -223,7 +223,7 @@ class Stage952GuiTests(unittest.TestCase):
                 # Both sides of each dimension group retain the same 14px inset.
                 # The first nominal field remains anchored at its original X.
                 self.assertEqual(right(group)-right(field), 14)
-            self.assertEqual(w.height(),784)
+            self.assertEqual(w.height(),782)
         finally:w.close()
 
     def test_compact_screening_columns_and_status(self):
@@ -246,7 +246,7 @@ class Stage952GuiTests(unittest.TestCase):
             results=w.findChild(QWidget,'overview_box')
             self.assertEqual(save.mapTo(w,save.rect().topLeft()).x()+save.width(),
                              results.mapTo(w,results.rect().topLeft()).x()+results.width())
-            self.assertEqual(save.width(),112)
+            self.assertEqual(save.width(),106)
             for name in ('overview_squeeze_4','overview_fit_4','overview_fill_4'):
                 self.assertEqual(centre(name),centre('overview_header_4'))
             # Contents-only alignment: the actual rendered Status text is

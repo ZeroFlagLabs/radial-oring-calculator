@@ -20,7 +20,7 @@ class InterfaceSourceTests(unittest.TestCase):
             widths.append((w.find('./property[@name="minimumSize"]/size/width').text,
                            w.find('./property[@name="maximumSize"]/size/width').text))
         self.assertEqual(len(set(widths)),1)
-        self.assertEqual(widths[0],('112','112'))
+        self.assertEqual(widths[0],('106','106'))
     def test_no_example_values_in_designer_and_dovetail_unset(self):
         r=ET.parse(ROOT/'src/ui/forms/main_window.ui').getroot()
         for w in r.iter('widget'):
@@ -83,9 +83,9 @@ class InterfaceWindowsTests(unittest.TestCase):
             w.application.setCurrentIndex(1)
             w.ring_size.setCurrentIndex(1)
             w.reset_button.click()
-            self.assertEqual(w.configuration.currentIndex(),1)
-            self.assertEqual(w.groove_type.currentIndex(),1)
-            self.assertEqual(w.application.currentIndex(),1)
+            self.assertEqual(w.configuration.currentIndex(),0)
+            self.assertEqual(w.groove_type.currentIndex(),0)
+            self.assertEqual(w.application.currentIndex(),0)
             self.assertEqual(w.ring_size.currentIndex(),0)
             self.assertFalse(w.snapshot_button.isEnabled())
             self.assertIsNone(w._last_result)

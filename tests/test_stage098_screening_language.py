@@ -84,7 +84,7 @@ class ScreeningLanguageSourceTests(unittest.TestCase):
         self.assertIsNotNone(button)
         label = button.find('./property[@name="text"]/string')
         self.assertIsNotNone(label)
-        self.assertEqual(label.text, 'Reset dimensions')
+        self.assertEqual(label.text, 'Reset')
 
     def test_inspector_typography_uses_uniform_10_point_working_text(self):
         source = (ROOT/'src/ui/inspect_results.py').read_text(encoding='utf8')

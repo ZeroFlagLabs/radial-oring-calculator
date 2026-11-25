@@ -184,6 +184,7 @@ class MainWindow(QMainWindow):
         # counterpart can inherit shared physical dimensions on first use.
         self._previous_configuration = None
         self._build_ui()
+        self._startup_selectors = {name:getattr(self,name).currentIndex() for name in ("calculation_method","application","configuration","groove_type","entry_mode","female_entry_mode","ring_size")}
         self._reset_dimensions()
         # Parent-owned timer cannot fire after the window is closed (also
         # important for short-lived test windows).
@@ -537,16 +538,16 @@ class MainWindow(QMainWindow):
         get('placeholderLayout',QVBoxLayout).insertWidget(0,self.guide_picture,1)
         self.trace_button.clicked.connect(self._show_tolerance_trace)
         self.snapshot_button.setStyleSheet("""QPushButton#snapshot_button {
-            color:#176bc0; background:#f3f8fe; border:1px solid #bed4ee; padding:3px 10px;
+            color:#176bc0; background:#f3f8fe; border:1px solid #bed4ee; padding:2px 8px;
         } QPushButton#snapshot_button:hover {background:#e3f1fd;}""")
         self.save_snapshot_button.setStyleSheet("""QPushButton#save_snapshot_button {
-            color:white; background:#176bc0; border:1px solid #176bc0; padding:3px 12px;
+            color:white; background:#176bc0; border:1px solid #176bc0; padding:2px 8px;
         } QPushButton#save_snapshot_button:hover {background:#0e5ba7;}
         QPushButton#save_snapshot_button:disabled {
             color:#8795a5; background:#eff2f5; border:1px solid #c4cdd8;
         }""")
-        self.reset_button.setToolTip('Clear all entered dimensions and tolerances; keep the selected application and geometry.')
-        self.reset_button.clicked.connect(self._reset_dimensions)
+        self.reset_button.setToolTip('Restore all calculation inputs and selections to startup defaults.')
+        self.reset_button.clicked.connect(self._reset_all)
         self.snapshot_button.clicked.connect(self._copy_snapshot)
         self.save_snapshot_button.clicked.connect(self._save_snapshot)
         self.guide_button.clicked.connect(self._show_size_guide)
@@ -579,7 +580,7 @@ class MainWindow(QMainWindow):
         # the centre of Save PNG, while keeping the results grid untouched.
         status_header = get('overview_header_4', QLabel)
         status_header.setFixedWidth(102)  # Existing released Status-column width.
-        status_header.setContentsMargins(40, 0, 0, 0)
+        status_header.setContentsMargins(46, 0, 0, 0)
         for col in range(6): self.overview_grid.setColumnStretch(col,0)
         for col,width in ((0,326),(1,136),(2,136),(3,136),(5,102)):
             self.overview_grid.setColumnMinimumWidth(col,width)
@@ -592,7 +593,7 @@ class MainWindow(QMainWindow):
             status = get(f'overview_{key}_4', QLabel)
             status.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
             status.setFixedWidth(102)  # Keep oversized offscreen font hints from widening the grid.
-            status.setContentsMargins(40, 3, 0, 0)
+            status.setContentsMargins(46, 3, 0, 0)
         self.overview_note.setStyleSheet('color:#657a91; font-size:11px;')
         self.overview_note.setWordWrap(False)
         self.overview_note.hide()
@@ -1048,6 +1049,16 @@ class MainWindow(QMainWindow):
                 self.statusBar().showMessage(str(exc), 10000)
                 return
             self.statusBar().showMessage(f'Snapshot saved: {path}', 5000)
+
+    def _reset_all(self, *_):
+        # Clear both visible and hidden geometry before changing selectors, so
+        # the normal first-use inheritance cannot reintroduce old dimensions.
+        self._reset_dimensions()
+        for name,index in self._startup_selectors.items():
+            getattr(self,name).setCurrentIndex(index)
+        self._reset_dimensions()
+        for editor in self.findChildren(QLineEdit):
+            editor.deselect()
 
     def _reset_dimensions(self, *_):
         """Set all numeric input values back to zero without changing the

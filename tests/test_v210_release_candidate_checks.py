@@ -57,8 +57,8 @@ class V210ReleaseCandidateChecks(unittest.TestCase):
                 self.assertNotIn('preview',widget.toolTip().lower())
                 self.assertIn('permitted dimension',widget.toolTip())
         self.assertEqual(w.width(),1080)
-        # Native Windows is 801px; Qt's offscreen renderer uses 784px.
-        self.assertIn(w.height(),(784,801))
+        # Native Windows is 799px; Qt's offscreen renderer uses 782px.
+        self.assertIn(w.height(),(782,799))
 
     def test_limits_endpoints_are_preserved_to_six_place_input_resolution(self):
         w=self.build_window()

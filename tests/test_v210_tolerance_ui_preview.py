@@ -64,8 +64,8 @@ class ToleranceModeFunctionalTests(unittest.TestCase):
     def test_all_17_rows_retain_geometry_and_have_matching_11px_labels(self):
         w=self.window()
         self.assertEqual(w.width(),1080)
-        # Native Windows is 801 px; offscreen Qt uses shorter font metrics.
-        self.assertIn(w.height(),(784,801))
+        # Native Windows is 799 px; offscreen Qt uses shorter font metrics.
+        self.assertIn(w.height(),(782,799))
         controls=[r for group in (w.rows,w.female_rows,w.shared_rows) for r in group.values()]
         self.assertEqual(len(controls),17)
         for row in controls:

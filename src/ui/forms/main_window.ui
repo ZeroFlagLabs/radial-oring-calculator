@@ -115,7 +115,7 @@
      <item>
       <widget class="QLabel" name="version_label">
        <property name="text">
-        <string>v2.1.9</string>
+        <string>v2.1.10</string>
        </property>
       </widget>
      </item>
@@ -4995,8 +4995,8 @@
      <item>
       <widget class="QPushButton" name="trace_button">
        <property name="focusPolicy"><enum>Qt::FocusPolicy::NoFocus</enum></property>
-       <property name="minimumSize"><size><width>112</width><height>0</height></size></property>
-       <property name="maximumSize"><size><width>112</width><height>16777215</height></size></property>
+       <property name="minimumSize"><size><width>106</width><height>30</height></size></property>
+       <property name="maximumSize"><size><width>106</width><height>30</height></size></property>
        <property name="text">
         <string>Inspect results</string>
        </property>
@@ -5005,9 +5005,9 @@
      <item>
       <widget class="QPushButton" name="reset_button">
        <property name="focusPolicy"><enum>Qt::FocusPolicy::NoFocus</enum></property>
-       <property name="minimumSize"><size><width>112</width><height>0</height></size></property>
-       <property name="maximumSize"><size><width>112</width><height>16777215</height></size></property>
-       <property name="text"><string>Reset dimensions</string></property>
+       <property name="minimumSize"><size><width>106</width><height>30</height></size></property>
+       <property name="maximumSize"><size><width>106</width><height>30</height></size></property>
+       <property name="text"><string>Reset</string></property>
       </widget>
      </item>
      <item>
@@ -5026,8 +5026,8 @@
      <item>
       <widget class="QPushButton" name="snapshot_button">
        <property name="focusPolicy"><enum>Qt::FocusPolicy::NoFocus</enum></property>
-       <property name="minimumSize"><size><width>112</width><height>0</height></size></property>
-       <property name="maximumSize"><size><width>112</width><height>16777215</height></size></property>
+       <property name="minimumSize"><size><width>106</width><height>30</height></size></property>
+       <property name="maximumSize"><size><width>106</width><height>30</height></size></property>
        <property name="text">
         <string>Copy snapshot</string>
        </property>
@@ -5036,8 +5036,8 @@
      <item>
       <widget class="QPushButton" name="save_snapshot_button">
        <property name="focusPolicy"><enum>Qt::FocusPolicy::NoFocus</enum></property>
-       <property name="minimumSize"><size><width>112</width><height>0</height></size></property>
-       <property name="maximumSize"><size><width>112</width><height>16777215</height></size></property>
+       <property name="minimumSize"><size><width>106</width><height>30</height></size></property>
+       <property name="maximumSize"><size><width>106</width><height>30</height></size></property>
        <property name="text">
         <string>Save PNG…</string>
        </property>

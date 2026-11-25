@@ -137,7 +137,7 @@ status_names=('overview_header_4','overview_squeeze_4',
 for name in status_names:
     label=w.findChild(QLabel,name)
     assert text_center(label)==cell_center(save),(name,text_center(label),cell_center(save))
-assert save.width()==112
+assert save.width()==106
 w.close()
 """)
 

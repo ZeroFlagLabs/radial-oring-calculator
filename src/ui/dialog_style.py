@@ -5,7 +5,7 @@
 # 12px of padding on each side gives the intended 112px action width.
 # The headless offscreen platform reports inflated font metrics, so do not
 # derive the visible button width from its QFontMetrics.
-ACTION_BUTTON_WIDTH = 112
+ACTION_BUTTON_WIDTH = 106
 
 
 def standard_action_width(button):
@@ -14,4 +14,4 @@ def standard_action_width(button):
 
 
 def set_standard_action_width(button):
-    button.setFixedWidth(standard_action_width(button))
+    button.setFixedSize(standard_action_width(button),30)

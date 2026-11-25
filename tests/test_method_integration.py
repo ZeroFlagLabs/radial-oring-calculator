@@ -67,7 +67,7 @@ class MethodUiChecks(unittest.TestCase):
         w=MainWindow();w.show()
         try:
             self.app.processEvents()
-            self.assertEqual((w.width(),w.height()),(1080,784))
+            self.assertEqual((w.width(),w.height()),(1080,782))
             button=w.calculation_method_info_button
             self.assertEqual((button.width(),button.height()),(15,15))
             self.assertTrue(button.isVisible())
@@ -109,7 +109,7 @@ class MethodUiChecks(unittest.TestCase):
             self.assertNotIn('recommended for new',' '.join(x.text() for x in descriptions).lower())
             self.assertNotIn('retrospective',' '.join(x.text() for x in descriptions).lower())
             close=dialog.findChild(QWidget,'close_method_information')
-            self.assertEqual(close.width(),112)
+            self.assertEqual(close.width(),106)
             self.assertEqual(close.geometry().right()+1,dialog.width()-11)
             dialog.close()
             # The quiet QDialog opens directly, never a notification message box.
@@ -206,7 +206,7 @@ class MethodUiChecks(unittest.TestCase):
         try:
             self.app.processEvents()
             self.assertEqual(guide.choose.width(),112)
-            self.assertEqual(guide.close_button.width(),112)
+            self.assertEqual(guide.close_button.width(),106)
             # Qt offscreen reports inflated font widths on this Windows host.
             # Native Windows fit was verified separately at 87px + 24px.
             if self.app.platformName() != 'offscreen':
@@ -244,8 +244,8 @@ class MethodUiChecks(unittest.TestCase):
                 inspector.findChild(QPushButton,'close_inspection'),
             ]
             self.assertEqual([button.width() for button in buttons],
-                             [112,112,112,112,112])
-            for button in buttons:
+                             [112,106,106,106,106])
+            for button in buttons[1:]:
                 self.assertEqual(button.width(),standard_action_width(button))
             # The longest caption remains untruncated at the current font.
             # Qt offscreen reports inflated font widths on this Windows host.
@@ -301,13 +301,13 @@ class MethodUiChecks(unittest.TestCase):
         w=MainWindow();w.show()
         try:
             self.app.processEvents()
-            self.assertEqual((w.width(),w.height()),(1080,784))
+            self.assertEqual((w.width(),w.height()),(1080,782))
             names=('trace_button','reset_button','snapshot_button',
                    'save_snapshot_button')
             buttons=[w.findChild(QPushButton,name) for name in names]
-            self.assertEqual([btn.width() for btn in buttons],[112]*4)
+            self.assertEqual([btn.width() for btn in buttons],[106]*4)
             xs=[btn.mapTo(w,btn.rect().topLeft()).x() for btn in buttons]
-            self.assertEqual(xs,[10,130,838,958])
+            self.assertEqual(xs,[10,124,850,964])
             self.assertTrue(all(a.geometry().right()<b.geometry().left()
                                 for a,b in zip(buttons,buttons[1:])))
         finally:
