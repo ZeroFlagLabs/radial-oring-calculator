@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (QComboBox, QHBoxLayout, QHeaderView,
 from PySide6.QtUiTools import QUiLoader
 from src.ui.inspection_data import geometry_records, explain_case
 from src.ui.dialog_style import set_standard_action_width
+from src.dialog_theme import apply_dialog_theme, return_focus_after_selection
 
 
 def _math(text):
@@ -18,7 +19,7 @@ def _math(text):
 def _math_equation(expression, fraction):
     """Use 10 pt for equations and fractions, matching the dimension inputs."""
     if fraction is None:
-        return ('<p style="margin:3px 0 3px 14px;font-size:10pt;color:#233a50;">'
+        return ('<p style="margin:3px 0 3px 14px;font-size:10pt;color:#242424;">'
                 + _math(expression) + '</p>')
     lhs, numer, denom, suffix = fraction
     return ('<table cellspacing="0" cellpadding="0" style="margin-left:13px;">'
@@ -45,7 +46,7 @@ def _html_breakdown(metric, condition, result, dimensions, steps, places,
                + fmt(result) + ' %')
     lines = [
         '<html><body style="font-family:Segoe UI,Arial,sans-serif;'
-        'color:#233a50;font-size:10pt;">',
+        'color:#242424;font-size:10pt;">',
     ]
     if screening_check is not None:
         status = 'PASS' if screening_check.within_limits else 'REVIEW'
@@ -62,7 +63,7 @@ def _html_breakdown(metric, condition, result, dimensions, steps, places,
             '<td align="right" valign="middle">'
             '<p style="font-size:12pt;color:' + colour + ';margin:3px 0 4px 0;">'
             '<b>' + status + '</b></p></td></tr></table>',
-            '<p style="font-size:9pt;color:#657a91;margin:4px 0 12px 0;">'
+            '<p style="font-size:9pt;color:#667c94;margin:4px 0 12px 0;">'
             'Full tolerance-range screening: '
             + escape(screening_check.criterion) + '</p>',
         ]
@@ -107,10 +108,10 @@ def _html_breakdown(metric, condition, result, dimensions, steps, places,
                      '<b>' + str(n) + '. ' + escape(step.title) + '</b></p>')
         lines.append(_math_equation(step.symbolic, step.symbol_fraction))
         if step.title == 'Installed-section reduction':
-            lines.append('<p style="font-size:9pt;color:#667f94;margin:3px 0 4px 13px;">'
+            lines.append('<p style="font-size:9pt;color:#667c94;margin:3px 0 4px 13px;">'
                          'Source: Parker Hannifin, Parker O-Ring Handbook, '
                          'Catalog ORD 5700A/US, Fig. 3-3, p. 3-7.</p>')
-        lines.append('<p style="font-size:9pt;color:#667f94;margin:6px 0 4px 13px;">'
+        lines.append('<p style="font-size:9pt;color:#667c94;margin:6px 0 4px 13px;">'
                      'Substitution</p>')
         lines.append(_math_equation(step.numeric, step.numeric_fraction))
         lines.append('<p style="font-size:10pt;margin:7px 0 3px 13px;color:#164f8a;">'
@@ -118,7 +119,7 @@ def _html_breakdown(metric, condition, result, dimensions, steps, places,
                      + (' ' + escape(step.unit) if step.unit else '') + '</b></p>')
         if step.note:
             lines.append('<p style="font-size:9pt;margin:5px 0 12px 13px;'
-                         'color:#577189;">' + escape(step.note) + '</p>')
+                         'color:#667c94;">' + escape(step.note) + '</p>')
     lines.append('</body></html>')
     return '\n'.join(lines)
 
@@ -132,7 +133,7 @@ def build_inspect_results(evaluation, output, female, inputs, parent=None, scree
         dialog=QUiLoader().load(file,parent)
         if dialog is None:raise RuntimeError(f'Cannot load results inspector: {form}')
     finally:file.close()
-    dialog.setWindowTitle(dialog.windowTitle() + ' | ' + evaluation.method.title())
+
     get=dialog.findChild
     selector_layout=get(QHBoxLayout,'traceSelectorsLayout')
     for idx in range(3):selector_layout.setStretch(idx,1)
@@ -154,7 +155,7 @@ def build_inspect_results(evaluation, output, female, inputs, parent=None, scree
                       'are rounded to the selected precision.')
     for footer in (tolerance_footer, geometry_footer):
         footer.setText(precision_note)
-        footer.setStyleSheet('color:#657a91; font-size:10px;')
+        footer.setStyleSheet('color:#667c94; font-size:10px;')
         footer.setWordWrap(False)
         footer.show()
     text.setOpenExternalLinks(False)
@@ -175,7 +176,8 @@ def build_inspect_results(evaluation, output, female, inputs, parent=None, scree
         grid.setColumnWidth(col,135)
     for i,(name,_,_) in enumerate(geometry):grid.setItem(i,0,QTableWidgetItem(name))
 
-    def redraw(*_):
+    def redraw(reset_scroll=False):
+        pos = 0 if reset_scroll else text.verticalScrollBar().value()
         places=precision.currentIndex()
         result,dimensions,steps=explain_case(evaluation,measure.currentText(),
                                             condition.currentText(),inputs,places)
@@ -184,6 +186,7 @@ def build_inspect_results(evaluation, output, female, inputs, parent=None, scree
         screening_check = screening.checks[measure.currentIndex()] if screening is not None else None
         text.setHtml(_html_breakdown(measure.currentText(),condition.currentText(),
                                      result,dimensions,steps,places,screening_check))
+        text.verticalScrollBar().setValue(pos)
         for row,(_,rng,unit) in enumerate(geometry):
             for col,key in enumerate(('minimum','nominal','maximum'),1):
                 value=getattr(rng,key)
@@ -193,9 +196,12 @@ def build_inspect_results(evaluation, output, female, inputs, parent=None, scree
                 cell.setText(f'{value:.{places}f}')
                 cell.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 cell.setToolTip(f'Calculated: {value:.9f} {unit}')
-    measure.currentIndexChanged.connect(redraw)
-    condition.currentIndexChanged.connect(redraw)
-    precision.currentIndexChanged.connect(redraw)
+    measure.currentIndexChanged.connect(lambda _: redraw(reset_scroll=True))
+    condition.currentIndexChanged.connect(lambda _: redraw())
+    precision.currentIndexChanged.connect(lambda _: redraw())
+    for combo in (measure, condition, precision):
+        return_focus_after_selection(combo, text)
     close.clicked.connect(dialog.accept)
     redraw()
+    apply_dialog_theme(dialog)
     return dialog

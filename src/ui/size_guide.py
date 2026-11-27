@@ -4,6 +4,7 @@ import re
 
 from PySide6.QtCore import Qt
 from src.ui.dialog_style import set_standard_action_width
+from src.dialog_theme import apply_dialog_theme
 
 from PySide6.QtWidgets import (
     QDialog, QFrame, QHeaderView, QHBoxLayout, QLabel, QLineEdit, QPushButton,
@@ -84,6 +85,7 @@ class SizeGuide(QDialog):
         layout.addWidget(self.table)
 
         self.summary = QLabel(f"{len(sizes)} listed O-ring sizes. Double-click to use a size.")
+        self.summary.setStyleSheet("color:#242424;")
         layout.addWidget(self.summary)
         buttons = QHBoxLayout()
         self.choose = QPushButton("Use selected size")
@@ -103,6 +105,7 @@ class SizeGuide(QDialog):
         self.table.itemDoubleClicked.connect(lambda _: self._choose())
         self.table.itemSelectionChanged.connect(self._selection_changed)
         self.table.selectRow(0)
+        apply_dialog_theme(self)
 
     def _selection_changed(self):
         self.choose.setEnabled(self.table.currentRow() >= 0 and not self.table.isRowHidden(self.table.currentRow()))

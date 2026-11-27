@@ -27,6 +27,7 @@ from src.ui.precision import format_input, format_result
 from src.ui.size_guide import SizeGuide
 from src.ui.dialog_position import exec_centered
 from src.ui.dialog_style import set_standard_action_width
+from src.dialog_theme import apply_dialog_theme
 from src.ui.settings_dialog import SettingsDialog
 from src.calculations.criteria import ScreeningResults, screen_rectangular
 from src.calculations.profile_geometry import SignedDimension
@@ -1209,6 +1210,7 @@ class MainWindow(QMainWindow):
         footer.addStretch()
         footer.addWidget(close)
         layout.addLayout(footer)
+        apply_dialog_theme(dialog)
         dialog.adjustSize()
         dialog.setFixedHeight(dialog.sizeHint().height())
         return dialog

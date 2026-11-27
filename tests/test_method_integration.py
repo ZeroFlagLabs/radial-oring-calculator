@@ -172,7 +172,7 @@ class MethodUiChecks(unittest.TestCase):
                 self.app.processEvents()
                 dlg=w._make_tolerance_trace_dialog()
                 self.assertIsNotNone(dlg)
-                self.assertIn(method.title(),dlg.windowTitle())
+                self.assertEqual(dlg.windowTitle(), 'Inspect Results | Static & Dynamic Radial O-Ring Calculator')
                 measures=dlg.findChild(QComboBox,'trace_measure')
                 conditions=dlg.findChild(QComboBox,'trace_condition')
                 prec=dlg.findChild(QComboBox,'trace_precision')

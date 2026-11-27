@@ -40,9 +40,8 @@ class SourceReferenceGuideTests(unittest.TestCase):
     def test_references_are_scrollable_not_resized(self):
         self.assertIsNotNone(self.ui.find('.//widget[@name="references_scroll"]'))
         self.assertIsNotNone(self.ui.find('.//widget[@name="references_content"]'))
-        note=self.text('references_note')
-        self.assertIn('not universal acceptance limits',note)
-        self.assertIn('not distributed',note)
+        self.assertIsNone(self.ui.find('.//widget[@name="references_note"]'))
+        self.assertIn('may not be suitable for every O-ring material or application',self.text('assumptions_text'))
         self.assertEqual(self.ui.find('.//widget[@name="settingsDialog"]/property[@name="minimumSize"]/size/width').text,'510')
     def test_all_eight_matched_square_guides(self):
         directory=ROOT/'src/resources/guides'

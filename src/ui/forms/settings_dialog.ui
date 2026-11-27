@@ -174,15 +174,6 @@
              <property name="wordWrap"><bool>true</bool></property>
             </widget>
            </item>
-           <item><spacer name="referencesClosingNoteGap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
-           <item>
-            <widget class="QLabel" name="references_note">
-             <property name="text"><string>These are selected general dimensional screening criteria, not universal acceptance limits for all materials and operating conditions. Manufacturer recommendations may differ for specific applications.
-
-The reference publications are not distributed with the application.</string></property>
-             <property name="wordWrap"><bool>true</bool></property>
-            </widget>
-           </item>
            <item>
             <spacer name="referencesSpacer">
              <property name="orientation"><enum>Qt::Orientation::Vertical</enum></property>
@@ -201,7 +192,7 @@ The reference publications are not distributed with the application.</string></p
      <widget class="QWidget" name="updates_tab">
       <attribute name="title"><string>Updates</string></attribute>
       <layout class="QVBoxLayout" name="updatesLayout">
-       <item><widget class="QLabel" name="current_version"><property name="text"><string>Current version:</string></property></widget></item>
+       <item><widget class="QLabel" name="current_version"><property name="text"><string>Current version: v2.1.14</string></property></widget></item>
        <item><spacer name="updates_version_to_checkbox_gap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>12</height></size></property></spacer></item><item><widget class="QCheckBox" name="check_on_launch"><property name="text"><string>Automatically check for updates on launch</string></property></widget></item>
        <item><spacer name="updates_checkbox_to_information_gap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>12</height></size></property></spacer></item><item><widget class="QLabel" name="update_information"><property name="text"><string>Checks stable GitHub Releases in the background. Updates are not downloaded or installed automatically; the application remains portable.</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
        <item><spacer name="updates_information_to_status_gap"><property name="orientation"><enum>Qt::Orientation::Vertical</enum></property><property name="sizeType"><enum>QSizePolicy::Fixed</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>8</height></size></property></spacer></item><item><widget class="QLabel" name="update_status"><property name="text"><string>Not checked yet</string></property><property name="wordWrap"><bool>true</bool></property></widget></item>
@@ -221,16 +212,14 @@ The reference publications are not distributed with the application.</string></p
        <item>
         <widget class="QLabel" name="about_text">
          <property name="text">
-          <string>ZeroFlagLabs Static &amp; Dynamic Radial O-Ring Calculator  ·  v2.1.13
+          <string>ZeroFlagLabs Static &amp; Dynamic Radial O-Ring Calculator  ·  v2.1.14
 
 Dimensional screening for static and dynamic (reciprocating) radial O-ring seals.
 
-Licence: MIT (for the original application source code).
-Free and open source: use, modify and redistribute under the MIT Licence.
+Portable Windows application.
 
-Third-party components, including PySide6/Qt, retain their respective licences. See the repository LICENSE and third-party notices when published.
-
-</string>
+Original application code: MIT Licence.
+PySide6/Qt and other third-party components retain their own licences. Any third-party reference datasets retain their respective rights and licences.</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>

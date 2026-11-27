@@ -18,9 +18,15 @@ def main():
     if app_icon.isNull():
         raise RuntimeError(f"Application icon could not be loaded: {icon_path}")
     app.setWindowIcon(app_icon)
+    if "--dialogue-test" in sys.argv:
+        from src.dialogue_acceptance import prepare_scheme
+        prepare_scheme(app)
     window = MainWindow()
     window.setWindowIcon(app_icon)
     window.show()
+    if "--dialogue-test" in sys.argv:
+        from src.dialogue_acceptance import run_for_window
+        return run_for_window(app,window)
     return app.exec()
 
 

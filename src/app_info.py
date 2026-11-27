@@ -5,7 +5,7 @@ the corresponding release is actually published on GitHub.
 """
 
 APP_TITLE = 'Static & Dynamic Radial O-Ring Calculator'
-APP_VERSION = '2.1.13'
+APP_VERSION = '2.1.14'
 GITHUB_REPOSITORY = 'ZeroFlagLabs/radial-oring-calculator'
 GITHUB_URL = 'https://github.com/' + GITHUB_REPOSITORY
 RELEASES_URL = GITHUB_URL + '/releases/latest'

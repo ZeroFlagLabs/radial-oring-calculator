@@ -9,6 +9,7 @@ from src.app_info import APP_TITLE, APP_VERSION, GITHUB_URL
 from src.ui.update_checker import UpdateChecker
 from src.ui.dialog_position import exec_centered
 from src.ui.dialog_style import set_standard_action_width
+from src.dialog_theme import apply_dialog_theme, set_settings_identity
 
 
 class SettingsDialog:
@@ -39,11 +40,7 @@ class SettingsDialog:
         if any(x is None for x in (self.check_on_launch, self.check_now, self.status,
                                     self.release_button, self.version, self.about, self.link)):
             raise RuntimeError('Settings Designer form is missing an Updates/About control')
-        self.version.setText('Current version: v' + APP_VERSION)
-        self.about.setText('ZeroFlagLabs ' + APP_TITLE + '  ·  v' + APP_VERSION +
-                           '\n\nDimensional screening for static and dynamic (reciprocating) radial O-ring seals.'+
-                           '\n\nOriginal application code: MIT Licence.'+
-                           '\nPySide6/Qt and other third-party components retain their own licences.')
+        set_settings_identity(self.dialog, APP_TITLE, APP_VERSION, 'Dimensional screening for static and dynamic (reciprocating) radial O-ring seals.')
         # The repository is public; stable releases are published separately.
         self.link.setText(f'<a href="{GITHUB_URL}">Project on GitHub</a>')
         self.link.setOpenExternalLinks(True)
@@ -54,6 +51,7 @@ class SettingsDialog:
         self.checker.state_changed.connect(self._refresh)
         self.dialog.finished.connect(self._disconnect)
         self._refresh()
+        apply_dialog_theme(self.dialog)
 
     def _refresh(self):
         self.status.setText(self.checker.status)

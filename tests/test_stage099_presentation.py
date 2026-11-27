@@ -61,9 +61,8 @@ class PresentationSourceTests(unittest.TestCase):
             self.assertEqual(html.count('margin:0 0 10px 0;'),4)
             self.assertEqual(html.count('• '),3)
         self.assertEqual(root.find('.//spacer[@name="referencesSectionGap"]/.//height').text,'20')
-        self.assertEqual(root.find('.//spacer[@name="referencesClosingNoteGap"]/.//height').text,'20')
-        ending=root.find('.//widget[@name="references_note"]/property[@name="text"]/string').text
-        self.assertIn('The reference publications are not distributed with the application.',ending)
+        self.assertIsNone(root.find('.//spacer[@name="referencesClosingNoteGap"]'))
+        self.assertIsNone(root.find('.//widget[@name="references_note"]'))
 
     def test_assumptions_explains_three_percent_boundary(self):
         root=ET.parse(ROOT/'src/ui/forms/settings_dialog.ui').getroot()
@@ -101,7 +100,7 @@ class PresentationSourceTests(unittest.TestCase):
             self.assertIsNotNone(sp)
             self.assertEqual(sp.find('./property[@name="sizeType"]/enum').text,'QSizePolicy::Fixed')
             self.assertEqual(sp.find('.//size/height').text,height)
-        self.assertEqual(root.find('.//widget[@name="current_version"]/property[@name="text"]/string').text,'Current version:')
+        self.assertEqual(root.find('.//widget[@name="current_version"]/property[@name="text"]/string').text,'Current version: v' + APP_VERSION)
         self.assertIn('remains portable',root.find('.//widget[@name="update_information"]/property[@name="text"]/string').text)
         self.assertEqual(root.find('.//widget[@name="check_now_button"]/property[@name="text"]/string').text,'Check for updates')
 
@@ -114,7 +113,7 @@ class PresentationSourceTests(unittest.TestCase):
         self.assertEqual(items[2].find('./widget').get('name'),'github_link')
         self.assertEqual(root.find('.//widget[@name="github_link"]/property[@name="text"]/string').text, 'Project on GitHub')
         self.assertIn('third-party components retain their own licences',
-                      (ROOT/'src/ui/settings_dialog.py').read_text(encoding='utf8'))
+                      (ROOT/'src/dialog_theme.py').read_text(encoding='utf8'))
 
 @unittest.skipUnless(QT,'PySide6 GUI required')
 class PresentationGuiTests(unittest.TestCase):

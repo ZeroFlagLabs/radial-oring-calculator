@@ -145,7 +145,7 @@ class Stage952GuiTests(unittest.TestCase):
             self.assertTrue(w.save_snapshot_button.isEnabled())
             dialog=w._make_tolerance_trace_dialog()
             self.assertIsNotNone(dialog)
-            self.assertIn('Simplified',dialog.windowTitle())
+            self.assertEqual(dialog.windowTitle(), 'Inspect Results | Static & Dynamic Radial O-Ring Calculator')
             dialog.close()
             self.assertIsNotNone(w._snapshot_pixmap())
             self.assertIn('Symmetrical:', w.statusBar().currentMessage())

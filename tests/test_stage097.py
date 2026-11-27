@@ -30,7 +30,7 @@ class Stage097SourceTests(unittest.TestCase):
         def txt(name):return r.find(f'.//widget[@name="{name}"]/property[@name="text"]/string').text
         self.assertNotIn('current dimensional',txt('references_text'))
         self.assertNotIn('traceability review is planned',txt('references_text'))
-        self.assertIn('The reference publications are not distributed',txt('references_note'))
+        self.assertIsNone(r.find('.//widget[@name="references_note"]'))
         self.assertIn('dynamic (reciprocating) radial',txt('about_text'))
         self.assertNotIn('Pre-release development build',txt('about_text'))
         self.assertEqual(txt('assumptions_text').count('•'),10)
