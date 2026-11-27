@@ -483,7 +483,7 @@ class MainWindow(QMainWindow):
         note_font.setStretch(88)
         self.shared_note.setFont(note_font)
         self.shared_note.setWordWrap(False)
-        get('window_title',QLabel).setStyleSheet('font-size:19px; font-weight:700; color:#123b6c;')
+        get('window_title',QLabel).setStyleSheet('font-size:19px; font-weight:700; color:#123b7c;')
         get('version_label',QLabel).setStyleSheet('color:#6c7e94; font-size:11px;')
         get('version_label',QLabel).setText('v' + APP_VERSION)
         self.calculation_method_info_button.setIcon(QIcon(str(icon_dir / 'info-guide.png')))
